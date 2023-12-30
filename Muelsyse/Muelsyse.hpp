@@ -2,5 +2,5 @@
 
 namespace mls
 {
-	const std::string MuelsyseVersion();
+	void MuelsyseVersion();
 } // namespace mls

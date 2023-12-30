@@ -1,40 +1,89 @@
-﻿{
-	"version": 3,
-	"configurePresets": [
-		{
-			"name": "win32-msvc",
-			"description": "Visual Studio",
-			"hidden": true,
-			"generator": "Ninja",
-			"binaryDir": "${sourceDir}/build/${presetName}",
-			"installDir": "${sourceDir}/build",
-			"cacheVariables": {
-				"CMAKE_C_COMPILER": "cl.exe",
-				"CMAKE_CXX_COMPILER": "cl.exe"
-			},
-			"condition": {
-				"type": "equals",
-				"lhs": "${hostSystemName}",
-				"rhs": "Windows"
-			}
-		},
-		{
-			"name": "x64-debug",
-			"displayName": "x64 Debug",
-			"description": "x64-windows-Debug",
-			"inherits": "win32-msvc",
-			"architecture": {
-				"value": "x64",
-				"strategy": "external"
-			},
-			"cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
-		},
-		{
-			"name": "x64-release",
-			"displayName": "x64 Release",
-			"description": "x64-windows-Release",
-			"inherits": "x64-debug",
-			"cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
-		}
-	]
+{
+    "version": 2,
+    "configurePresets": [
+        {
+            "name": "MSVC-x64-Release",
+            "displayName": "VS 2022 Release - amd64 Release",
+            "description": "将编译器用于 VS 17 2022 (x64 体系结构)",
+            "generator": "Visual Studio 17 2022",
+            "toolset": "host=x64",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
+                "CMAKE_C_COMPILER": "cl",
+                "CMAKE_CXX_COMPILER": "cl",
+                "VCPKG_TARGET_TRIPLET": "x64-windows-static"
+            }
+        },
+        {
+            "name": "MSVC-x64-Debug",
+            "displayName": "VS 2022 Release - amd64 Debug",
+            "description": "将编译器用于 VS 17 2022 (x64 体系结构)",
+            "generator": "Visual Studio 17 2022",
+            "toolset": "host=x64",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
+                "CMAKE_C_COMPILER": "cl",
+                "CMAKE_CXX_COMPILER": "cl",
+                "VCPKG_TARGET_TRIPLET": "x64-windows-static"
+            }
+        },
+        {
+            "name": "MinGW-x64-Release",
+            "displayName": "MinGW - x64 - Release",
+            "description": "将编译器用于 MinGW x64 Release",
+            "generator": "MinGW Makefiles",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_BUILD_TYPE": "Release",
+                "VCPKG_TARGET_TRIPLET": "x64-mingw-static"
+            }
+        },
+        {
+            "name": "MinGW-x64-Debug",
+            "displayName": "MinGW - x64 - Debug",
+            "description": "将编译器用于 MinGW x64 Debug",
+            "generator": "MinGW Makefiles",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "VCPKG_TARGET_TRIPLET": "x64-mingw-static"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "msvc-x64-release",
+            "displayName": "MSVC x64 Release",
+            "configurePreset": "MSVC-x64-Release",
+            "configuration": "Release"
+        },
+        {
+            "name": "msvc-x64-debug",
+            "displayName": "MSVC x64 Debug",
+            "configurePreset": "MSVC-x64-Debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "MinGW-x64-release",
+            "displayName": "MinGW x64 Release",
+            "configurePreset": "MinGW-x64-Release",
+            "configuration": "Release"
+        },
+        {
+            "name": "MinGW-x64-debug",
+            "displayName": "MinGW x64 Debug",
+            "configurePreset": "MinGW-x64-Debug",
+            "configuration": "Debug"
+        }
+    ]
 }

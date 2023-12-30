@@ -1,9 +1,11 @@
 #include "Muelsyse.hpp"
+#include <spdlog/spdlog.h>
 
 namespace mls
 {
-	const std::string MuelsyseVersion()
+	void MuelsyseVersion()
 	{
-		return "0.0.0dev";
+		spdlog::set_pattern("[%Y-%m-%d %T]%^[%l]%$ %v");
+		spdlog::info("0.0.0dev");
 	};
 } // namespace mls
