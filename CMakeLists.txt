@@ -15,3 +15,4 @@ endif()
 
 add_subdirectory(Muelsyse)
 add_subdirectory(FlowingLab)
+add_subdirectory(Flowing)
