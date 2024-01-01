@@ -4,23 +4,32 @@ file(GLOB_RECURSE MLS_SRC LIST_DIRECTORIES false
 
 project(MuelsyseLib)
 
-add_library(Muelsyse STATIC ${MLS_SRC})
+if(MUL_BUILD_TYPE STREQUAL "Static")
+    add_library(MuelsyseLib STATIC ${MLS_SRC})
+elseif(MUL_BUILD_TYPE STREQUAL "Shared")
+    add_compile_definitions(MUL_BUILD_DLL)
+    add_library(MuelsyseLib SHARED ${MLS_SRC})
+endif()
 
-target_include_directories(Muelsyse PUBLIC .)
+target_include_directories(MuelsyseLib PUBLIC .)
 
 find_package(glad CONFIG REQUIRED)
-    target_link_libraries(Muelsyse PRIVATE glad::glad)
+    target_link_libraries(MuelsyseLib PRIVATE glad::glad)
 
 find_package(glfw3 CONFIG REQUIRED)
-    target_link_libraries(Muelsyse PRIVATE glfw)
+    target_link_libraries(MuelsyseLib PRIVATE glfw)
 
 find_package(glm CONFIG REQUIRED)
-    target_link_libraries(Muelsyse PRIVATE glm::glm)
+    target_link_libraries(MuelsyseLib PRIVATE glm::glm)
 
 find_package(spdlog CONFIG REQUIRED)
-    target_link_libraries(Muelsyse PRIVATE spdlog::spdlog_header_only)
+    target_link_libraries(MuelsyseLib PRIVATE spdlog::spdlog_header_only)
 
 find_package(Stb REQUIRED)
-    target_include_directories(Muelsyse PRIVATE ${Stb_INCLUDE_DIR})
+    target_include_directories(MuelsyseLib PRIVATE ${Stb_INCLUDE_DIR})
 
-install(TARGETS Muelsyse DESTINATION lib)
+if(MUL_BUILD_TYPE STREQUAL "Static")
+    install(TARGETS MuelsyseLib DESTINATION lib)
+elseif(MUL_BUILD_TYPE STREQUAL "Shared")
+    install(TARGETS MuelsyseLib DESTINATION bin)
+endif()

@@ -1,8 +1,17 @@
 #include <iostream>
 #include <Muelsyse.hpp>
 
-int main(int argc, char** argv)
+class FlowingLab: public mul::Application
 {
-	mls::MuelsyseVersion();
-	return 0;
+public:
+	FlowingLab() {};
+	~FlowingLab() {};
+
+private:
+
+};
+
+mul::Application* mul::createApplication()
+{
+	return new FlowingLab();
 }

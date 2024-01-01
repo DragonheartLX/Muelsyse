@@ -30,6 +30,6 @@ add_executable(Flowing ${FLOWING_SRC})
 
 target_include_directories(Flowing PRIVATE .)
 
-target_link_libraries(Flowing PRIVATE Muelsyse)
+target_link_libraries(Flowing PRIVATE MuelsyseLib)
 
 install(TARGETS Flowing DESTINATION bin)

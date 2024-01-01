@@ -13,6 +13,27 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     )
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(MUL_DEBUG)
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_compile_definitions(MUL_RELEASE)
+endif()
+
+if(MUL_BUILD_TYPE STREQUAL "Static")
+    add_compile_definitions(MUL_BUILD_STATIC)
+endif()
+
+if(MUL_BUILD_TYPE STREQUAL "Shared")
+    add_compile_definitions(MUL_BUILD_SHARED)
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_compile_definitions(MUL_MSVC)
+    add_compile_definitions(MUL_PLATFORM_WINDOWS)
+endif()
+
 add_subdirectory(Muelsyse)
 add_subdirectory(FlowingLab)
 add_subdirectory(Flowing)

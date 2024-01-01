@@ -1,6 +1,5 @@
-#include <iostream>
+#pragma once
 
-namespace mls
-{
-	void MuelsyseVersion();
-} // namespace mls
+#include "Core/Application.hpp"
+
+#include "Core/EntryPoint.hpp"

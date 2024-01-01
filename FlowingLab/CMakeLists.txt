@@ -30,6 +30,6 @@ add_executable(FlowingLab ${FLOWING_LAB_SRC})
 
 target_include_directories(FlowingLab PRIVATE .)
 
-target_link_libraries(FlowingLab PRIVATE Muelsyse)
+target_link_libraries(FlowingLab PRIVATE MuelsyseLib)
 
 install(TARGETS FlowingLab DESTINATION bin)
