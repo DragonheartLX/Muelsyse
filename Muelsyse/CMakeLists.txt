@@ -12,6 +12,7 @@ elseif(MUL_BUILD_TYPE STREQUAL "Shared")
 endif()
 
 target_include_directories(MuelsyseLib PUBLIC .)
+target_precompile_headers(MuelsyseLib PRIVATE mulpch.h)
 
 find_package(glad CONFIG REQUIRED)
     target_link_libraries(MuelsyseLib PRIVATE glad::glad)
@@ -23,7 +24,7 @@ find_package(glm CONFIG REQUIRED)
     target_link_libraries(MuelsyseLib PRIVATE glm::glm)
 
 find_package(spdlog CONFIG REQUIRED)
-    target_link_libraries(MuelsyseLib PRIVATE spdlog::spdlog_header_only)
+    target_link_libraries(MuelsyseLib PUBLIC spdlog::spdlog_header_only)
 
 find_package(Stb REQUIRED)
     target_include_directories(MuelsyseLib PRIVATE ${Stb_INCLUDE_DIR})

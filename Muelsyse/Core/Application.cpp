@@ -1,4 +1,8 @@
-#include "Core/Application.hpp"
+#include "Core/Application.h"
+
+#include "Event/Event.h"
+#include "Event/ApplicationEvent.h"
+#include "Core/Logger.h"
 
 namespace mul
 {

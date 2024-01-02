@@ -2,41 +2,84 @@
     "version": 3,
     "configurePresets": [
         {
-            "name": "msvc-x64-static",
-            "displayName": "MSVC x64 Static",
-            "description": "MSVC x64 Static",
+            "name": "msvc-x64-static-debug",
+            "displayName": "MSVC x64 Static Debug",
+            "description": "MSVC x64 Static Debug",
             "generator": "Visual Studio 17 2022",
             "toolset": "host=x64",
             "architecture": "x64",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
                 "CMAKE_C_COMPILER": "cl",
                 "CMAKE_CXX_COMPILER": "cl",
+                "CMAKE_BUILD_TYPE": "Debug",
                 "VCPKG_TARGET_TRIPLET": "x64-windows-static",
                 "MUL_BUILD_TYPE": "Static"
             }
         },
         {
-            "name": "msvc-x64-dynamic",
-            "displayName": "MSVC x64 Dynamic",
-            "description": "MSVC x64 Dynamic",
+            "name": "msvc-x64-static-release",
+            "displayName": "MSVC x64 Static Release",
+            "description": "MSVC x64 Static Release",
             "generator": "Visual Studio 17 2022",
             "toolset": "host=x64",
             "architecture": "x64",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/${presetName}/bin",
-                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/${presetName}/bin",
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
                 "CMAKE_C_COMPILER": "cl",
                 "CMAKE_CXX_COMPILER": "cl",
+                "CMAKE_BUILD_TYPE": "Release",
+                "VCPKG_TARGET_TRIPLET": "x64-windows-static",
+                "MUL_BUILD_TYPE": "Static"
+            }
+        },
+        {
+            "name": "msvc-x64-dynamic-debug",
+            "displayName": "MSVC x64 Dynamic Debug",
+            "description": "MSVC x64 Dynamic Debug",
+            "generator": "Visual Studio 17 2022",
+            "toolset": "host=x64",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
+                "CMAKE_C_COMPILER": "cl",
+                "CMAKE_CXX_COMPILER": "cl",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "VCPKG_TARGET_TRIPLET": "x64-windows",
+                "MUL_BUILD_TYPE": "Shared"
+            }
+        },
+        {
+            "name": "msvc-x64-dynamic-release",
+            "displayName": "MSVC x64 Dynamic Release",
+            "description": "MSVC x64 Dynamic Release",
+            "generator": "Visual Studio 17 2022",
+            "toolset": "host=x64",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
+                "CMAKE_C_COMPILER": "cl",
+                "CMAKE_CXX_COMPILER": "cl",
+                "CMAKE_BUILD_TYPE": "Release",
                 "VCPKG_TARGET_TRIPLET": "x64-windows",
                 "MUL_BUILD_TYPE": "Shared"
             }
         },
         {
             "name": "mingw-x64-static-debug",
+            "hidden": true,
             "displayName": "MinGW x64 Static Debug",
             "description": "MinGW x64 Static Debug",
             "generator": "MinGW Makefiles",
@@ -52,6 +95,7 @@
         },
         {
             "name": "mingw-x64-static-release",
+            "hidden": true,
             "displayName": "MinGW x64 Static Release",
             "description": "MinGW x64 Static Release",
             "generator": "MinGW Makefiles",
@@ -67,6 +111,7 @@
         },
         {
             "name": "mingw-x64-dynamic-debug",
+            "hidden": true,
             "displayName": "MinGW x64 Dynamic Debug",
             "description": "MinGW x64 Dynamic Debug",
             "generator": "MinGW Makefiles",
@@ -84,6 +129,7 @@
         },
         {
             "name": "mingw-x64-dynamic-release",
+            "hidden": true,
             "displayName": "MinGW x64 Dynamic Release",
             "description": "MinGW x64 Dynamic Release",
             "generator": "MinGW Makefiles",
@@ -104,47 +150,51 @@
         {
             "name": "msvc-x64-static-release",
             "displayName": "MSVC x64 Static Release",
-            "configurePreset": "msvc-x64-static",
+            "configurePreset": "msvc-x64-static-release",
             "configuration": "Release"
         },
         {
             "name": "msvc-x64-static-debug",
             "displayName": "MSVC x64 Static Debug",
-            "configurePreset": "msvc-x64-static",
+            "configurePreset": "msvc-x64-static-debug",
             "configuration": "Debug"
         },
         {
             "name": "msvc-x64-dynamic-release",
             "displayName": "MSVC x64 Dynamic Release",
-            "configurePreset": "msvc-x64-dynamic",
+            "configurePreset": "msvc-x64-dynamic-release",
             "configuration": "Release"
         },
         {
             "name": "msvc-x64-dynamic-debug",
             "displayName": "MSVC x64 Dynamic Debug",
-            "configurePreset": "msvc-x64-dynamic",
+            "configurePreset": "msvc-x64-dynamic-debug",
             "configuration": "Debug"
         },
         {
             "name": "MinGW-x64-static-release",
+            "hidden": true,
             "displayName": "MinGW x64 Static Release",
             "configurePreset": "mingw-x64-static-release",
             "configuration": "Release"
         },
         {
             "name": "MinGW-x64-static-debug",
+            "hidden": true,
             "displayName": "MinGW x64 Static Debug",
             "configurePreset": "mingw-x64-static-debug",
             "configuration": "Debug"
         },
         {
             "name": "MinGW-x64-dynamic-release",
+            "hidden": true,
             "displayName": "MinGW x64 Dynamic Release",
             "configurePreset": "mingw-x64-dynamic-release",
             "configuration": "Release"
         },
         {
             "name": "MinGW-x64-dynamic-debug",
+            "hidden": true,
             "displayName": "MinGW x64 Dynamic Debug",
             "configurePreset": "mingw-x64-dynamic-debug",
             "configuration": "Debug"

@@ -1,5 +1,5 @@
 #include <iostream>
-#include <Muelsyse.hpp>
+#include <Muelsyse.h>
 
 class FlowingLab: public mul::Application
 {
