@@ -11,5 +11,8 @@ int main(int argc, char** argv)
 	app->run();
 	delete app;
 
+	MUL_CORE_INFO("Muelsyse exit.");
 	return 0;
 }
+
+#define FLOWING(X)	mul::Application* mul::createApplication() { return new X(); }

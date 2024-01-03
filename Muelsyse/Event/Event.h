@@ -9,8 +9,8 @@ namespace mul
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		AppTick, AppUpdate, AppRender,
-		KeyPressed, KeyReleased,
-		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseCcrolled
+		KeyPressed, KeyReleased, KeyTyped,
+		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 
 	enum EventCategory
@@ -31,8 +31,9 @@ namespace mul
 
 	class MUL_API Event
 	{
-		friend class EventDispatcher;
 	public:
+		bool handled = false;
+
 		virtual EventType getEventType() const = 0;
 		virtual const char* getName() const = 0;
 		virtual int getCategoryFlags() const = 0;
@@ -41,8 +42,6 @@ namespace mul
 		inline bool isInCategory(EventCategory categroy) { return getCategoryFlags() & categroy; }
 	private:
 
-	protected:
-		bool m_Handled = false;
 	};
 
 	class EventDispatcher
@@ -53,11 +52,11 @@ namespace mul
 		EventDispatcher(Event& event) : m_Event(event) {};
 		
 		template<typename T>
-		bool match(EventFunc<T> func)
+		bool dispatcher(EventFunc<T> func)
 		{
 			if (m_Event.getEventType() == T::getStaticType())
 			{
-				m_Event.m_Handled = func(*(T*)&m_Event);
+				m_Event.handled = func(*(T*)&m_Event);
 				return true;
 			}
 			return false;

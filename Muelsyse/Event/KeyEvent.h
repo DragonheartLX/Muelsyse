@@ -2,8 +2,8 @@
 #include "mulpch.h"
 #include "Event/Event.h"
 
-namespace mul {
-
+namespace mul 
+{
 	class MUL_API KeyEvent: public Event
 	{
 	public:
@@ -48,5 +48,21 @@ namespace mul {
 		}
 
 		EVENT_CLASS_TYPE(KeyReleased)
+	};
+
+	class MUL_API KeyTypedEvent: public KeyEvent
+	{
+	public:
+		KeyTypedEvent(int keycode)
+			: KeyEvent(keycode) {}
+
+		std::string toString() const override
+		{
+			std::stringstream ss;
+			ss << "KeyTypedEvent: " << m_KeyCode;
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(KeyTyped)
 	};
 }

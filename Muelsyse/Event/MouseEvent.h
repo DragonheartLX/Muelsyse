@@ -2,8 +2,8 @@
 #include "mulpch.h"
 #include "Event/Event.h"
 
-namespace mul {
-
+namespace mul 
+{
 	class MUL_API MouseMovedEvent: public Event
 	{
 	public:
@@ -36,7 +36,7 @@ namespace mul {
 		std::string toString() const override
 		{
 			std::stringstream ss;
-			ss << "MouseScrolledEvent: " << GetXOffset() << ", " << GetYOffset();
+			ss << "MouseScrolledEvent: " << getXOffset() << ", " << getYOffset();
 			return ss.str();
 		}
 
@@ -87,5 +87,4 @@ namespace mul {
 
 		EVENT_CLASS_TYPE(MouseButtonReleased)
 	};
-
 }

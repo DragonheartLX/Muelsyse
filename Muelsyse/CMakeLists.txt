@@ -7,18 +7,22 @@ project(MuelsyseLib)
 if(MUL_BUILD_TYPE STREQUAL "Static")
     add_library(MuelsyseLib STATIC ${MLS_SRC})
 elseif(MUL_BUILD_TYPE STREQUAL "Shared")
+    add_compile_definitions(GLAD_GLAPI_EXPORT_BUILD)
     add_compile_definitions(MUL_BUILD_DLL)
     add_library(MuelsyseLib SHARED ${MLS_SRC})
 endif()
 
 target_include_directories(MuelsyseLib PUBLIC .)
+target_include_directories(MuelsyseLib PUBLIC External)
+
 target_precompile_headers(MuelsyseLib PRIVATE mulpch.h)
 
-find_package(glad CONFIG REQUIRED)
-    target_link_libraries(MuelsyseLib PRIVATE glad::glad)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set_property(TARGET MuelsyseLib APPEND PROPERTY LINK_FLAGS "/NODEFAULTLIB:MSVCRTD")
+endif()
 
 find_package(glfw3 CONFIG REQUIRED)
-    target_link_libraries(MuelsyseLib PRIVATE glfw)
+    target_link_libraries(MuelsyseLib PUBLIC glfw)
 
 find_package(glm CONFIG REQUIRED)
     target_link_libraries(MuelsyseLib PRIVATE glm::glm)

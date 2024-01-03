@@ -2,8 +2,8 @@
 #include "mulpch.h"
 #include "Event/Event.h"
 
-namespace mul {
-
+namespace mul 
+{
 	class MUL_API WindowResizeEvent: public Event
 	{
 	public:

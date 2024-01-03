@@ -26,6 +26,7 @@ if(MUL_BUILD_TYPE STREQUAL "Static")
 endif()
 
 if(MUL_BUILD_TYPE STREQUAL "Shared")
+    add_compile_definitions(GLAD_GLAPI_EXPORT)
     add_compile_definitions(MUL_BUILD_SHARED)
 endif()
 
