@@ -1,6 +1,5 @@
 #pragma once
 #include <Muelsyse.h>
-#include <imgui.h>
 
 class ExampleLayer: public mul::Layer
 {

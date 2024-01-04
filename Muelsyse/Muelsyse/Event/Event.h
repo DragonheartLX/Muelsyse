@@ -1,6 +1,6 @@
 #pragma once
 #include "mulpch.h"
-#include "Core/Core.h"
+#include "Muelsyse/Core/Core.h"
 
 namespace mul
 {
@@ -37,6 +37,12 @@ namespace mul
 		virtual EventType getEventType() const = 0;
 		virtual const char* getName() const = 0;
 		virtual int getCategoryFlags() const = 0;
+
+		// cause __acrt_first_block == header ASSERT when used in Flowing
+		// TODO:
+		// use char* or mul::string
+		// https://stackoverflow.com/questions/35310117/debug-assertion-failed-expression-acrt-first-block-header
+		// https://blog.csdn.net/caolinqing1/article/details/103366406
 		virtual std::string toString() const { return getName(); };
 
 		inline bool isInCategory(EventCategory categroy) { return getCategoryFlags() & categroy; }

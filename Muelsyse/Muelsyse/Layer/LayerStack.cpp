@@ -1,5 +1,5 @@
 #include "mulpch.h"
-#include "Layer/LayerStack.h"
+#include "Muelsyse/Layer/LayerStack.h"
 
 namespace mul 
 {
@@ -32,9 +32,9 @@ namespace mul
 		auto it = std::find(m_Layers.begin(), m_Layers.end(), layer);
 		if (it != m_Layers.end())
 		{
+			layer->onDetach();
 			m_Layers.erase(it);
 			m_LayerInsertIndex--;
-			layer->onDetach();
 		}
 	}
 
@@ -43,8 +43,8 @@ namespace mul
 		auto it = std::find(m_Layers.begin(), m_Layers.end(), overlay);
 		if (it != m_Layers.end())
 		{
-			m_Layers.erase(it);
 			overlay->onDetach();
+			m_Layers.erase(it);
 		}
 	}
 

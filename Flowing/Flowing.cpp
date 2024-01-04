@@ -1,4 +1,3 @@
-#include <iostream>
 #include <Muelsyse.h>
 
 class Flowing : public mul::Application
@@ -11,7 +10,4 @@ private:
 
 };
 
-mul::Application* mul::createApplication()
-{
-	return new Flowing();
-}
+FLOWING(Flowing);

@@ -1,5 +1,6 @@
 #pragma once
-#include "Window/Window.h"
+#include "Muelsyse/Window/Window.h"
+#include "Muelsyse/Renderer/GraphicsContext.h"
 
 struct GLFWwindow;
 
@@ -27,6 +28,7 @@ namespace mul
 		virtual void shutdown();
 
 		GLFWwindow* m_Window;
+		GraphicsContext* m_Context;
 
 		struct WindowData
 		{

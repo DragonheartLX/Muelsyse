@@ -1,11 +1,11 @@
 #pragma once
-#include "Core/Core.h"
-#include "Window/Window.h"
-#include "Event/ApplicationEvent.h"
-#include "Layer/LayerStack.h"
-#include "Event/Event.h"
-#include "Event/ApplicationEvent.h"
-#include "ImGui/ImGuiLayer.h"
+#include "Muelsyse/Core/Core.h"
+#include "Muelsyse/Window/Window.h"
+#include "Muelsyse/Event/ApplicationEvent.h"
+#include "Muelsyse/Layer/LayerStack.h"
+#include "Muelsyse/Event/Event.h"
+#include "Muelsyse/Event/ApplicationEvent.h"
+#include "Muelsyse/ImGui/ImGuiLayer.h"
 
 namespace mul
 {
@@ -33,6 +33,8 @@ namespace mul
 
 		LayerStack m_LayerStack;
 		static Application* s_Instance;
+
+		unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
 	};
 
 	Application* createApplication();

@@ -1,8 +1,8 @@
 #pragma once
-#include "Layer/Layer.h"
-#include "Event/ApplicationEvent.h"
-#include "Event/KeyEvent.h"
-#include "Event/MouseEvent.h"
+#include "Muelsyse/Layer/Layer.h"
+#include "Muelsyse/Event/ApplicationEvent.h"
+#include "Muelsyse/Event/KeyEvent.h"
+#include "Muelsyse/Event/MouseEvent.h"
 
 namespace mul 
 {

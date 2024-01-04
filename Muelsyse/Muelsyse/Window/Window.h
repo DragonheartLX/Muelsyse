@@ -1,7 +1,7 @@
 #pragma once
 #include "mulpch.h"
-#include "Core/Core.h"
-#include "Event/Event.h"
+#include "Muelsyse/Core/Core.h"
+#include "Muelsyse/Event/Event.h"
 
 namespace mul 
 {

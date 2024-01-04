@@ -1,13 +1,15 @@
 #pragma once
 
-#include "Core/Application.h"
-#include "Core/Logger.h"
-#include "Layer/Layer.h"
+#include "Muelsyse/Core/Application.h"
+#include "Muelsyse/Core/Logger.h"
+#include "Muelsyse/Layer/Layer.h"
 
-#include "Input/Input.h"
-#include "Input/KeyCode.h"
-#include "Input/MouseButtonCode.h"
+#include "Muelsyse/Input/Input.h"
+#include "Muelsyse/Input/KeyCode.h"
+#include "Muelsyse/Input/MouseButtonCode.h"
 
-#include "ImGui/ImGuiLayer.h"
+#include "Muelsyse/ImGui/ImGuiLayer.h"
 
-#include "Core/EntryPoint.h"
+#include "Muelsyse/Core/EntryPoint.h"
+
+#include "External/imgui.h"

@@ -1,6 +1,6 @@
 #pragma once
-#include "Core/Core.h"
-#include "Layer/Layer.h"
+#include "Muelsyse/Core/Core.h"
+#include "Muelsyse/Layer/Layer.h"
 
 #include <vector>
 

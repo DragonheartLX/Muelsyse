@@ -1,6 +1,6 @@
 #pragma once
 #include "mulpch.h"
-#include "Core/Core.h"
+#include "Muelsyse/Core/Core.h"
 
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
@@ -25,23 +25,23 @@ namespace mul
 	#define MUL_CORE_INFO(...)		::mul::Logger::getCoreLogger()->info(__VA_ARGS__)
 	#define MUL_CORE_WARN(...)		::mul::Logger::getCoreLogger()->warn(__VA_ARGS__)
 	#define MUL_CORE_ERROR(...)		::mul::Logger::getCoreLogger()->error(__VA_ARGS__)
-	#define MUL_CORE_FATAL(...)		::mul::Logger::getCoreLogger()->fatal(__VA_ARGS__)
+	#define MUL_CORE_CRITICAL(...)	::mul::Logger::getCoreLogger()->critical(__VA_ARGS__)
 
-	#define MUL_TRACE(...)		::mul::Logger::getClientLogger()->trace(__VA_ARGS__)
-	#define MUL_INFO(...)		::mul::Logger::getClientLogger()->info(__VA_ARGS__)
-	#define MUL_WARN(...)		::mul::Logger::getClientLogger()->warn(__VA_ARGS__)
-	#define MUL_ERROR(...)		::mul::Logger::getClientLogger()->error(__VA_ARGS__)
-	#define MUL_FATAL(...)		::mul::Logger::getClientLogger()->fatal(__VA_ARGS__)
+	#define MUL_TRACE(...)			::mul::Logger::getClientLogger()->trace(__VA_ARGS__)
+	#define MUL_INFO(...)			::mul::Logger::getClientLogger()->info(__VA_ARGS__)
+	#define MUL_WARN(...)			::mul::Logger::getClientLogger()->warn(__VA_ARGS__)
+	#define MUL_ERROR(...)			::mul::Logger::getClientLogger()->error(__VA_ARGS__)
+	#define MUL_CRITICAL(...)		::mul::Logger::getClientLogger()->critical(__VA_ARGS__)
 #else
 	#define MUL_CORE_TRACE(...)
 	#define MUL_CORE_INFO(...)
 	#define MUL_CORE_WARN(...)
 	#define MUL_CORE_ERROR(...)
-	#define MUL_CORE_FATAL(...)
+	#define MUL_CORE_CRITICAL(...)
 
 	#define MUL_TRACE(...)	
 	#define MUL_INFO(...)	
 	#define MUL_WARN(...)	
 	#define MUL_ERROR(...)	
-	#define MUL_FATAL(...)	
+	#define MUL_CRITICAL(...)	
 #endif

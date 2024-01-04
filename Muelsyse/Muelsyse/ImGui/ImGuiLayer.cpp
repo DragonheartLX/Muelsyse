@@ -1,11 +1,11 @@
 #include "mulpch.h"
-#include "ImGui/ImGuiLayer.h"
-#include "Core/Application.h"
-#include "glad/glad.h"
+#include "Muelsyse/ImGui/ImGuiLayer.h"
+#include "Muelsyse/Core/Application.h"
+#include "External/glad/glad.h"
 
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
+#include "External/imgui.h"
+#include "External/imgui_impl_opengl3.h"
+#include "External/imgui_impl_glfw.h"
 #include <GLFW/glfw3.h>
 
 namespace mul 

@@ -14,9 +14,7 @@ void ExampleLayer::onUpdate()
 
 void ExampleLayer::onImGuiRender()
 {
-	ImGui::Begin("Test");
-	ImGui::Text("Hello World");
-	ImGui::End();
+	
 }
 
 void ExampleLayer::onEvent(mul::Event& event)

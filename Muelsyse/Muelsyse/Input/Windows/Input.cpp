@@ -1,6 +1,6 @@
 #include "mulpch.h"
-#include "Input/Windows/Input.h"
-#include "Core/Application.h"
+#include "Muelsyse/Input/Windows/Input.h"
+#include "Muelsyse/Core/Application.h"
 
 #include <GLFW/glfw3.h>
 

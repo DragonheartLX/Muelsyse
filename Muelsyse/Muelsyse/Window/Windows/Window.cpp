@@ -1,10 +1,11 @@
 #include "mulpch.h"
-#include "Window/Windows/Window.h"
-#include "glad/glad.h"
-#include "Event/ApplicationEvent.h"
-#include "Event/MouseEvent.h"
-#include "Event/KeyEvent.h"
+#include "Muelsyse/Window/Windows/Window.h"
+#include "Muelsyse/Event/ApplicationEvent.h"
+#include "Muelsyse/Event/MouseEvent.h"
+#include "Muelsyse/Event/KeyEvent.h"
+#include "Muelsyse/Renderer/OpenGL/OpenGLContext.h"
 
+#include "External/glad/glad.h"
 #include <GLFW/glfw3.h>
 
 namespace mul 
@@ -50,10 +51,9 @@ namespace mul
 		}
 
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		glfwMakeContextCurrent(m_Window);
-
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		MUL_CORE_ASSERT(status, "Failed to initialize Glad!");
+		
+		m_Context = new OpenGLContext(m_Window);
+		m_Context->init();
 		
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		setVSync(true);
@@ -157,7 +157,7 @@ namespace mul
 	void WindowsWindow::onUpdate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		m_Context->swapBuffers();
 	}
 
 	void WindowsWindow::setVSync(bool enabled)
