@@ -4,7 +4,6 @@
 #include "Muelsyse/Event/ApplicationEvent.h"
 #include "Muelsyse/Layer/LayerStack.h"
 #include "Muelsyse/Event/Event.h"
-#include "Muelsyse/Event/ApplicationEvent.h"
 #include "Muelsyse/ImGui/ImGuiLayer.h"
 
 namespace mul
@@ -32,9 +31,9 @@ namespace mul
 		bool m_Running = true;
 
 		LayerStack m_LayerStack;
-		static Application* s_Instance;
+		float m_LastFrameTime = 0.0f;
 
-		unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+		static Application* s_Instance;
 	};
 
 	Application* createApplication();

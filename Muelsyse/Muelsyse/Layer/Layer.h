@@ -1,6 +1,7 @@
 #pragma once
 #include "Muelsyse/Core/Core.h"
 #include "Muelsyse/Event/Event.h"
+#include "Muelsyse/Core/Timestep.h"
 
 namespace mul 
 {
@@ -12,7 +13,7 @@ namespace mul
 
 		virtual void onAttach() {}
 		virtual void onDetach() {}
-		virtual void onUpdate() {}
+		virtual void onUpdate(Timestep ts) {}
 		virtual void onImGuiRender() {}
 		virtual void onEvent(Event& event) {}
 

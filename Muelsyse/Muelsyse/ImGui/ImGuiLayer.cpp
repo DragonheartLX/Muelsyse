@@ -58,7 +58,7 @@ namespace mul
 		ImGui::DestroyContext();
 	}
 
-	void ImGuiLayer::Begin()
+	void ImGuiLayer::begin()
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::get();
@@ -73,7 +73,7 @@ namespace mul
 		ImGui::NewFrame();
 	}
 
-	void ImGuiLayer::End()
+	void ImGuiLayer::end()
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::get();

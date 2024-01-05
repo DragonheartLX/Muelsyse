@@ -27,3 +27,14 @@
 #define BIT(x) (1 << x)
 
 #define MUL_BIND_EVENT_FUNC(fn) std::bind(&fn, this, std::placeholders::_1)
+
+#include <memory>
+
+namespace mul
+{
+	template<typename T>
+	using Scope = std::unique_ptr<T>;
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+}

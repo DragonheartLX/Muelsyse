@@ -16,8 +16,8 @@ namespace mul
 		virtual void onDetach() override;
 		virtual void onImGuiRender() override;
 
-		void Begin();
-		void End();
+		void begin();
+		void end();
 
 	private:
 		float m_Time = 0.0f;

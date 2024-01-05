@@ -29,8 +29,8 @@ namespace mul
 
 	void LayerStack::popLayer(Layer* layer)
 	{
-		auto it = std::find(m_Layers.begin(), m_Layers.end(), layer);
-		if (it != m_Layers.end())
+		auto it = std::find(m_Layers.begin(), m_Layers.begin() + m_LayerInsertIndex, layer);
+		if (it != m_Layers.end() + m_LayerInsertIndex)
 		{
 			layer->onDetach();
 			m_Layers.erase(it);
@@ -40,7 +40,7 @@ namespace mul
 
 	void LayerStack::popOverlay(Layer* overlay)
 	{
-		auto it = std::find(m_Layers.begin(), m_Layers.end(), overlay);
+		auto it = std::find(m_Layers.begin() + m_LayerInsertIndex, m_Layers.end(), overlay);
 		if (it != m_Layers.end())
 		{
 			overlay->onDetach();

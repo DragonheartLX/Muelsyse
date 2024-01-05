@@ -52,17 +52,15 @@ namespace mul
 
 	class EventDispatcher
 	{
-		template<typename T>
-		using EventFunc = std::function<bool(T&)>;
 	public:
 		EventDispatcher(Event& event) : m_Event(event) {};
 		
-		template<typename T>
-		bool dispatcher(EventFunc<T> func)
+		template<typename T, typename F>
+		bool dispatcher(const F& func)
 		{
 			if (m_Event.getEventType() == T::getStaticType())
 			{
-				m_Event.handled = func(*(T*)&m_Event);
+				m_Event.handled = func(static_cast<T&>(m_Event));
 				return true;
 			}
 			return false;
