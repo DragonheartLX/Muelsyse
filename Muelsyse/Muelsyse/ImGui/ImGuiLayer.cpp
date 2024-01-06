@@ -23,6 +23,8 @@ namespace mul
 
 	void ImGuiLayer::onAttach()
 	{
+		MUL_PROFILE_FUNCTION();
+
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -53,6 +55,8 @@ namespace mul
 
 	void ImGuiLayer::onDetach()
 	{
+		MUL_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -60,6 +64,8 @@ namespace mul
 
 	void ImGuiLayer::begin()
 	{
+		MUL_PROFILE_FUNCTION();
+
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::get();
 		io.DisplaySize = ImVec2(app.getWindow().getWidth(), app.getWindow().getHeight());
@@ -75,6 +81,8 @@ namespace mul
 
 	void ImGuiLayer::end()
 	{
+		MUL_PROFILE_FUNCTION();
+
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::get();
 		io.DisplaySize = ImVec2(app.getWindow().getWidth(), app.getWindow().getHeight());
@@ -94,7 +102,7 @@ namespace mul
 
 	void ImGuiLayer::onImGuiRender()
 	{
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
+		// static bool show = true;
+		// ImGui::ShowDemoWindow(&show);
 	}
 }

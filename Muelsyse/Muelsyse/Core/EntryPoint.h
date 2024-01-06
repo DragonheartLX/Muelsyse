@@ -7,9 +7,17 @@ int main(int argc, char** argv)
 	mul::Logger::init();
 	MUL_CORE_INFO("Initialized Logger!");
 
+	MUL_PROFILE_BEGIN_SESSION("Startup", "MuelsyseProfile-Startup.json");
 	mul::Application* app = mul::createApplication();
-	app->run();
+	MUL_PROFILE_END_SESSION();
+
+	MUL_PROFILE_BEGIN_SESSION("Runtime", "MuelsyseProfile-Runtime.json");
+	app->m_Run();
+	MUL_PROFILE_END_SESSION();
+
+	MUL_PROFILE_BEGIN_SESSION("Startup", "MuelsyseProfile-Shutdown.json");
 	delete app;
+	MUL_PROFILE_END_SESSION();
 
 	MUL_CORE_INFO("Muelsyse exit.");
 	return 0;

@@ -5,17 +5,17 @@
 
 namespace mul
 {
-	#define BIND_EVENT_FUNC(x) std::bind(&Application::x, this, std::placeholders::_1)
-
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application()
 	{
+		MUL_PROFILE_FUNCTION();
+
 		MUL_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
-		m_Window = std::unique_ptr<Window>(Window::create());
-		m_Window->setEventCallback(BIND_EVENT_FUNC(onEvent));
+		m_Window = Window::create();
+		m_Window->setEventCallback(MUL_BIND_EVENT_FUNC(Application::onEvent));
 
 		Renderer::init();
 
@@ -25,24 +25,40 @@ namespace mul
 
 	Application::~Application()
 	{
-
+		MUL_PROFILE_FUNCTION();
+		Renderer::shutdown();
 	}
 
-	void Application::run()
+	void Application::m_Run()
 	{
+		MUL_PROFILE_FUNCTION();
+
 		while (m_Running)
 		{
+			MUL_PROFILE_SCOPE("RunLoop");
+
 			float time = (float)glfwGetTime();
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
-			for (Layer* layer : m_LayerStack)
-				layer->onUpdate(timestep);
+			if(!m_Minimized)
+			{
+				{
+					MUL_PROFILE_SCOPE("LayerStack OnUpdate");
+				
+					for (Layer* layer : m_LayerStack)
+						layer->onUpdate(timestep);
+				}
 
-			m_ImGuiLayer->begin();
-			for (Layer* layer : m_LayerStack)
-				layer->onImGuiRender();
-			m_ImGuiLayer->end();
+				m_ImGuiLayer->begin();
+				{
+					MUL_PROFILE_SCOPE("LayerStack OnImGuiRender");
+
+					for (Layer* layer : m_LayerStack)
+						layer->onImGuiRender();
+				}
+				m_ImGuiLayer->end();
+			}
 
 			m_Window->onUpdate();
 		}
@@ -50,12 +66,15 @@ namespace mul
 
 	void Application::onEvent(Event& e)
 	{
-		EventDispatcher dispatcher(e);
-		dispatcher.dispatcher<WindowCloseEvent>(BIND_EVENT_FUNC(m_OnWindowClose));
+		MUL_PROFILE_FUNCTION();
 
-		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
+		EventDispatcher dispatcher(e);
+		dispatcher.dispatcher<WindowCloseEvent>(MUL_BIND_EVENT_FUNC(Application::m_OnWindowClose));
+		dispatcher.dispatcher<WindowResizeEvent>(MUL_BIND_EVENT_FUNC(Application::m_OnWindowResize));
+
+		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
-			(*--it)->onEvent(e);
+			(*it)->onEvent(e);
 			if (e.handled)
 				break;
 		}
@@ -63,17 +82,37 @@ namespace mul
 
 	void Application::pushLayer(Layer* layer)
 	{
+		MUL_PROFILE_FUNCTION();
 		m_LayerStack.pushLayer(layer);
+		layer->onAttach();
 	}
 
 	void Application::pushOverlay(Layer* layer)
 	{
+		MUL_PROFILE_FUNCTION();
 		m_LayerStack.pushOverlay(layer);
+		layer->onAttach();
 	}
 
 	bool Application::m_OnWindowClose(WindowCloseEvent& e)
 	{
 		m_Running = false;
 		return true;
+	}
+
+	bool Application::m_OnWindowResize(WindowResizeEvent& e)
+	{
+		MUL_PROFILE_FUNCTION();
+
+		if (e.getWidth() == 0 || e.getHeight() == 0)
+		{
+			m_Minimized = true;
+			return false;
+		}
+
+		m_Minimized = false;
+		Renderer::onWindowResize(e.getWidth(), e.getHeight());
+
+		return false;
 	}
 }

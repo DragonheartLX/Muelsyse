@@ -14,6 +14,8 @@ namespace mul
 
 	void OpenGLContext::init()
 	{
+		MUL_PROFILE_FUNCTION();
+		
 		glfwMakeContextCurrent(m_WindowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		MUL_CORE_ASSERT(status, "Failed to initialize Glad!");
@@ -26,10 +28,21 @@ namespace mul
 		MUL_CORE_INFO("Renderer: {0}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
 		MUL_CORE_INFO("Version: {0}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 		MUL_CORE_INFO("=====================");
+
+		// #ifdef MUL_ENABLE_ASSERTS
+		// int versionMajor;
+		// int versionMinor;
+		// glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
+		// glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
+// 
+		// MUL_CORE_ASSERT(versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5), "Muelsyse requires at least OpenGL version 4.5!");
+		// #endif
 	}
 
 	void OpenGLContext::swapBuffers()
 	{
+		MUL_PROFILE_FUNCTION();
+
 		glfwSwapBuffers(m_WindowHandle);
 	}
 

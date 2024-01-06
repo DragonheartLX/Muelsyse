@@ -12,4 +12,5 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Muelsyse/Debug/Instrumentor.h"
 #include "Muelsyse/Core/Logger.h"

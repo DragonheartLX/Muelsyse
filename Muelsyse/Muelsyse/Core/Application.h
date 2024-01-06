@@ -6,6 +6,8 @@
 #include "Muelsyse/Event/Event.h"
 #include "Muelsyse/ImGui/ImGuiLayer.h"
 
+int main(int argc, char** argv);
+
 namespace mul
 {
 	class MUL_API Application
@@ -14,7 +16,6 @@ namespace mul
 		Application();
 		virtual ~Application();
 
-		void run();
 		void onEvent(Event& e);
 
 		void pushLayer(Layer* layer);
@@ -24,16 +25,22 @@ namespace mul
 
 		inline static Application& get() { return *s_Instance; }
 	private:
-		bool m_OnWindowClose(WindowCloseEvent& e);
+		void m_Run();
 
+		bool m_OnWindowClose(WindowCloseEvent& e);
+		bool m_OnWindowResize(WindowResizeEvent& e);
+		
 		ImGuiLayer* m_ImGuiLayer;
 		std::unique_ptr<Window> m_Window;
 		bool m_Running = true;
-
+		bool m_Minimized = false;
+		
 		LayerStack m_LayerStack;
 		float m_LastFrameTime = 0.0f;
 
 		static Application* s_Instance;
+
+		friend int ::main(int argc, char** argv);
 	};
 
 	Application* createApplication();

@@ -11,20 +11,21 @@ namespace mul
 	LayerStack::~LayerStack()
 	{
 		for (Layer* layer : m_Layers)
+		{
+			layer->onDetach();
 			delete layer;
+		}
 	}
 
 	void LayerStack::pushLayer(Layer* layer)
 	{
 		m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, layer);
 		m_LayerInsertIndex++;
-		layer->onAttach();
 	}
 
 	void LayerStack::pushOverlay(Layer* overlay)
 	{
 		m_Layers.emplace_back(overlay);
-		overlay->onAttach();
 	}
 
 	void LayerStack::popLayer(Layer* layer)

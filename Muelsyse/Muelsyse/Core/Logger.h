@@ -12,11 +12,11 @@ namespace mul
 	public:
 		static void init();
 
-		inline static std::shared_ptr<spdlog::logger>& getCoreLogger() { return m_CoreLogger; };
-		inline static std::shared_ptr<spdlog::logger>& getClientLogger() { return m_ClientLogger; };
+		inline static Ref<spdlog::logger>& getCoreLogger() { return m_CoreLogger; };
+		inline static Ref<spdlog::logger>& getClientLogger() { return m_ClientLogger; };
 	private:
-		static std::shared_ptr<spdlog::logger> m_CoreLogger;
-		static std::shared_ptr<spdlog::logger> m_ClientLogger;
+		static Ref<spdlog::logger> m_CoreLogger;
+		static Ref<spdlog::logger> m_ClientLogger;
 	};
 }
 

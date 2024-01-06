@@ -32,7 +32,6 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     add_compile_definitions(MUL_MSVC)
-    add_compile_definitions(MUL_PLATFORM_WINDOWS)
 endif()
 
 add_subdirectory(Muelsyse)

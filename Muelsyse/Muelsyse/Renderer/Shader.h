@@ -15,7 +15,12 @@ namespace mul
 		virtual void bind() const = 0;
 		virtual void unBind() const = 0;
 
-		static Shader* create(const std::string& vertexSrc, const std::string& fragmentSrc, bool isFromFile = true);
+		virtual void setInt(const std::string& name, int value) = 0;
+		virtual void setFloat3(const std::string& name, const glm::vec3& value) = 0;
+		virtual void setFloat4(const std::string& name, const glm::vec4& value) = 0;
+		virtual void setMat4(const std::string& name, const glm::mat4& value) = 0;
+
+		static Ref<Shader> create(const std::string& vertexSrc, const std::string& fragmentSrc, bool isFromFile = true);
 	private:
 		uint32_t m_RendererID;
 	};

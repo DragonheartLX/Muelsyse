@@ -1,4 +1,5 @@
 #pragma once
+#include "Muelsyse/Core/Core.h"
 
 namespace mul 
 {
@@ -7,6 +8,8 @@ namespace mul
 	public:
 		virtual void init() = 0;
 		virtual void swapBuffers() = 0;
+
+		static Scope<GraphicsContext> create(void* window);
 	};
 
 }

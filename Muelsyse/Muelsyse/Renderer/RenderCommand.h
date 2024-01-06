@@ -12,6 +12,11 @@ namespace mul
 			s_RendererAPI->init();
 		}
 
+		inline static void setViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+		{
+			s_RendererAPI->setViewport(x, y, width, height);
+		}
+
 		inline static void setClearColor(const glm::vec4& color)
 		{
 			s_RendererAPI->setClearColor(color);
@@ -22,11 +27,11 @@ namespace mul
 			s_RendererAPI->clear();
 		}
 
-		inline static void drawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
+		inline static void drawIndexed(const Ref<VertexArray>& vertexArray)
 		{
 			s_RendererAPI->drawIndexed(vertexArray);
 		}
 	private:
-		static RendererAPI* s_RendererAPI;
+		static Scope<RendererAPI> s_RendererAPI;
 	};
 }

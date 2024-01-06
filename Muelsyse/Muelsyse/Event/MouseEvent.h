@@ -1,6 +1,7 @@
 #pragma once
 #include "mulpch.h"
 #include "Muelsyse/Event/Event.h"
+#include "Muelsyse/Input/Input.h"
 
 namespace mul 
 {
@@ -49,19 +50,19 @@ namespace mul
 	class MUL_API MouseButtonEvent: public Event
 	{
 	public:
-		inline int getMouseButton() const { return m_Button; }
+		inline MouseCode getMouseButton() const { return m_Button; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	protected:
-		MouseButtonEvent(int button): m_Button(button) {}
+		MouseButtonEvent(MouseCode button): m_Button(button) {}
 
-		int m_Button;
+		MouseCode m_Button;
 	};
 
 	class MUL_API MouseButtonPressedEvent: public MouseButtonEvent
 	{
 	public:
-		MouseButtonPressedEvent(int button): MouseButtonEvent(button) {}
+		MouseButtonPressedEvent(MouseCode button): MouseButtonEvent(button) {}
 
 		std::string toString() const override
 		{
@@ -76,7 +77,7 @@ namespace mul
 	class MUL_API MouseButtonReleasedEvent: public MouseButtonEvent
 	{
 	public:
-		MouseButtonReleasedEvent(int button): MouseButtonEvent(button) {}
+		MouseButtonReleasedEvent(MouseCode button): MouseButtonEvent(button) {}
 
 		std::string toString() const override
 		{

@@ -5,12 +5,12 @@
 
 namespace mul 
 {
-	Shader* Shader::create(const std::string& vertex, const std::string& fragment, bool isFromFile)
+	Ref<Shader> Shader::create(const std::string& vertex, const std::string& fragment, bool isFromFile)
 	{
 		switch (Renderer::getAPI())
 		{
 			case RendererAPI::API::None:    MUL_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-			case RendererAPI::API::OpenGL:  return new OpenGLShader(vertex, fragment, isFromFile);
+			case RendererAPI::API::OpenGL:  return createRef<OpenGLShader>(vertex, fragment, isFromFile);
 		}
 
 		MUL_CORE_ASSERT(false, "Unknown RendererAPI!");

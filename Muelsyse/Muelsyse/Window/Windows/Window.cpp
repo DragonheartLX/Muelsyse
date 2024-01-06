@@ -4,55 +4,68 @@
 #include "Muelsyse/Event/MouseEvent.h"
 #include "Muelsyse/Event/KeyEvent.h"
 #include "Muelsyse/Renderer/OpenGL/OpenGLContext.h"
+#include "Muelsyse/Renderer/Renderer.h"
 
 #include "External/glad/glad.h"
 #include <GLFW/glfw3.h>
 
 namespace mul 
 {
-	static bool s_GLFWInitialized = false;
+	static uint8_t s_GLFWWindowCount = 0;
 
 	static void GLFWErrorCallback(int error, const char* description)
 	{
 		MUL_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
-	Window* Window::create(const WindowProps& props)
-	{
-		return new WindowsWindow(props);
-	}
-
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
+		MUL_PROFILE_FUNCTION();
+
 		init(props);
 	}
 
 	WindowsWindow::~WindowsWindow()
 	{
+		MUL_PROFILE_FUNCTION();
+
 		shutdown();
 	}
 
 	void WindowsWindow::init(const WindowProps& props)
 	{
+		MUL_PROFILE_FUNCTION();
+
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
 
 		MUL_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 
-		if (!s_GLFWInitialized)
+		if (s_GLFWWindowCount == 0)
 		{
-			// TODO: glfwTerminate on system shutdown
+			MUL_PROFILE_SCOPE("glfwInit");
+
+			MUL_CORE_INFO("Initializing GLFW");
 			int success = glfwInit();
 			MUL_CORE_ASSERT(success, "Could not intialize GLFW!");
 
 			glfwSetErrorCallback(GLFWErrorCallback);
-			s_GLFWInitialized = true;
 		}
 
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+		{
+			MUL_PROFILE_SCOPE("glfwCreateWindow");
+
+		#if defined(MUL_DEBUG)
+			if (Renderer::getAPI() == RendererAPI::API::OpenGL)
+				glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+		#endif
+
+			m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+			++s_GLFWWindowCount;
+		}
 		
-		m_Context = new OpenGLContext(m_Window);
+		m_Context = GraphicsContext::create(m_Window);
 		m_Context->init();
 		
 		glfwSetWindowUserPointer(m_Window, &m_Data);
@@ -84,19 +97,19 @@ namespace mul
 				{
 				case GLFW_PRESS:
 					{
-						KeyPressedEvent event(key, 0);
+						KeyPressedEvent event(static_cast<KeyCode>(key), 0);
 						data.EventCallback(event);
 						break;
 					}
 				case GLFW_RELEASE:
 					{
-						KeyReleasedEvent event(key);
+						KeyReleasedEvent event(static_cast<KeyCode>(key));
 						data.EventCallback(event);
 						break;
 					}
 				case GLFW_REPEAT:
 					{
-						KeyPressedEvent event(key, 1);
+						KeyPressedEvent event(static_cast<KeyCode>(key), 1);
 						data.EventCallback(event);
 						break;
 					}
@@ -107,7 +120,7 @@ namespace mul
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-				KeyTypedEvent event(keycode);
+				KeyTypedEvent event(static_cast<KeyCode>(keycode));
 				data.EventCallback(event);
 			});
 
@@ -119,13 +132,13 @@ namespace mul
 				{
 				case GLFW_PRESS:
 					{
-						MouseButtonPressedEvent event(button);
+						MouseButtonPressedEvent event(static_cast<MouseCode>(button));
 						data.EventCallback(event);
 						break;
 					}
 				case GLFW_RELEASE:
 					{
-						MouseButtonReleasedEvent event(button);
+						MouseButtonReleasedEvent event(static_cast<MouseCode>(button));
 						data.EventCallback(event);
 						break;
 					}
@@ -151,17 +164,29 @@ namespace mul
 
 	void WindowsWindow::shutdown()
 	{
+		MUL_PROFILE_FUNCTION();
+
 		glfwDestroyWindow(m_Window);
+		
+		if (--s_GLFWWindowCount == 0)
+		{
+			MUL_CORE_INFO("Terminating GLFW");
+			glfwTerminate();
+		}
 	}
 
 	void WindowsWindow::onUpdate()
 	{
+		MUL_PROFILE_FUNCTION();
+
 		glfwPollEvents();
 		m_Context->swapBuffers();
 	}
 
 	void WindowsWindow::setVSync(bool enabled)
 	{
+		MUL_PROFILE_FUNCTION();
+
 		if (enabled)
 			glfwSwapInterval(1);
 		else

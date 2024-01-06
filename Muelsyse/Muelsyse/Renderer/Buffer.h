@@ -34,10 +34,10 @@ namespace mul
 		std::string name;
 		ShaderDataType type;
 		uint32_t size;
-		uint32_t offset;
+		size_t offset;
 		bool normalized;
 
-		BufferElement() {}
+		BufferElement() = default;
 
 		BufferElement(ShaderDataType Type, const std::string& Name, bool Normalized = false)
 			: name(Name), type(Type), size(ShaderDataTypeSize(Type)), offset(0), normalized(Normalized)
@@ -87,7 +87,7 @@ namespace mul
 	private:
 		void calculateOffsetsAndStride()
 		{
-			uint32_t offset = 0;
+			size_t offset = 0;
 			m_Stride = 0;
 			for (auto& element : m_Elements)
 			{
@@ -112,7 +112,7 @@ namespace mul
 		virtual const BufferLayout& getLayout() const = 0;
 		virtual void setLayout(const BufferLayout& layout) = 0;
 
-		static VertexBuffer* create(float* vertices, uint32_t size);
+		static Ref<VertexBuffer> create(float* vertices, uint32_t size);
 	};
 
 	class MUL_API IndexBuffer
@@ -125,6 +125,6 @@ namespace mul
 
 		virtual uint32_t getCount() const = 0;
 
-		static IndexBuffer* create(uint32_t* indices, uint32_t size);
+		static Ref<IndexBuffer> create(uint32_t* indices, uint32_t size);
 	};
 }
