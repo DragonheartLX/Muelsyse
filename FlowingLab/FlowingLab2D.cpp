@@ -4,8 +4,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Sandbox2D::Sandbox2D()
-	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f)
+Sandbox2D::Sandbox2D(): 
+	Layer("Sandbox2D"), 
+	m_CameraController(1920.0f / 1080.0f, true)
 {
 }
 

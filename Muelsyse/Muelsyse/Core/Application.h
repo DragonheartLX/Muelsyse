@@ -6,7 +6,11 @@
 #include "Muelsyse/Event/Event.h"
 #include "Muelsyse/ImGui/ImGuiLayer.h"
 
-int main(int argc, char** argv);
+#ifdef MUL_NO_CONSOLE
+	int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow);
+#else
+	int main(int argc, char** argv);
+#endif
 
 namespace mul
 {
@@ -40,7 +44,11 @@ namespace mul
 
 		static Application* s_Instance;
 
-		friend int ::main(int argc, char** argv);
+		#ifdef MUL_NO_CONSOLE
+			friend int APIENTRY ::WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow);
+		#else
+			friend int ::main(int argc, char** argv);
+		#endif
 	};
 
 	Application* createApplication();

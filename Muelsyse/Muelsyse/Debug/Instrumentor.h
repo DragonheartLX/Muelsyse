@@ -155,8 +155,6 @@ namespace mul
 	};
 }
 
-#define MUL_PROFILE 1
-
 #if MUL_PROFILE
 	// Resolve which function signature macro will be used. Note that this only
 	// is resolved when the (pre)compiler starts, so the syntax highlighting

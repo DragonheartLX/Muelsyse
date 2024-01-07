@@ -5,31 +5,19 @@ file(GLOB_RECURSE FLOWING_LAB_SRC LIST_DIRECTORIES false
 
 project(FlowingLab)
 
-add_executable(FlowingLab ${FLOWING_LAB_SRC})
+if(MUL_NO_CONSOLE)
+    if(MSVC)
+        add_executable(${PROJECT_NAME} ${FLOWING_LAB_SRC})
+        target_link_options(${PROJECT_NAME} PRIVATE "/SUBSYSTEM:WINDOWS")
+    else()
+        add_executable(${PROJECT_NAME} WIN32 ${FLOWING_LAB_SRC})
+    endif()
+else()
+    add_executable(${PROJECT_NAME} ${FLOWING_LAB_SRC})
+endif()
 
-# No console in Release
-# if(MSVC)
-#     add_executable(FlowingLab ${FLOWING_LAB_SRC})
-# 
-#     if(CMAKE_BUILD_TYPE MATCHES "Debug")
-#         target_link_options(FlowingLab PRIVATE "/entry:WinMainCRTStartup")
-#     endif()
-# 
-#     if(CMAKE_BUILD_TYPE MATCHES "Release")
-#         target_link_options(FlowingLab PRIVATE "/SUBSYSTEM:WINDOWS")
-#     endif()
-# else()
-#     if(CMAKE_BUILD_TYPE MATCHES "Debug")
-#         add_executable(FlowingLab ${FLOWING_LAB_SRC})
-#     endif()
-#     
-#     if(CMAKE_BUILD_TYPE MATCHES "Release")
-#         add_executable(FlowingLab WIN32 ${FLOWING_LAB_SRC})
-#     endif()
-# endif()
+target_include_directories(${PROJECT_NAME} PRIVATE .)
 
-target_include_directories(FlowingLab PRIVATE .)
+target_link_libraries(${PROJECT_NAME} PRIVATE MuelsyseLib)
 
-target_link_libraries(FlowingLab PRIVATE MuelsyseLib)
-
-install(TARGETS FlowingLab DESTINATION bin)
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)

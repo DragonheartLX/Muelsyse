@@ -42,7 +42,10 @@
 #endif // End of platform detection
 
 #ifdef MUL_PLATFORM_WINDOWS
-	#if defined(_MSC_VER) && defined(MUL_BUILD_SHARED)
+	// #if defined(_MSC_VER) && defined(MUL_BUILD_SHARED)
+	#ifdef MUL_BUILD_SHARED
+		#define GLAD_GLAPI_EXPORT
+
 		#ifdef MUL_BUILD_DLL
 			#define MUL_API __declspec(dllexport)
 		#else
@@ -57,7 +60,7 @@
 
 #define IMGUI_API MUL_API
 
-#ifdef MUL_DEBUG
+#ifdef MUL_DEBUG_ASSERT
 	#define MUL_ASSERT(x, ...) { if(!(x)) { MUL_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
 	#define MUL_CORE_ASSERT(x, ...) { if(!(x)) { MUL_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
 #else

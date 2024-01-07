@@ -2,202 +2,326 @@
     "version": 3,
     "configurePresets": [
         {
-            "name": "msvc-x64-static-debug",
-            "displayName": "MSVC x64 Static Debug",
-            "description": "MSVC x64 Static Debug",
+            "name": "msvc-x64-static",
+            "displayName": "MSVC x64 Static",
+            "hidden": true,
             "generator": "Visual Studio 17 2022",
             "toolset": "host=x64",
             "architecture": "x64",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": {
-                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
-                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
+            "cacheVariables": 
+            {
                 "CMAKE_C_COMPILER": "cl",
                 "CMAKE_CXX_COMPILER": "cl",
-                "CMAKE_BUILD_TYPE": "Debug",
                 "VCPKG_TARGET_TRIPLET": "x64-windows-static",
-                "MUL_BUILD_TYPE": "Static"
+                "MUL_BUILD_SHARED": "OFF"
+            }
+        },
+        {
+            "name": "msvc-x64-static-debug",
+            "displayName": "MSVC x64 Static Debug",
+            "description": "MSVC x64 Static Debug",
+            "inherits": "msvc-x64-static",
+            "binaryDir": "${sourceDir}/build/msvc-x64-static/Debug",
+            "cacheVariables": {
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-static",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-static",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/msvc-x64-static",
+                "MUL_NO_CONSOLE": "OFF",
+                "MUL_DEBUG_ASSERT": "ON",
+                "MUL_LOGGER": "ON"
             }
         },
         {
             "name": "msvc-x64-static-release",
             "displayName": "MSVC x64 Static Release",
             "description": "MSVC x64 Static Release",
+            "inherits": "msvc-x64-static",
+            "binaryDir": "${sourceDir}/build/msvc-x64-static/Release",
+            "cacheVariables": {
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-static",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-static",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/msvc-x64-static",
+                "MUL_NO_CONSOLE": "ON",
+                "MUL_DEBUG_ASSERT": "OFF",
+                "MUL_LOGGER": "OFF"
+            }
+        },
+        {
+            "name": "msvc-x64-static-RelWithDebInfo",
+            "displayName": "MSVC x64 Static RelWithDebInfo",
+            "description": "MSVC x64 Static RelWithDebInfo",
+            "inherits": "msvc-x64-static",
+            "binaryDir": "${sourceDir}/build/msvc-x64-static/RelWithDebInfo",
+            "cacheVariables": {
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-static",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-static",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/msvc-x64-static",
+                "MUL_NO_CONSOLE": "OFF",
+                "MUL_DEBUG_ASSERT": "ON",
+                "MUL_LOGGER": "ON"
+            }
+        },
+        {
+            "name": "msvc-x64-dynamic",
+            "displayName": "MSVC x64 Dynamic",
+            "hidden": true,
             "generator": "Visual Studio 17 2022",
             "toolset": "host=x64",
             "architecture": "x64",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": {
-                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
-                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
+            "cacheVariables": 
+            {
                 "CMAKE_C_COMPILER": "cl",
                 "CMAKE_CXX_COMPILER": "cl",
-                "CMAKE_BUILD_TYPE": "Release",
-                "VCPKG_TARGET_TRIPLET": "x64-windows-static",
-                "MUL_BUILD_TYPE": "Static"
+                "VCPKG_TARGET_TRIPLET": "x64-windows",
+                "MUL_BUILD_SHARED": "ON"
             }
         },
         {
             "name": "msvc-x64-dynamic-debug",
             "displayName": "MSVC x64 Dynamic Debug",
             "description": "MSVC x64 Dynamic Debug",
-            "generator": "Visual Studio 17 2022",
-            "toolset": "host=x64",
-            "architecture": "x64",
-            "binaryDir": "${sourceDir}/build/${presetName}",
+            "inherits": "msvc-x64-dynamic",
+            "binaryDir": "${sourceDir}/build/msvc-x64-dynamic/Debug",
             "cacheVariables": {
-                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
-                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
-                "CMAKE_C_COMPILER": "cl",
-                "CMAKE_CXX_COMPILER": "cl",
-                "CMAKE_BUILD_TYPE": "Debug",
-                "VCPKG_TARGET_TRIPLET": "x64-windows",
-                "MUL_BUILD_TYPE": "Shared"
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-dynamic",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-dynamic",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/msvc-x64-dynamic",
+                "MUL_NO_CONSOLE": "OFF",
+                "MUL_DEBUG_ASSERT": "ON",
+                "MUL_LOGGER": "ON"
             }
         },
         {
             "name": "msvc-x64-dynamic-release",
             "displayName": "MSVC x64 Dynamic Release",
             "description": "MSVC x64 Dynamic Release",
-            "generator": "Visual Studio 17 2022",
-            "toolset": "host=x64",
-            "architecture": "x64",
-            "binaryDir": "${sourceDir}/build/${presetName}",
+            "inherits": "msvc-x64-dynamic",
+            "binaryDir": "${sourceDir}/build/msvc-x64-dynamic/Release",
             "cacheVariables": {
-                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
-                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/${presetName}",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
-                "CMAKE_C_COMPILER": "cl",
-                "CMAKE_CXX_COMPILER": "cl",
-                "CMAKE_BUILD_TYPE": "Release",
-                "VCPKG_TARGET_TRIPLET": "x64-windows",
-                "MUL_BUILD_TYPE": "Shared"
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-dynamic",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-dynamic",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/msvc-x64-dynamic",
+                "MUL_NO_CONSOLE": "ON",
+                "MUL_DEBUG_ASSERT": "OFF",
+                "MUL_LOGGER": "OFF"
+            }
+        },
+        {
+            "name": "msvc-x64-dynamic-RelWithDebInfo",
+            "displayName": "MSVC x64 Dynamic RelWithDebInfo",
+            "description": "MSVC x64 Dynamic RelWithDebInfo",
+            "inherits": "msvc-x64-dynamic",
+            "binaryDir": "${sourceDir}/build/msvc-x64-dynamic/RelWithDebInfo",
+            "cacheVariables": {
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-dynamic",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-dynamic",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/msvc-x64-dynamic",
+                "MUL_NO_CONSOLE": "OFF",
+                "MUL_DEBUG_ASSERT": "ON",
+                "MUL_LOGGER": "ON"
+            }
+        },
+        {
+            "name": "mingw-x64-static",
+            "displayName": "MinGW x64 Static",
+            "hidden": true,
+            "generator": "MinGW Makefiles",
+            "cacheVariables": 
+            {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "VCPKG_TARGET_TRIPLET": "x64-mingw-static",
+                "MUL_BUILD_SHARED": "OFF"
             }
         },
         {
             "name": "mingw-x64-static-debug",
-            "hidden": true,
             "displayName": "MinGW x64 Static Debug",
             "description": "MinGW x64 Static Debug",
-            "generator": "MinGW Makefiles",
-            "binaryDir": "${sourceDir}/build/${presetName}",
+            "inherits": "mingw-x64-static",
+            "binaryDir": "${sourceDir}/build/mingw-x64-static/Debug",
             "cacheVariables": {
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
-                "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_CXX_COMPILER": "g++",
-                "CMAKE_BUILD_TYPE": "Debug",
-                "VCPKG_TARGET_TRIPLET": "x64-mingw-static",
-                "MUL_BUILD_TYPE": "Static"
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/Debug",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/Debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-static",
+                "CMAKE_BUILD_TYPE":"Debug",
+                "MUL_NO_CONSOLE": "OFF",
+                "MUL_DEBUG_ASSERT": "ON",
+                "MUL_LOGGER": "ON"
             }
         },
         {
             "name": "mingw-x64-static-release",
-            "hidden": true,
             "displayName": "MinGW x64 Static Release",
             "description": "MinGW x64 Static Release",
-            "generator": "MinGW Makefiles",
-            "binaryDir": "${sourceDir}/build/${presetName}",
+            "inherits": "mingw-x64-static",
+            "binaryDir": "${sourceDir}/build/mingw-x64-static/Release",
             "cacheVariables": {
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/Release",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/Release",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-static",
+                "CMAKE_BUILD_TYPE":"Release",
+                "MUL_NO_CONSOLE": "ON",
+                "MUL_DEBUG_ASSERT": "OFF",
+                "MUL_LOGGER": "OFF"
+            }
+        },
+        {
+            "name": "mingw-x64-static-RelWithDebInfo",
+            "displayName": "MinGW x64 Static RelWithDebInfo",
+            "description": "MinGW x64 Static RelWithDebInfo",
+            "inherits": "mingw-x64-static",
+            "binaryDir": "${sourceDir}/build/mingw-x64-static/RelWithDebInfo",
+            "cacheVariables": {
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/RelWithDebInfo",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/RelWithDebInfo",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-static",
+                "CMAKE_BUILD_TYPE":"RelWithDebInfo",
+                "MUL_NO_CONSOLE": "OFF",
+                "MUL_DEBUG_ASSERT": "ON",
+                "MUL_LOGGER": "ON"
+            }
+        },
+        {
+            "name": "mingw-x64-dynamic",
+            "displayName": "MinGW x64 Dynamic",
+            "hidden": true,
+            "generator": "MinGW Makefiles",
+            "cacheVariables": 
+            {
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++",
-                "CMAKE_BUILD_TYPE": "Release",
-                "VCPKG_TARGET_TRIPLET": "x64-mingw-static",
-                "MUL_BUILD_TYPE": "Static"
+                "VCPKG_TARGET_TRIPLET": "x64-mingw-dynamic",
+                "MUL_BUILD_SHARED": "OFF"
             }
         },
         {
             "name": "mingw-x64-dynamic-debug",
-            "hidden": true,
             "displayName": "MinGW x64 Dynamic Debug",
             "description": "MinGW x64 Dynamic Debug",
-            "generator": "MinGW Makefiles",
-            "binaryDir": "${sourceDir}/build/${presetName}",
+            "inherits": "mingw-x64-dynamic",
+            "binaryDir": "${sourceDir}/build/mingw-x64-dynamic/Debug",
             "cacheVariables": {
-                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/${presetName}/bin",
-                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/${presetName}/bin",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
-                "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_CXX_COMPILER": "g++",
-                "CMAKE_BUILD_TYPE": "Debug",
-                "VCPKG_TARGET_TRIPLET": "x64-mingw-dynamic",
-                "MUL_BUILD_TYPE": "Shared"
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/Debug",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/Debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-dynamic",
+                "CMAKE_BUILD_TYPE":"Debug",
+                "MUL_NO_CONSOLE": "OFF",
+                "MUL_DEBUG_ASSERT": "ON",
+                "MUL_LOGGER": "ON"
             }
         },
         {
             "name": "mingw-x64-dynamic-release",
-            "hidden": true,
             "displayName": "MinGW x64 Dynamic Release",
             "description": "MinGW x64 Dynamic Release",
-            "generator": "MinGW Makefiles",
-            "binaryDir": "${sourceDir}/build/${presetName}",
+            "inherits": "mingw-x64-dynamic",
+            "binaryDir": "${sourceDir}/build/mingw-x64-dynamic/Release",
             "cacheVariables": {
-                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/${presetName}/bin",
-                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/${presetName}/bin",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/${presetName}",
-                "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_CXX_COMPILER": "g++",
-                "CMAKE_BUILD_TYPE": "Release",
-                "VCPKG_TARGET_TRIPLET": "x64-mingw-dynamic",
-                "MUL_BUILD_TYPE": "Shared"
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/Release",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/Release",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-dynamic",
+                "CMAKE_BUILD_TYPE":"Release",
+                "MUL_NO_CONSOLE": "ON",
+                "MUL_DEBUG_ASSERT": "OFF",
+                "MUL_LOGGER": "OFF"
             }
-        }
+        },
+        {
+            "name": "mingw-x64-dynamic-RelWithDebInfo",
+            "displayName": "MinGW x64 Dynamic RelWithDebInfo",
+            "description": "MinGW x64 Dynamic RelWithDebInfo",
+            "inherits": "mingw-x64-dynamic",
+            "binaryDir": "${sourceDir}/build/mingw-x64-dynamic/RelWithDebInfo",
+            "cacheVariables": {
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/RelWithDebInfo",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/RelWithDebInfo",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-dynamic",
+                "CMAKE_BUILD_TYPE":"RelWithDebInfo",
+                "MUL_NO_CONSOLE": "OFF",
+                "MUL_DEBUG_ASSERT": "ON",
+                "MUL_LOGGER": "ON"
+            }
+        }        
     ],
     "buildPresets": [
         {
-            "name": "msvc-x64-static-release",
+            "name": "MSVC-x64-static-RelWithDebInfo",
+            "displayName": "MSVC x64 Static RelWithDebInfo",
+            "configurePreset": "msvc-x64-static-RelWithDebInfo",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "MSVC-x64-static-release",
             "displayName": "MSVC x64 Static Release",
             "configurePreset": "msvc-x64-static-release",
             "configuration": "Release"
         },
         {
-            "name": "msvc-x64-static-debug",
+            "name": "MSVC-x64-static-debug",
             "displayName": "MSVC x64 Static Debug",
             "configurePreset": "msvc-x64-static-debug",
             "configuration": "Debug"
         },
         {
-            "name": "msvc-x64-dynamic-release",
+            "name": "MSVC-x64-dynamic-RelWithDebInfo",
+            "displayName": "MSVC x64 Dynamic RelWithDebInfo",
+            "configurePreset": "msvc-x64-dynamic-RelWithDebInfo",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "MSVC-x64-dynamic-release",
             "displayName": "MSVC x64 Dynamic Release",
             "configurePreset": "msvc-x64-dynamic-release",
             "configuration": "Release"
         },
         {
-            "name": "msvc-x64-dynamic-debug",
+            "name": "MSVC-x64-dynamic-debug",
             "displayName": "MSVC x64 Dynamic Debug",
             "configurePreset": "msvc-x64-dynamic-debug",
             "configuration": "Debug"
         },
         {
+            "name": "MinGW-x64-static-RelWithDebInfo",
+            "displayName": "MinGW x64 Static RelWithDebInfo",
+            "configurePreset": "mingw-x64-static-RelWithDebInfo",
+            "configuration": "RelWithDebInfo",
+            "jobs": 8
+        },
+        {
             "name": "MinGW-x64-static-release",
-            "hidden": true,
             "displayName": "MinGW x64 Static Release",
             "configurePreset": "mingw-x64-static-release",
-            "configuration": "Release"
+            "configuration": "Release",
+            "jobs": 8
         },
         {
             "name": "MinGW-x64-static-debug",
-            "hidden": true,
             "displayName": "MinGW x64 Static Debug",
             "configurePreset": "mingw-x64-static-debug",
-            "configuration": "Debug"
+            "configuration": "Debug",
+            "jobs": 8
+        },
+        {
+            "name": "MinGW-x64-dynamic-RelWithDebInfo",
+            "displayName": "MinGW x64 Dynamic RelWithDebInfo",
+            "configurePreset": "mingw-x64-dynamic-RelWithDebInfo",
+            "configuration": "RelWithDebInfo",
+            "jobs": 8
         },
         {
             "name": "MinGW-x64-dynamic-release",
-            "hidden": true,
             "displayName": "MinGW x64 Dynamic Release",
             "configurePreset": "mingw-x64-dynamic-release",
-            "configuration": "Release"
+            "configuration": "Release",
+            "jobs": 8
         },
         {
             "name": "MinGW-x64-dynamic-debug",
-            "hidden": true,
             "displayName": "MinGW x64 Dynamic Debug",
             "configurePreset": "mingw-x64-dynamic-debug",
-            "configuration": "Debug"
+            "configuration": "Debug",
+            "jobs": 8
         }
     ]
 }

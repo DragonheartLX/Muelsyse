@@ -17,12 +17,12 @@ namespace mul
 		logSinks[0]->set_pattern("%^[%T] %n: %v%$");
 		logSinks[1]->set_pattern("[%T] [%l] %n: %v");
 
-		m_CoreLogger = std::make_shared<spdlog::logger>("HAZEL", begin(logSinks), end(logSinks));
+		m_CoreLogger = std::make_shared<spdlog::logger>("Muelsyse", begin(logSinks), end(logSinks));
 		spdlog::register_logger(m_CoreLogger);
 		m_CoreLogger->set_level(spdlog::level::trace);
 		m_CoreLogger->flush_on(spdlog::level::trace);
 
-		m_ClientLogger = std::make_shared<spdlog::logger>("APP", begin(logSinks), end(logSinks));
+		m_ClientLogger = std::make_shared<spdlog::logger>("Flowing", begin(logSinks), end(logSinks));
 		spdlog::register_logger(m_ClientLogger);
 		m_ClientLogger->set_level(spdlog::level::trace);
 		m_ClientLogger->flush_on(spdlog::level::trace);

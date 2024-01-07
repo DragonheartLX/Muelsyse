@@ -20,7 +20,7 @@ namespace mul
 	};
 }
 
-#ifdef MUL_DEBUG
+#ifdef MUL_LOGGER
 	#define MUL_CORE_TRACE(...)		::mul::Logger::getCoreLogger()->trace(__VA_ARGS__)
 	#define MUL_CORE_INFO(...)		::mul::Logger::getCoreLogger()->info(__VA_ARGS__)
 	#define MUL_CORE_WARN(...)		::mul::Logger::getCoreLogger()->warn(__VA_ARGS__)

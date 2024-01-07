@@ -4,12 +4,12 @@ file(GLOB_RECURSE MLS_SRC LIST_DIRECTORIES false
 
 project(MuelsyseLib)
 
-if(MUL_BUILD_TYPE STREQUAL "Static")
-    add_library(MuelsyseLib STATIC ${MLS_SRC})
-elseif(MUL_BUILD_TYPE STREQUAL "Shared")
+if(MUL_BUILD_SHARED)
     add_compile_definitions(GLAD_GLAPI_EXPORT_BUILD)
     add_compile_definitions(MUL_BUILD_DLL)
     add_library(MuelsyseLib SHARED ${MLS_SRC})
+else()
+    add_library(MuelsyseLib STATIC ${MLS_SRC})
 endif()
 
 target_include_directories(MuelsyseLib PUBLIC .)
@@ -32,8 +32,8 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(Stb REQUIRED)
     target_include_directories(MuelsyseLib PRIVATE ${Stb_INCLUDE_DIR})
 
-if(MUL_BUILD_TYPE STREQUAL "Static")
-    install(TARGETS MuelsyseLib DESTINATION lib)
-elseif(MUL_BUILD_TYPE STREQUAL "Shared")
+if(MUL_BUILD_SHARED)
     install(TARGETS MuelsyseLib DESTINATION bin)
+else()
+    install(TARGETS MuelsyseLib DESTINATION lib)
 endif()
