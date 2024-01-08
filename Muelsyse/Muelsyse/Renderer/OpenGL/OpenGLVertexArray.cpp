@@ -20,6 +20,7 @@ namespace mul
 			case ShaderDataType::Int3:     return GL_INT;
 			case ShaderDataType::Int4:     return GL_INT;
 			case ShaderDataType::Bool:     return GL_BOOL;
+			default:					   break;
 		}
 
 		MUL_CORE_ASSERT(false, "Unknown ShaderDataType!");
@@ -63,7 +64,7 @@ namespace mul
 		glBindVertexArray(m_RendererID);
 		vertexBuffer->bind();
 
-		uint32_t index = 0;
+		// uint32_t index = 0;
 		const auto& layout = vertexBuffer->getLayout();
 		for (const auto& element : layout)
 		{

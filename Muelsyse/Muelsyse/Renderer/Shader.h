@@ -21,7 +21,9 @@ namespace mul
 		virtual void setMat4(const std::string& name, const glm::mat4& value) = 0;
 
 		static Ref<Shader> create(const std::string& vertexSrc, const std::string& fragmentSrc, bool isFromFile = true);
-	private:
-		uint32_t m_RendererID;
+	// private:
+		// no use in basic shader class
+		// remove ?
+		// uint32_t m_RendererID;
 	};
 }

@@ -12,7 +12,8 @@ namespace mul
 	public:
 		Input(const Input&) = delete;
 		Input& operator=(const Input&) = delete;
-
+		virtual ~Input() = default;
+		
 		inline static bool isKeyPressed(KeyCode key) { return s_Instance->isKeyPressedImpl(key); }
 
 		inline static bool isMouseButtonPressed(MouseCode button) { return s_Instance->isMouseButtonPressedImpl(button); }

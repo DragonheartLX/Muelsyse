@@ -4,7 +4,7 @@ file(GLOB_RECURSE MLS_SRC LIST_DIRECTORIES false
 
 project(MuelsyseLib)
 
-if(MUL_BUILD_SHARED)
+if(MUL_OPT_BUILD_SHARED)
     add_compile_definitions(GLAD_GLAPI_EXPORT_BUILD)
     add_compile_definitions(MUL_BUILD_DLL)
     add_library(MuelsyseLib SHARED ${MLS_SRC})
@@ -32,7 +32,7 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(Stb REQUIRED)
     target_include_directories(MuelsyseLib PRIVATE ${Stb_INCLUDE_DIR})
 
-if(MUL_BUILD_SHARED)
+if(MUL_OPT_BUILD_SHARED)
     install(TARGETS MuelsyseLib DESTINATION bin)
 else()
     install(TARGETS MuelsyseLib DESTINATION lib)

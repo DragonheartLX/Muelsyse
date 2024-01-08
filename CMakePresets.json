@@ -6,14 +6,14 @@
             "displayName": "MSVC x64 Static",
             "hidden": true,
             "generator": "Visual Studio 17 2022",
-            "toolset": "host=x64",
+            "toolset": "ClangCL",
             "architecture": "x64",
             "cacheVariables": 
             {
-                "CMAKE_C_COMPILER": "cl",
-                "CMAKE_CXX_COMPILER": "cl",
+                "CMAKE_C_COMPILER": "clang-cl",
+                "CMAKE_CXX_COMPILER": "clang-cl",
                 "VCPKG_TARGET_TRIPLET": "x64-windows-static",
-                "MUL_BUILD_SHARED": "OFF"
+                "MUL_OPT_BUILD_SHARED": "OFF"
             }
         },
         {
@@ -26,9 +26,10 @@
                 "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-static",
                 "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-static",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/msvc-x64-static",
-                "MUL_NO_CONSOLE": "OFF",
-                "MUL_DEBUG_ASSERT": "ON",
-                "MUL_LOGGER": "ON"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "MUL_OPT_NO_CONSOLE": "OFF",
+                "MUL_OPT_DEBUG_ASSERT": "ON",
+                "MUL_OPT_LOGGER": "ON"
             }
         },
         {
@@ -41,9 +42,10 @@
                 "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-static",
                 "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-static",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/msvc-x64-static",
-                "MUL_NO_CONSOLE": "ON",
-                "MUL_DEBUG_ASSERT": "OFF",
-                "MUL_LOGGER": "OFF"
+                "CMAKE_BUILD_TYPE": "Release",
+                "MUL_OPT_NO_CONSOLE": "ON",
+                "MUL_OPT_DEBUG_ASSERT": "OFF",
+                "MUL_OPT_LOGGER": "OFF"
             }
         },
         {
@@ -56,9 +58,10 @@
                 "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-static",
                 "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-static",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/msvc-x64-static",
-                "MUL_NO_CONSOLE": "OFF",
-                "MUL_DEBUG_ASSERT": "ON",
-                "MUL_LOGGER": "ON"
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+                "MUL_OPT_NO_CONSOLE": "OFF",
+                "MUL_OPT_DEBUG_ASSERT": "ON",
+                "MUL_OPT_LOGGER": "ON"
             }
         },
         {
@@ -66,14 +69,14 @@
             "displayName": "MSVC x64 Dynamic",
             "hidden": true,
             "generator": "Visual Studio 17 2022",
-            "toolset": "host=x64",
+            "toolset": "ClangCL",
             "architecture": "x64",
             "cacheVariables": 
             {
-                "CMAKE_C_COMPILER": "cl",
-                "CMAKE_CXX_COMPILER": "cl",
+                "CMAKE_C_COMPILER": "clang-cl",
+                "CMAKE_CXX_COMPILER": "clang-cl",
                 "VCPKG_TARGET_TRIPLET": "x64-windows",
-                "MUL_BUILD_SHARED": "ON"
+                "MUL_OPT_BUILD_SHARED": "ON"
             }
         },
         {
@@ -86,9 +89,10 @@
                 "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-dynamic",
                 "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-dynamic",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/msvc-x64-dynamic",
-                "MUL_NO_CONSOLE": "OFF",
-                "MUL_DEBUG_ASSERT": "ON",
-                "MUL_LOGGER": "ON"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "MUL_OPT_NO_CONSOLE": "OFF",
+                "MUL_OPT_DEBUG_ASSERT": "ON",
+                "MUL_OPT_LOGGER": "ON"
             }
         },
         {
@@ -101,9 +105,10 @@
                 "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-dynamic",
                 "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-dynamic",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/msvc-x64-dynamic",
-                "MUL_NO_CONSOLE": "ON",
-                "MUL_DEBUG_ASSERT": "OFF",
-                "MUL_LOGGER": "OFF"
+                "CMAKE_BUILD_TYPE": "Release",
+                "MUL_OPT_NO_CONSOLE": "ON",
+                "MUL_OPT_DEBUG_ASSERT": "OFF",
+                "MUL_OPT_LOGGER": "OFF"
             }
         },
         {
@@ -116,9 +121,10 @@
                 "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-dynamic",
                 "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/msvc-x64-dynamic",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/msvc-x64-dynamic",
-                "MUL_NO_CONSOLE": "OFF",
-                "MUL_DEBUG_ASSERT": "ON",
-                "MUL_LOGGER": "ON"
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+                "MUL_OPT_NO_CONSOLE": "OFF",
+                "MUL_OPT_DEBUG_ASSERT": "ON",
+                "MUL_OPT_LOGGER": "ON"
             }
         },
         {
@@ -131,7 +137,7 @@
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++",
                 "VCPKG_TARGET_TRIPLET": "x64-mingw-static",
-                "MUL_BUILD_SHARED": "OFF"
+                "MUL_OPT_BUILD_SHARED": "OFF"
             }
         },
         {
@@ -144,10 +150,10 @@
                 "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/Debug",
                 "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/Debug",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-static",
-                "CMAKE_BUILD_TYPE":"Debug",
-                "MUL_NO_CONSOLE": "OFF",
-                "MUL_DEBUG_ASSERT": "ON",
-                "MUL_LOGGER": "ON"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "MUL_OPT_NO_CONSOLE": "OFF",
+                "MUL_OPT_DEBUG_ASSERT": "ON",
+                "MUL_OPT_LOGGER": "ON"
             }
         },
         {
@@ -160,10 +166,10 @@
                 "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/Release",
                 "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/Release",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-static",
-                "CMAKE_BUILD_TYPE":"Release",
-                "MUL_NO_CONSOLE": "ON",
-                "MUL_DEBUG_ASSERT": "OFF",
-                "MUL_LOGGER": "OFF"
+                "CMAKE_BUILD_TYPE": "Release",
+                "MUL_OPT_NO_CONSOLE": "ON",
+                "MUL_OPT_DEBUG_ASSERT": "OFF",
+                "MUL_OPT_LOGGER": "OFF"
             }
         },
         {
@@ -176,10 +182,10 @@
                 "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/RelWithDebInfo",
                 "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/RelWithDebInfo",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-static",
-                "CMAKE_BUILD_TYPE":"RelWithDebInfo",
-                "MUL_NO_CONSOLE": "OFF",
-                "MUL_DEBUG_ASSERT": "ON",
-                "MUL_LOGGER": "ON"
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+                "MUL_OPT_NO_CONSOLE": "OFF",
+                "MUL_OPT_DEBUG_ASSERT": "ON",
+                "MUL_OPT_LOGGER": "ON"
             }
         },
         {
@@ -192,7 +198,7 @@
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++",
                 "VCPKG_TARGET_TRIPLET": "x64-mingw-dynamic",
-                "MUL_BUILD_SHARED": "OFF"
+                "MUL_OPT_BUILD_SHARED": "ON"
             }
         },
         {
@@ -205,10 +211,10 @@
                 "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/Debug",
                 "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/Debug",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-dynamic",
-                "CMAKE_BUILD_TYPE":"Debug",
-                "MUL_NO_CONSOLE": "OFF",
-                "MUL_DEBUG_ASSERT": "ON",
-                "MUL_LOGGER": "ON"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "MUL_OPT_NO_CONSOLE": "OFF",
+                "MUL_OPT_DEBUG_ASSERT": "ON",
+                "MUL_OPT_LOGGER": "ON"
             }
         },
         {
@@ -221,10 +227,10 @@
                 "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/Release",
                 "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/Release",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-dynamic",
-                "CMAKE_BUILD_TYPE":"Release",
-                "MUL_NO_CONSOLE": "ON",
-                "MUL_DEBUG_ASSERT": "OFF",
-                "MUL_LOGGER": "OFF"
+                "CMAKE_BUILD_TYPE": "Release",
+                "MUL_OPT_NO_CONSOLE": "ON",
+                "MUL_OPT_DEBUG_ASSERT": "OFF",
+                "MUL_OPT_LOGGER": "OFF"
             }
         },
         {
@@ -237,10 +243,10 @@
                 "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/RelWithDebInfo",
                 "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/RelWithDebInfo",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-dynamic",
-                "CMAKE_BUILD_TYPE":"RelWithDebInfo",
-                "MUL_NO_CONSOLE": "OFF",
-                "MUL_DEBUG_ASSERT": "ON",
-                "MUL_LOGGER": "ON"
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+                "MUL_OPT_NO_CONSOLE": "OFF",
+                "MUL_OPT_DEBUG_ASSERT": "ON",
+                "MUL_OPT_LOGGER": "ON"
             }
         }        
     ],

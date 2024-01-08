@@ -12,7 +12,8 @@ namespace mul
 		{
 			None = 0, OpenGL = 1
 		};
-
+		virtual ~RendererAPI() = default;
+		
 		virtual void init() = 0;
 		
 		virtual void setClearColor(const glm::vec4& color) = 0;

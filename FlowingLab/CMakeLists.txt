@@ -5,7 +5,7 @@ file(GLOB_RECURSE FLOWING_LAB_SRC LIST_DIRECTORIES false
 
 project(FlowingLab)
 
-if(MUL_NO_CONSOLE)
+if(MUL_OPT_NO_CONSOLE)
     if(MSVC)
         add_executable(${PROJECT_NAME} ${FLOWING_LAB_SRC})
         target_link_options(${PROJECT_NAME} PRIVATE "/SUBSYSTEM:WINDOWS")

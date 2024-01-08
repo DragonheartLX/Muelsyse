@@ -23,6 +23,7 @@ namespace mul
 			case ShaderDataType::Int3:     return 4 * 3;
 			case ShaderDataType::Int4:     return 4 * 4;
 			case ShaderDataType::Bool:     return 1;
+			default: 					   break;
 		}
 
 		MUL_CORE_ASSERT(false, "Unknown ShaderDataType!");
@@ -59,6 +60,7 @@ namespace mul
 				case ShaderDataType::Int3:    return 3;
 				case ShaderDataType::Int4:    return 4;
 				case ShaderDataType::Bool:    return 1;
+				default:					  break;
 			}
 
 			MUL_CORE_ASSERT(false, "Unknown ShaderDataType!");
