@@ -22,4 +22,9 @@ namespace mul
 	private:
 		float m_Time = 0.0f;
 	};
+
+	void MUL_API ImGuiText(const char* fmt, ...);
+	void MUL_API ImGuiBegin(const char* name, bool* p_open = NULL, int flags = 0);
+	void MUL_API ImGuiColorEdit3(const char* label, float col[3], int flags = 0);
+	void MUL_API ImGuiEnd();
 }

@@ -42,10 +42,7 @@
 #endif // End of platform detection
 
 #ifdef MUL_PLATFORM_WINDOWS
-	// #if defined(_MSC_VER) && defined(MUL_BUILD_SHARED)
 	#ifdef MUL_BUILD_SHARED
-		#define GLAD_GLAPI_EXPORT
-
 		#ifdef MUL_BUILD_DLL
 			#define MUL_API __declspec(dllexport)
 		#else
@@ -57,8 +54,6 @@
 #else
 	#error Muelsyse currently only support windows with MSVC
 #endif
-
-#define IMGUI_API MUL_API
 
 #ifdef MUL_DEBUG_ASSERT
 	#define MUL_ASSERT(x, ...) { if(!(x)) { MUL_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }

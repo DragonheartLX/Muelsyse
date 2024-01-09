@@ -5,7 +5,6 @@ file(GLOB_RECURSE MLS_SRC LIST_DIRECTORIES false
 project(MuelsyseLib)
 
 if(MUL_OPT_BUILD_SHARED)
-    add_compile_definitions(GLAD_GLAPI_EXPORT_BUILD)
     add_compile_definitions(MUL_BUILD_DLL)
     add_library(MuelsyseLib SHARED ${MLS_SRC})
 else()
@@ -21,7 +20,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 find_package(glfw3 CONFIG REQUIRED)
-    target_link_libraries(MuelsyseLib PUBLIC glfw)
+    target_link_libraries(MuelsyseLib PRIVATE glfw)
 
 find_package(glm CONFIG REQUIRED)
     target_link_libraries(MuelsyseLib PRIVATE glm::glm)
@@ -31,6 +30,12 @@ find_package(spdlog CONFIG REQUIRED)
 
 find_package(Stb REQUIRED)
     target_include_directories(MuelsyseLib PRIVATE ${Stb_INCLUDE_DIR})
+
+find_package(glad CONFIG REQUIRED)
+    target_link_libraries(MuelsyseLib PRIVATE glad::glad)
+
+find_package(imgui CONFIG REQUIRED)
+    target_link_libraries(MuelsyseLib PUBLIC imgui::imgui)
 
 if(MUL_OPT_BUILD_SHARED)
     install(TARGETS MuelsyseLib DESTINATION bin)

@@ -2,8 +2,9 @@
 #include "Muelsyse/Renderer/OpenGL/OpenGLShader.h"
 
 #include <fstream>
-#include "External/glad/glad.h"
+#include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <filesystem>
 
 namespace mul
 {
@@ -79,6 +80,13 @@ namespace mul
 		setUniformInt(name, value);
 	}
 
+	void OpenGLShader::setFloat(const std::string& name, const float value)
+	{
+		MUL_PROFILE_FUNCTION();
+
+		setUniformFloat(name, value);
+	}
+
 	void OpenGLShader::setFloat3(const std::string& name, const glm::vec3& value)
 	{
 		MUL_PROFILE_FUNCTION();
@@ -140,7 +148,7 @@ namespace mul
 		MUL_PROFILE_FUNCTION();
 
 		// Read source
-		std::ifstream file(filepath, std::ios_base::in);
+		std::ifstream file(std::filesystem::absolute(filepath).generic_string(), std::ios_base::in);
 		if (!file.is_open())
 		{
 			MUL_CORE_ERROR("Error: Shader file open error.");

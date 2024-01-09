@@ -3,7 +3,8 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-#include "External/glad/glad.h"
+#include <glad/glad.h>
+#include <filesystem>
 
 namespace mul 
 {
@@ -36,7 +37,7 @@ namespace mul
 		stbi_uc* data = nullptr;
 		{
 			MUL_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std:string&)");
-			data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+			data = stbi_load(std::filesystem::absolute(path).generic_string().c_str(), &width, &height, &channels, 0);
 		}
 		MUL_CORE_ASSERT(data, "Failed to load image!");
 		m_Width = width;

@@ -1,6 +1,5 @@
 #include "FlowingLab2D.h"
 
-#include <External/imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -50,9 +49,9 @@ void Sandbox2D::onImGuiRender()
 {
 	MUL_PROFILE_FUNCTION();
 
-	ImGui::Begin("Settings");
-	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
-	ImGui::End();
+	mul::ImGuiBegin("FlowingLab");
+
+	mul::ImGuiEnd();
 }
 
 void Sandbox2D::onEvent(mul::Event& e)

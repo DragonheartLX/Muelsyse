@@ -22,5 +22,3 @@
 #include "Muelsyse/Renderer/Shader.h"
 #include "Muelsyse/Renderer/VertexArray.h"
 #include "Muelsyse/Renderer/Texture.h"
-
-#include "External/imgui.h"

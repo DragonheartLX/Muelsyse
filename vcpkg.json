@@ -17,7 +17,34 @@
 		{
 			"name": "stb",
 			"version>=": "2023-04-11#1"
+		},
+		{
+			"name": "glad",
+			"version>=": "0.1.36",
+			"default-features": false,
+			"features": [
+				"loader",
+				"gl-api-46"
+			]
+		},
+		{
+		  "name": "imgui",
+		  "version>=": "1.89.9",
+		  "default-features": false,
+		  "features": [
+			"docking-experimental",
+			"glfw-binding",
+			"opengl3-binding"
+		  ]
 		}
 	],
+	"vcpkg-configuration": {
+		"overlay-ports": [
+			"./scripts/custom-ports"
+		],
+		"overlay-triplets": [
+			"./scripts/custom-triplets"
+		]
+	},
 	"builtin-baseline": "b40de44891dc1cab11d4722094ae44807a837b98"
 }

@@ -1,7 +1,7 @@
 #include "mulpch.h"
 #include "Muelsyse/Renderer/OpenGL/OpenGLContext.h"
 
-#include "External/glad/glad.h"
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace mul
@@ -29,14 +29,14 @@ namespace mul
 		MUL_CORE_INFO("Version: {0}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 		MUL_CORE_INFO("=====================");
 
-		// #ifdef MUL_ENABLE_ASSERTS
-		// int versionMajor;
-		// int versionMinor;
-		// glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
-		// glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
+		#ifdef MUL_DEBUG_ASSERT
+		int versionMajor;
+		int versionMinor;
+		glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
+		glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
 // 
-		// MUL_CORE_ASSERT(versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5), "Muelsyse requires at least OpenGL version 4.5!");
-		// #endif
+		MUL_CORE_ASSERT(versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5), "Muelsyse requires at least OpenGL version 4.5!");
+		#endif
 	}
 
 	void OpenGLContext::swapBuffers()

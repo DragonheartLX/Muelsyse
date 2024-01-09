@@ -12,7 +12,7 @@
             {
                 "CMAKE_C_COMPILER": "clang-cl",
                 "CMAKE_CXX_COMPILER": "clang-cl",
-                "VCPKG_TARGET_TRIPLET": "x64-windows-static",
+                "VCPKG_TARGET_TRIPLET": "x64-win-llvm-static",
                 "MUL_OPT_BUILD_SHARED": "OFF"
             }
         },
@@ -75,7 +75,7 @@
             {
                 "CMAKE_C_COMPILER": "clang-cl",
                 "CMAKE_CXX_COMPILER": "clang-cl",
-                "VCPKG_TARGET_TRIPLET": "x64-windows",
+                "VCPKG_TARGET_TRIPLET": "x64-win-llvm",
                 "MUL_OPT_BUILD_SHARED": "ON"
             }
         },
@@ -142,6 +142,7 @@
         },
         {
             "name": "mingw-x64-static-debug",
+            "hidden": true,
             "displayName": "MinGW x64 Static Debug",
             "description": "MinGW x64 Static Debug",
             "inherits": "mingw-x64-static",
@@ -158,6 +159,7 @@
         },
         {
             "name": "mingw-x64-static-release",
+            "hidden": true,
             "displayName": "MinGW x64 Static Release",
             "description": "MinGW x64 Static Release",
             "inherits": "mingw-x64-static",
@@ -174,6 +176,7 @@
         },
         {
             "name": "mingw-x64-static-RelWithDebInfo",
+            "hidden": true,
             "displayName": "MinGW x64 Static RelWithDebInfo",
             "description": "MinGW x64 Static RelWithDebInfo",
             "inherits": "mingw-x64-static",
@@ -203,6 +206,7 @@
         },
         {
             "name": "mingw-x64-dynamic-debug",
+            "hidden": true,
             "displayName": "MinGW x64 Dynamic Debug",
             "description": "MinGW x64 Dynamic Debug",
             "inherits": "mingw-x64-dynamic",
@@ -219,6 +223,7 @@
         },
         {
             "name": "mingw-x64-dynamic-release",
+            "hidden": true,
             "displayName": "MinGW x64 Dynamic Release",
             "description": "MinGW x64 Dynamic Release",
             "inherits": "mingw-x64-dynamic",
@@ -235,6 +240,7 @@
         },
         {
             "name": "mingw-x64-dynamic-RelWithDebInfo",
+            "hidden": true,
             "displayName": "MinGW x64 Dynamic RelWithDebInfo",
             "description": "MinGW x64 Dynamic RelWithDebInfo",
             "inherits": "mingw-x64-dynamic",
@@ -289,6 +295,7 @@
         },
         {
             "name": "MinGW-x64-static-RelWithDebInfo",
+            "hidden": true,
             "displayName": "MinGW x64 Static RelWithDebInfo",
             "configurePreset": "mingw-x64-static-RelWithDebInfo",
             "configuration": "RelWithDebInfo",
@@ -296,6 +303,7 @@
         },
         {
             "name": "MinGW-x64-static-release",
+            "hidden": true,
             "displayName": "MinGW x64 Static Release",
             "configurePreset": "mingw-x64-static-release",
             "configuration": "Release",
@@ -303,6 +311,7 @@
         },
         {
             "name": "MinGW-x64-static-debug",
+            "hidden": true,
             "displayName": "MinGW x64 Static Debug",
             "configurePreset": "mingw-x64-static-debug",
             "configuration": "Debug",
@@ -310,6 +319,7 @@
         },
         {
             "name": "MinGW-x64-dynamic-RelWithDebInfo",
+            "hidden": true,
             "displayName": "MinGW x64 Dynamic RelWithDebInfo",
             "configurePreset": "mingw-x64-dynamic-RelWithDebInfo",
             "configuration": "RelWithDebInfo",
@@ -317,6 +327,7 @@
         },
         {
             "name": "MinGW-x64-dynamic-release",
+            "hidden": true,
             "displayName": "MinGW x64 Dynamic Release",
             "configurePreset": "mingw-x64-dynamic-release",
             "configuration": "Release",
@@ -324,6 +335,7 @@
         },
         {
             "name": "MinGW-x64-dynamic-debug",
+            "hidden": true,
             "displayName": "MinGW x64 Dynamic Debug",
             "configurePreset": "mingw-x64-dynamic-debug",
             "configuration": "Debug",
