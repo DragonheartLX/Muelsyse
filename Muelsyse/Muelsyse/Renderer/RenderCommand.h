@@ -27,9 +27,9 @@ namespace mul
 			s_RendererAPI->clear();
 		}
 
-		inline static void drawIndexed(const Ref<VertexArray>& vertexArray)
+		inline static void drawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count = 0)
 		{
-			s_RendererAPI->drawIndexed(vertexArray);
+			s_RendererAPI->drawIndexed(vertexArray, count);
 		}
 	private:
 		static Scope<RendererAPI> s_RendererAPI;
