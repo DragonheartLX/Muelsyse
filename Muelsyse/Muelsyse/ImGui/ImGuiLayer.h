@@ -15,16 +15,14 @@ namespace mul
 		virtual void onAttach() override;
 		virtual void onDetach() override;
 		virtual void onImGuiRender() override;
+		virtual void onEvent(Event& e) override;
 
 		void begin();
 		void end();
 
+		void blockEvents(bool block) { m_BlockEvents = block; }
 	private:
+		bool m_BlockEvents = true;
 		float m_Time = 0.0f;
 	};
-
-	void MUL_API ImGuiText(const char* fmt, ...);
-	void MUL_API ImGuiBegin(const char* name, bool* p_open = NULL, int flags = 0);
-	void MUL_API ImGuiColorEdit3(const char* label, float col[3], int flags = 0);
-	void MUL_API ImGuiEnd();
 }

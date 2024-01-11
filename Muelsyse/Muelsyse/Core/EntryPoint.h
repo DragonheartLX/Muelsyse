@@ -39,7 +39,7 @@ extern mul::Application* mul::createApplication();
 		app->m_Run();
 		MUL_PROFILE_END_SESSION();
 
-		MUL_PROFILE_BEGIN_SESSION("Startup", "MuelsyseProfile-Shutdown.json");
+		MUL_PROFILE_BEGIN_SESSION("Shutdown", "MuelsyseProfile-Shutdown.json");
 		delete app;
 		MUL_PROFILE_END_SESSION();
 

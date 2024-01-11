@@ -1,9 +1,11 @@
 #include "FlowingLab.h"
-#include "ExampleLayer.h"
-#include "FlowingLab2D.h"
+// #include "ExampleLayer.h"
+// #include "FlowingLab2D.h"
 
-FlowingLab::FlowingLab()
+FlowingLab::FlowingLab():
+	Application("FlowingLab Editor")
 {
 	// pushLayer(new ExampleLayer());
-	pushLayer(new Sandbox2D());
+	// pushLayer(new Sandbox2D());
+	pushLayer(new mul::EditorLayer());
 };

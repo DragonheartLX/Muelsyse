@@ -32,6 +32,8 @@ namespace mul
 	class MUL_API Event
 	{
 	public:
+		virtual ~Event() = default;
+
 		bool handled = false;
 
 		virtual EventType getEventType() const = 0;
@@ -45,7 +47,7 @@ namespace mul
 		// https://blog.csdn.net/caolinqing1/article/details/103366406
 		virtual std::string toString() const { return getName(); };
 
-		inline bool isInCategory(EventCategory categroy) { return getCategoryFlags() & categroy; }
+		bool isInCategory(EventCategory categroy) { return getCategoryFlags() & categroy; }
 	private:
 
 	};

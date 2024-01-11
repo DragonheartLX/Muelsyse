@@ -26,16 +26,6 @@
 				"loader",
 				"gl-api-46"
 			]
-		},
-		{
-		  "name": "imgui",
-		  "version>=": "1.89.9",
-		  "default-features": false,
-		  "features": [
-			"docking-experimental",
-			"glfw-binding",
-			"opengl3-binding"
-		  ]
 		}
 	],
 	"vcpkg-configuration": {

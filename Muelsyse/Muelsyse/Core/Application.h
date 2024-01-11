@@ -17,7 +17,7 @@ namespace mul
 	class MUL_API Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Flowing Application");
 		virtual ~Application();
 
 		void onEvent(Event& e);
@@ -25,9 +25,13 @@ namespace mul
 		void pushLayer(Layer* layer);
 		void pushOverlay(Layer* layer);
 
-		inline Window& getWindow() { return *m_Window; }
+		Window& getWindow() { return *m_Window; }
 
-		inline static Application& get() { return *s_Instance; }
+		void close();
+
+		ImGuiLayer* getImGuiLayer() { return m_ImGuiLayer; }
+
+		static Application& get() { return *s_Instance; }
 	private:
 		void m_Run();
 

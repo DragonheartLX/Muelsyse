@@ -7,14 +7,14 @@ namespace mul
 {
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application()
+	Application::Application(const std::string& name)
 	{
 		MUL_PROFILE_FUNCTION();
 
 		MUL_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
-		m_Window = Window::create();
+		m_Window = Window::create(WindowProps(name));
 		m_Window->setEventCallback(MUL_BIND_EVENT_FUNC(Application::onEvent));
 
 		Renderer::init();
@@ -74,9 +74,9 @@ namespace mul
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
 		{
-			(*it)->onEvent(e);
 			if (e.handled)
 				break;
+			(*it)->onEvent(e);
 		}
 	}
 
@@ -92,6 +92,11 @@ namespace mul
 		MUL_PROFILE_FUNCTION();
 		m_LayerStack.pushOverlay(layer);
 		layer->onAttach();
+	}
+
+	void Application::close()
+	{
+		m_Running = false;
 	}
 
 	bool Application::m_OnWindowClose(WindowCloseEvent& e)

@@ -1,26 +1,26 @@
 #include "mulpch.h"
-#include "Muelsyse/Input/Windows/Input.h"
+#include "Muelsyse/Input/Input.h"
 #include "Muelsyse/Core/Application.h"
 
 #include <GLFW/glfw3.h>
 
 namespace mul 
 {
-	bool WindowsInput::isKeyPressedImpl(KeyCode key)
+	bool Input::isKeyPressed(KeyCode key)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
 		auto state = glfwGetKey(window, static_cast<int32_t>(key));
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool WindowsInput::isMouseButtonPressedImpl(MouseCode button)
+	bool Input::isMouseButtonPressed(MouseCode button)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
 		auto state = glfwGetMouseButton(window, static_cast<int32_t>(button));
 		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float> WindowsInput::getMousePositionImpl()
+	std::pair<float, float> Input::getMousePosition()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
 		double xpos, ypos;
@@ -29,15 +29,15 @@ namespace mul
 		return { (float)xpos, (float)ypos };
 	}
 
-	float WindowsInput::getMouseXImpl()
+	float Input::getMouseX()
 	{
-		auto [x, y] = getMousePositionImpl();
+		auto [x, y] = getMousePosition();
 		return x;
 	}
 
-	float WindowsInput::getMouseYImpl()
+	float Input::getMouseY()
 	{
-		auto [x, y] = getMousePositionImpl();
+		auto [x, y] = getMousePosition();
 		return y;
 	}
 

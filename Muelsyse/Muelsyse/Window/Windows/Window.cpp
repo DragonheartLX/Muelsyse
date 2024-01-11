@@ -48,7 +48,7 @@ namespace mul
 
 			MUL_CORE_INFO("Initializing GLFW");
 			int success = glfwInit();
-			MUL_CORE_ASSERT(success, "Could not intialize GLFW!");
+			MUL_CORE_ASSERT(success, "Could not initialize GLFW!");
 
 			glfwSetErrorCallback(GLFWErrorCallback);
 		}

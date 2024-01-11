@@ -8,14 +8,14 @@ namespace mul
 	struct WindowProps
 	{
 		std::string Title;
-		unsigned int Width;
-		unsigned int Height;
+		uint32_t Width;
+		uint32_t Height;
 
 		WindowProps
 		(
 			const std::string& title = "Muelsyse",
-			unsigned int width = 1920,
-			unsigned int height = 1080
+			uint32_t width = 1920,
+			uint32_t height = 1080
 		):
 			Title(title), Width(width), Height(height)
 		{
@@ -32,8 +32,8 @@ namespace mul
 
 		virtual void onUpdate() = 0;
 
-		virtual unsigned int getWidth() const = 0;
-		virtual unsigned int getHeight() const = 0;
+		virtual uint32_t getWidth() const = 0;
+		virtual uint32_t getHeight() const = 0;
 
 		virtual void setEventCallback(const EventCallbackFunc& callback) = 0;
 		virtual void setVSync(bool enabled) = 0;

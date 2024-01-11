@@ -12,8 +12,8 @@ namespace mul
 	public:
 		static void init();
 
-		inline static Ref<spdlog::logger>& getCoreLogger() { return m_CoreLogger; };
-		inline static Ref<spdlog::logger>& getClientLogger() { return m_ClientLogger; };
+		static Ref<spdlog::logger>& getCoreLogger() { return m_CoreLogger; };
+		static Ref<spdlog::logger>& getClientLogger() { return m_ClientLogger; };
 	private:
 		static Ref<spdlog::logger> m_CoreLogger;
 		static Ref<spdlog::logger> m_ClientLogger;

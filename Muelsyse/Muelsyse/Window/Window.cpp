@@ -7,7 +7,6 @@
 
 namespace mul
 {
-
 	Scope<Window> Window::create(const WindowProps& props)
 	{
 	#ifdef MUL_PLATFORM_WINDOWS

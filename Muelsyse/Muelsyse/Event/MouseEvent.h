@@ -10,8 +10,8 @@ namespace mul
 	public:
 		MouseMovedEvent(float x, float y): m_MouseX(x), m_MouseY(y) {}
 
-		inline float getX() const { return m_MouseX; }
-		inline float getY() const { return m_MouseY; }
+		float getX() const { return m_MouseX; }
+		float getY() const { return m_MouseY; }
 
 		std::string toString() const override
 		{
@@ -31,8 +31,8 @@ namespace mul
 	public:
 		MouseScrolledEvent(float xOffset, float yOffset): m_XOffset(xOffset), m_YOffset(yOffset) {}
 
-		inline float getXOffset() const { return m_XOffset; }
-		inline float getYOffset() const { return m_YOffset; }
+		float getXOffset() const { return m_XOffset; }
+		float getYOffset() const { return m_YOffset; }
 
 		std::string toString() const override
 		{

@@ -41,6 +41,19 @@
 	#error "Unknown platform!"
 #endif // End of platform detection
 
+#ifdef MUL_DEBUG
+	#if defined(MUL_PLATFORM_WINDOWS)
+		#define MUL_DEBUGBREAK() __debugbreak()
+	#elif defined(HZ_PLATFORM_LINUX)
+		#include <signal.h>
+		#define MUL_DEBUGBREAK() raise(SIGTRAP)
+	#else
+		#error "Platform doesn't support debugbreak yet!"
+	#endif
+#else
+	#define MUL_DEBUGBREAK()
+#endif
+
 #ifdef MUL_PLATFORM_WINDOWS
 	#ifdef MUL_BUILD_SHARED
 		#ifdef MUL_BUILD_DLL
@@ -55,9 +68,11 @@
 	#error Muelsyse currently only support windows with MSVC
 #endif
 
+#define IMGUI_API MUL_API
+
 #ifdef MUL_DEBUG_ASSERT
-	#define MUL_ASSERT(x, ...) { if(!(x)) { MUL_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-	#define MUL_CORE_ASSERT(x, ...) { if(!(x)) { MUL_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+	#define MUL_ASSERT(x, ...) { if(!(x)) { MUL_ERROR("Assertion Failed: {0}", __VA_ARGS__); MUL_DEBUGBREAK(); } }
+	#define MUL_CORE_ASSERT(x, ...) { if(!(x)) { MUL_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); MUL_DEBUGBREAK(); } }
 #else
 	#define MUL_ASSERT(x, ...)
 	#define MUL_CORE_ASSERT(x, ...)

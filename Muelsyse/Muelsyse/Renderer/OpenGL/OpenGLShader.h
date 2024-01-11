@@ -22,12 +22,14 @@ namespace mul
 		virtual void unBind() const override;
 
 		virtual void setInt(const std::string& name, int value) override;
+		virtual void setIntArray(const std::string& name, int* values, uint32_t count) override;
 		virtual void setFloat(const std::string& name, const float value) override;
 		virtual void setFloat3(const std::string& name, const glm::vec3& value) override;
 		virtual void setFloat4(const std::string& name, const glm::vec4& value) override;
 		virtual void setMat4(const std::string& name, const glm::mat4& value) override;
 
 		void setUniformInt(const std::string& name, int value);
+		void setUniformIntArray(const std::string& name, int* values, uint32_t count);
 
 		void setUniformFloat(const std::string& name, float value);
 		void setUniformFloat2(const std::string& name, const glm::vec2& value);

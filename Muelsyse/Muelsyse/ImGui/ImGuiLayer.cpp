@@ -3,9 +3,9 @@
 #include "Muelsyse/Core/Application.h"
 
 #include <glad/glad.h>
-#include <imgui.h>
-#include <imgui_impl_opengl3.h>
-#include <imgui_impl_glfw.h>
+#include "External/imgui.h"
+#include "External/imgui_impl_opengl3.h"
+#include "External/imgui_impl_glfw.h"
 #include <GLFW/glfw3.h>
 
 namespace mul 
@@ -106,26 +106,13 @@ namespace mul
 		// ImGui::ShowDemoWindow(&show);
 	}
 
-	void ImGuiText(const char* fmt, ...)
+	void ImGuiLayer::onEvent(Event& e)
 	{
-		va_list args;
-    	va_start(args, fmt);
-    	ImGui::Text(fmt, args);
-    	va_end(args);
-	}
-
-	void ImGuiBegin(const char* name, bool* p_open, int flags)
-	{
-		ImGui::Begin(name, p_open, flags);
-	}
-
-	void ImGuiColorEdit3(const char* label, float col[3], int flags)
-	{
-		ImGui::ColorEdit3(label, col, flags);
-	}
-
-	void ImGuiEnd()
-	{
-		ImGui::End();
+		if (m_BlockEvents)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			e.handled |= e.isInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+			e.handled |= e.isInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		}
 	}
 }

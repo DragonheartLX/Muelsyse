@@ -19,5 +19,8 @@ private:
 	// Temp
 	mul::Ref<mul::VertexArray> m_SquareVA;
 	mul::Ref<mul::Shader> m_FlatColorShader;
+	mul::Ref<mul::Framebuffer> m_Framebuffer;
 	mul::Ref<mul::Texture2D> m_BgTexture;
+
+	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 };

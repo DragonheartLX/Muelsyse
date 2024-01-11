@@ -80,6 +80,11 @@ namespace mul
 		setUniformInt(name, value);
 	}
 
+	void OpenGLShader::setIntArray(const std::string& name, int* values, uint32_t count)
+	{
+		setUniformIntArray(name, values, count);
+	}
+
 	void OpenGLShader::setFloat(const std::string& name, const float value)
 	{
 		MUL_PROFILE_FUNCTION();
@@ -111,6 +116,12 @@ namespace mul
 	void OpenGLShader::setUniformInt(const std::string& name, int value)
 	{
 		glUniform1i(m_GetUniformLocation(name), value);
+	}
+
+	void OpenGLShader::setUniformIntArray(const std::string& name, int* values, uint32_t count)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform1iv(location, count, values);
 	}
 
 	void OpenGLShader::setUniformFloat(const std::string& name, float value)

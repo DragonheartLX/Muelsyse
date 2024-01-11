@@ -8,7 +8,7 @@ namespace mul
 	class MUL_API KeyEvent: public Event
 	{
 	public:
-		inline KeyCode getKeyCode() const { return m_KeyCode; }
+		KeyCode getKeyCode() const { return m_KeyCode; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 	protected:
@@ -22,7 +22,7 @@ namespace mul
 	public:
 		KeyPressedEvent(KeyCode keycode, int repeatCount): KeyEvent(keycode), m_RepeatCount(repeatCount) {}
 
-		inline int getRepeatCount() const { return m_RepeatCount; }
+		int getRepeatCount() const { return m_RepeatCount; }
 
 		std::string toString() const override
 		{

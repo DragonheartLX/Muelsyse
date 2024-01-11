@@ -2,7 +2,9 @@
 #include <Muelsyse.h>
 #include <Muelsyse/Core/EntryPoint.h>
 
-class FlowingLab : public mul::Application
+#include "EditorLayer.h"
+
+class FlowingLab: public mul::Application
 {
 public:
 	FlowingLab();

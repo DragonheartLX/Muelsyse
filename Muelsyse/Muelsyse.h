@@ -19,6 +19,9 @@
 #include "Muelsyse/Renderer/Renderer2D.h"
 #include "Muelsyse/Renderer/RenderCommand.h"
 #include "Muelsyse/Renderer/Buffer.h"
+#include "Muelsyse/Renderer/FrameBuffer.h"
 #include "Muelsyse/Renderer/Shader.h"
 #include "Muelsyse/Renderer/VertexArray.h"
 #include "Muelsyse/Renderer/Texture.h"
+
+#include "External/imgui.h"

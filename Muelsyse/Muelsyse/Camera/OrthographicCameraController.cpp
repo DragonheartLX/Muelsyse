@@ -67,6 +67,12 @@ namespace mul
 		dispatcher.dispatcher<WindowResizeEvent>(MUL_BIND_EVENT_FUNC(OrthographicCameraController::onWindowResized));
 	}
 
+	void OrthographicCameraController::onResize(float width, float height)
+	{
+		m_AspectRatio = width / height;
+		m_Camera.setProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+	}
+
 	bool OrthographicCameraController::onMouseScrolled(MouseScrolledEvent& e)
 	{
 		MUL_PROFILE_FUNCTION();
@@ -81,8 +87,8 @@ namespace mul
 	{
 		MUL_PROFILE_FUNCTION();
 		
-		m_AspectRatio = (float)e.getWidth() / (float)e.getHeight();
-		m_Camera.setProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+		onResize((float)e.getWidth(), (float)e.getHeight());
+
 		return false;
 	}
 
