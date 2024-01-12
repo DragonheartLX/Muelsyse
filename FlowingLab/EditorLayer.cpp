@@ -15,12 +15,20 @@ namespace mul
 	{
 		MUL_PROFILE_FUNCTION();
 
-		m_BgTexture = mul::Texture2D::create("assets/textures/picture.png");
+		m_BgTexture = Texture2D::create("assets/textures/picture.png");
 
-		mul::FramebufferSpecification fbSpec;
+		FramebufferSpecification fbSpec;
 	    fbSpec.width = 1980;
 	    fbSpec.height = 1080;
-	    m_Framebuffer = mul::Framebuffer::create(fbSpec);
+	    m_Framebuffer = Framebuffer::create(fbSpec);
+
+		m_ActiveScene = createRef<Scene>();
+
+		auto square = m_ActiveScene->createEntity();
+		m_ActiveScene->reg().emplace<TransformComponent>(square);
+		m_ActiveScene->reg().emplace<SpriteRendererComponent>(square, glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
+
+		m_SquareEntity = square;
 	}
 
 	void EditorLayer::onDetach()
@@ -28,7 +36,7 @@ namespace mul
 		MUL_PROFILE_FUNCTION();
 	}
 
-	void EditorLayer::onUpdate(mul::Timestep ts)
+	void EditorLayer::onUpdate(Timestep ts)
 	{
 		MUL_PROFILE_FUNCTION();
 
@@ -46,39 +54,19 @@ namespace mul
 			m_CameraController.onUpdate(ts);
 
 		// Render
-		mul::Renderer2D::resetStats();
-		{
-			MUL_PROFILE_SCOPE("Renderer Prep");
-			m_Framebuffer->bind();
-			mul::RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-			mul::RenderCommand::clear();
-		}
+		Renderer2D::resetStats();
 
-		{
-			static float rotation = 0.0f;
-			rotation += ts * 50.0f;
+		m_Framebuffer->bind();
+		RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		RenderCommand::clear();
 
-			MUL_PROFILE_SCOPE("Renderer Draw");
-			mul::Renderer2D::beginScene(m_CameraController.getCamera());
-			mul::Renderer2D::drawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, -45.0f, { 0.8f, 0.2f, 0.3f, 1.0f });
-			mul::Renderer2D::drawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-			mul::Renderer2D::drawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, m_SquareColor);
-			mul::Renderer2D::drawQuad({ 0.0f, 0.0f, -0.1f }, { 20.0f, 20.0f }, m_BgTexture, 10.0f);
-			mul::Renderer2D::drawRotatedQuad({ -2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, rotation, m_BgTexture, 20.0f);
-			mul::Renderer2D::endScene();
+		Renderer2D::beginScene(m_CameraController.getCamera());
+		
+		m_ActiveScene->onUpdate(ts);
 
-			mul::Renderer2D::beginScene(m_CameraController.getCamera());
-			for (float y = -5.0f; y < 5.0f; y += 0.5f)
-			{
-				for (float x = -5.0f; x < 5.0f; x += 0.5f)
-				{
-					glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.7f };
-					mul::Renderer2D::drawQuad({ x, y }, { 0.45f, 0.45f }, color);
-				}
-			}
-			mul::Renderer2D::endScene();
-			m_Framebuffer->unBind();
-		}
+		Renderer2D::endScene();
+
+		m_Framebuffer->unBind();
 	}
 
 	void EditorLayer::onImGuiRender()
@@ -117,6 +105,7 @@ namespace mul
 		// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
+		ImGui::SetWindowFontScale(1.4f);
 		ImGui::PopStyleVar();
 
 		if (opt_fullscreen)
@@ -138,7 +127,7 @@ namespace mul
 				// which we can't undo at the moment without finer window depth/z control.
 				//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
 
-				if (ImGui::MenuItem("Exit")) mul::Application::get().close();
+				if (ImGui::MenuItem("Exit")) Application::get().close();
 				ImGui::EndMenu();
 			}
 
@@ -146,15 +135,16 @@ namespace mul
 		}
 
 		ImGui::Begin("Settings");
-
-		auto stats = mul::Renderer2D::getStats();
+		ImGui::SetWindowFontScale(1.2f);
+		auto stats = Renderer2D::getStats();
 		ImGui::Text("Renderer2D Stats:");
 		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
 
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+		auto& squareColor = m_ActiveScene->reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
+		ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
 
 		ImGui::End();
 
@@ -177,7 +167,7 @@ namespace mul
 		ImGui::End();
 	}
 
-	void EditorLayer::onEvent(mul::Event& e)
+	void EditorLayer::onEvent(Event& e)
 	{
 		m_CameraController.onEvent(e);
 	}

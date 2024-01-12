@@ -15,6 +15,9 @@
 
 #include "Muelsyse/Camera/OrthographicCameraController.h"
 
+#include "Muelsyse/Scene/Scene.h"
+#include "Muelsyse/Scene/Components.h"
+
 #include "Muelsyse/Renderer/Renderer.h"
 #include "Muelsyse/Renderer/Renderer2D.h"
 #include "Muelsyse/Renderer/RenderCommand.h"

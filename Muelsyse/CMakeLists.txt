@@ -34,6 +34,9 @@ find_package(Stb REQUIRED)
 find_package(glad CONFIG REQUIRED)
     target_link_libraries(MuelsyseLib PRIVATE glad::glad)
 
+find_package(EnTT CONFIG REQUIRED)
+    target_link_libraries(MuelsyseLib PRIVATE EnTT::EnTT)
+
 if(MUL_OPT_BUILD_SHARED)
     install(TARGETS MuelsyseLib DESTINATION bin)
 else()
