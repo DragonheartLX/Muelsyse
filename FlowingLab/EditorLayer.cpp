@@ -24,9 +24,9 @@ namespace mul
 
 		m_ActiveScene = createRef<Scene>();
 
-		auto square = m_ActiveScene->createEntity();
-		m_ActiveScene->reg().emplace<TransformComponent>(square);
-		m_ActiveScene->reg().emplace<SpriteRendererComponent>(square, glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
+		// Entity
+		auto square = m_ActiveScene->createEntity("Green Square");
+		square.addComponent<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
 
 		m_SquareEntity = square;
 	}
@@ -143,8 +143,16 @@ namespace mul
 		ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.getTotalIndexCount());
 
-		auto& squareColor = m_ActiveScene->reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+		if (m_SquareEntity)
+		{
+			ImGui::Separator();
+			auto& tag = m_SquareEntity.getComponent<TagComponent>().Tag;
+			ImGui::Text("%s", tag.c_str());
+
+			auto& squareColor = m_SquareEntity.getComponent<SpriteRendererComponent>().Color;
+			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+			ImGui::Separator();
+		}
 
 		ImGui::End();
 

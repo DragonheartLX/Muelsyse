@@ -5,19 +5,20 @@
 
 namespace mul
 {
+	class Entity;
+
 	class MUL_API Scene
 	{
 	public:
 		Scene();
 		~Scene();
 
-		entt::entity createEntity();
-
-		// TEMP
-		entt::registry& reg() { return m_Registry; }
+		Entity createEntity(const std::string& name = std::string());
 
 		void onUpdate(Timestep ts);
 	private:
 		entt::registry m_Registry;
+
+		friend class Entity;
 	};
 }

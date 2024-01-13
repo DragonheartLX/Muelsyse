@@ -2,6 +2,7 @@
 #include "Muelsyse/Scene/Scene.h"
 #include "Muelsyse/Scene/Components.h"
 #include "Muelsyse/Renderer/Renderer2D.h"
+#include "Muelsyse/Scene/Entity.h"
 
 #include <glm/glm.hpp>
 
@@ -49,9 +50,13 @@ namespace mul
 
 	}
 
-	entt::entity Scene::createEntity()
+	Entity Scene::createEntity(const std::string& name)
 	{
-		return m_Registry.create();
+		Entity entity = { m_Registry.create(), this };
+		entity.addComponent<TransformComponent>();
+		auto& tag = entity.addComponent<TagComponent>();
+		tag.Tag = name.empty() ? "Entity" : name;
+		return entity;
 	}
 
 	void Scene::onUpdate(Timestep ts)

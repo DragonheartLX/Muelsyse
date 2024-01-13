@@ -28,11 +28,8 @@ namespace mul
 	class Instrumentor
 	{
 	public:
-		Instrumentor():
-            m_CurrentSession(nullptr)
-		{
-
-		}
+		Instrumentor(const Instrumentor&) = delete;
+		Instrumentor(Instrumentor&&) = delete;
 
 		void beginSession(const std::string& name, const std::string& filepath = "results.json")
 		{
@@ -125,6 +122,16 @@ namespace mul
 			}
 		}
     private:
+		Instrumentor()
+		: m_CurrentSession(nullptr)
+		{
+		}
+
+		~Instrumentor()
+		{
+			endSession();
+		}		
+
 		std::mutex m_Mutex;
 		InstrumentationSession* m_CurrentSession;
 		std::ofstream m_OutputStream;
@@ -215,8 +222,10 @@ namespace mul
 
 	#define MUL_PROFILE_BEGIN_SESSION(name, filepath) ::mul::Instrumentor::get().beginSession(name, filepath)
 	#define MUL_PROFILE_END_SESSION() ::mul::Instrumentor::get().endSession()
-	#define MUL_PROFILE_SCOPE(name) constexpr auto fixedName = ::Hazel::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
-									::Hazel::InstrumentationTimer timer##__LINE__(fixedName.Data)
+	#define MUL_PROFILE_SCOPE_LINE2(name, line) constexpr auto fixedName##line = ::mul::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
+											   ::mul::InstrumentationTimer timer##line(fixedName##line.Data)
+	#define MUL_PROFILE_SCOPE_LINE(name, line) MUL_PROFILE_SCOPE_LINE2(name, line)
+	#define MUL_PROFILE_SCOPE(name) MUL_PROFILE_SCOPE_LINE(name, __LINE__)
 	#define MUL_PROFILE_FUNCTION() MUL_PROFILE_SCOPE(MUL_FUNC_SIG)
 #else
 	#define MUL_PROFILE_BEGIN_SESSION(name, filepath)
