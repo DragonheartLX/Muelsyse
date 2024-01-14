@@ -146,10 +146,10 @@ namespace mul
 		if (m_SquareEntity)
 		{
 			ImGui::Separator();
-			auto& tag = m_SquareEntity.getComponent<TagComponent>().Tag;
+			auto& tag = m_SquareEntity.getComponent<TagComponent>().tag;
 			ImGui::Text("%s", tag.c_str());
 
-			auto& squareColor = m_SquareEntity.getComponent<SpriteRendererComponent>().Color;
+			auto& squareColor = m_SquareEntity.getComponent<SpriteRendererComponent>().color;
 			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
 			ImGui::Separator();
 		}

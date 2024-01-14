@@ -1,5 +1,7 @@
 #pragma once
 
+#define MUL_VERSION_STRING "0.0.0dev"
+
 // Platform detection using predefined macros
 #ifdef _WIN32
 	/* Windows x64/x86 */

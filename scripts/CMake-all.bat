@@ -28,23 +28,25 @@ cmake .. --preset msvc-x64-dynamic-release
 echo ----- Generate MSVC x64 Static Debug preset -----
 cmake .. --preset msvc-x64-dynamic-RelWithDebInfo
 
-echo ----- Generate MSVC x64 Static Debug preset -----
+goto DisableMinGWPresets
+echo ----- Generate MinGW x64 Static Debug preset -----
 cmake .. --preset mingw-x64-static-debug
 
-echo ----- Generate MSVC x64 Static Debug preset -----
+echo ----- Generate MinGW x64 Static Debug preset -----
 cmake .. --preset mingw-x64-static-release
 
-echo ----- Generate MSVC x64 Static Debug preset -----
+echo ----- Generate MinGW x64 Static Debug preset -----
 cmake .. --preset mingw-x64-static-RelWithDebInfo
 
-echo ----- Generate MSVC x64 Static Debug preset -----
+echo ----- Generate MinGW x64 Static Debug preset -----
 cmake .. --preset mingw-x64-dynamic-debug
 
-echo ----- Generate MSVC x64 Static Debug preset -----
+echo ----- Generate MinGW x64 Static Debug preset -----
 cmake .. --preset mingw-x64-dynamic-release
 
-echo ----- Generate MSVC x64 Static Debug preset -----
+echo ----- Generate MinGW x64 Static Debug preset -----
 cmake .. --preset mingw-x64-dynamic-RelWithDebInfo
+:DisableMinGWPresets
 
 pushd %~dp0\..\
 echo ----- Build MSVC x64 Static Debug preset -----
@@ -65,6 +67,7 @@ cmake --build --preset MSVC-x64-dynamic-release
 echo ----- Build MSVC x64 Dynamic RelWithDebInfo preset -----
 cmake --build --preset MSVC-x64-dynamic-RelWithDebInfo
 
+goto DisableMinGWBuild
 echo ----- Build MinGW x64 Static Debug preset -----
 cmake --build --preset MinGW-x64-static-debug
 
@@ -82,6 +85,7 @@ cmake --build --preset MinGW-x64-dynamic-release
 
 echo ----- Build MinGW x64 Dynamic RelWithDebInfo preset -----
 cmake --build --preset MinGW-x64-dynamic-RelWithDebInfo
+:DisableMinGWBuild
 popd
 
 echo ----- Build Finshed -----

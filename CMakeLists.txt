@@ -21,7 +21,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 # Clang Setting
-if(CMAKE_CXX_COMPILER_ID STREQUAL "clang")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     add_compile_options(
         "$<$<CONFIG:>:-fms-runtime-lib=static>" #-------------------|
         "$<$<CONFIG:Debug>:-fms-runtime-lib=static_dbg>" #----------|-- Statically link the runtime libraries

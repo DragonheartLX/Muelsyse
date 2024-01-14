@@ -14,10 +14,10 @@ namespace mul
 
 		void onUpdate() override;
 
-		unsigned int getWidth() const override { return m_Data.Width; }
-		unsigned int getHeight() const override { return m_Data.Height; }
+		unsigned int getWidth() const override { return m_Data.width; }
+		unsigned int getHeight() const override { return m_Data.height; }
 
-		void setEventCallback(const EventCallbackFunc& callback) override { m_Data.EventCallback = callback; }
+		void setEventCallback(const EventCallbackFunc& callback) override { m_Data.eventCallback = callback; }
 		void setVSync(bool enabled) override;
 		bool isVSync() const override;
 
@@ -31,11 +31,11 @@ namespace mul
 
 		struct WindowData
 		{
-			std::string Title;
-			unsigned int Width, Height;
-			bool VSync;
+			std::string title;
+			unsigned int width, height;
+			bool vSync;
 
-			EventCallbackFunc EventCallback;
+			EventCallbackFunc eventCallback;
 		};
 
 		WindowData m_Data;

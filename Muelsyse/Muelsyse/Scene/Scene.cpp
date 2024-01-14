@@ -8,16 +8,6 @@
 
 namespace mul
 {
-	static void doMath(const glm::mat4& transform)
-	{
-
-	}
-
-	static void onTransformConstruct(entt::registry& registry, entt::entity entity)
-	{
-
-	}
-
 	Scene::Scene()
 	{
 #if ENTT_EXAMPLE_CODE
@@ -55,7 +45,7 @@ namespace mul
 		Entity entity = { m_Registry.create(), this };
 		entity.addComponent<TransformComponent>();
 		auto& tag = entity.addComponent<TagComponent>();
-		tag.Tag = name.empty() ? "Entity" : name;
+		tag.tag = name.empty() ? "Entity" : name;
 		return entity;
 	}
 
@@ -66,7 +56,7 @@ namespace mul
 		{
 			const auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-			Renderer2D::drawQuad(transform, sprite.Color);
+			Renderer2D::drawQuad(transform, sprite.color);
 		}
 	}
 }

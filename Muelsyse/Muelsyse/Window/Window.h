@@ -7,17 +7,12 @@ namespace mul
 {
 	struct WindowProps
 	{
-		std::string Title;
-		uint32_t Width;
-		uint32_t Height;
+		std::string title;
+		uint32_t width;
+		uint32_t height;
 
-		WindowProps
-		(
-			const std::string& title = "Muelsyse",
-			uint32_t width = 1920,
-			uint32_t height = 1080
-		):
-			Title(title), Width(width), Height(height)
+		WindowProps(const std::string& winTitle = "Muelsyse", uint32_t winWidth = 1920,	uint32_t winHeight = 1080):
+			title(winTitle), width(winWidth), height(winHeight)
 		{
 
 		}
