@@ -1,12 +1,9 @@
 #pragma once
 #include "Muelsyse/Core/Logger.h"
 
-#include <string>
-#include <chrono>
-#include <algorithm>
-#include <fstream>
 #include <thread>
 #include <iomanip>
+#include <mutex>
 
 namespace mul
 {

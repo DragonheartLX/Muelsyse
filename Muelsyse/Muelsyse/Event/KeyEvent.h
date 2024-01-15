@@ -1,7 +1,7 @@
 #pragma once
 #include "mulpch.h"
 #include "Muelsyse/Event/Event.h"
-#include "Muelsyse/Input/Input.h"
+#include "Muelsyse/Input/KeyCode.h"
 
 namespace mul 
 {
@@ -12,7 +12,7 @@ namespace mul
 
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 	protected:
-		KeyEvent(KeyCode keycode): m_KeyCode(keycode) {}
+		KeyEvent(const KeyCode keycode): m_KeyCode(keycode) {}
 
 		KeyCode m_KeyCode;
 	};
@@ -20,9 +20,9 @@ namespace mul
 	class MUL_API KeyPressedEvent: public KeyEvent
 	{
 	public:
-		KeyPressedEvent(KeyCode keycode, int repeatCount): KeyEvent(keycode), m_RepeatCount(repeatCount) {}
+		KeyPressedEvent(const KeyCode keycode, const uint16_t repeatCount): KeyEvent(keycode), m_RepeatCount(repeatCount) {}
 
-		int getRepeatCount() const { return m_RepeatCount; }
+		const uint16_t getRepeatCount() const { return m_RepeatCount; }
 
 		std::string toString() const override
 		{
@@ -33,13 +33,13 @@ namespace mul
 
 		EVENT_CLASS_TYPE(KeyPressed)
 	private:
-		int m_RepeatCount;
+		uint16_t m_RepeatCount;
 	};
 
 	class MUL_API KeyReleasedEvent: public KeyEvent
 	{
 	public:
-		KeyReleasedEvent(KeyCode keycode): KeyEvent(keycode) {}
+		KeyReleasedEvent(const KeyCode keycode): KeyEvent(keycode) {}
 
 		std::string toString() const override
 		{
@@ -54,7 +54,7 @@ namespace mul
 	class MUL_API KeyTypedEvent: public KeyEvent
 	{
 	public:
-		KeyTypedEvent(KeyCode keycode): KeyEvent(keycode) {}
+		KeyTypedEvent(const KeyCode keycode): KeyEvent(keycode) {}
 
 		std::string toString() const override
 		{

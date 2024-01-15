@@ -3,6 +3,7 @@
 #include "Muelsyse/Core/Core.h"
 #include "Muelsyse/Core/Application.h"
 #include "Muelsyse/Core/Logger.h"
+#include "Muelsyse/Core/Assert.h"
 #include "Muelsyse/Core/Timestep.h"
 
 #include "Muelsyse/Layer/Layer.h"
@@ -17,6 +18,7 @@
 
 #include "Muelsyse/Scene/Scene.h"
 #include "Muelsyse/Scene/Entity.h"
+#include "Muelsyse/Scene/ScriptableEntity.h"
 #include "Muelsyse/Scene/Components.h"
 
 #include "Muelsyse/Renderer/Renderer.h"

@@ -6,23 +6,23 @@
 
 namespace mul 
 {
-	bool Input::isKeyPressed(KeyCode key)
+	bool Input::isKeyPressed(const KeyCode key)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
 		auto state = glfwGetKey(window, static_cast<int32_t>(key));
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool Input::isMouseButtonPressed(MouseCode button)
+	bool Input::isMouseButtonPressed(const MouseCode button)
 	{
-		auto window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
+		auto* window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
 		auto state = glfwGetMouseButton(window, static_cast<int32_t>(button));
 		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float> Input::getMousePosition()
+	glm::vec2 Input::getMousePosition()
 	{
-		auto window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
+		auto* window = static_cast<GLFWwindow*>(Application::get().getWindow().getNativeWindow());
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
 
@@ -31,14 +31,12 @@ namespace mul
 
 	float Input::getMouseX()
 	{
-		auto [x, y] = getMousePosition();
-		return x;
+		return getMousePosition().x;
 	}
 
 	float Input::getMouseY()
 	{
-		auto [x, y] = getMousePosition();
-		return y;
+		return getMousePosition().y;
 	}
 
 }

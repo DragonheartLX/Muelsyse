@@ -2,7 +2,7 @@
 #include "Muelsyse/ImGui/ImGuiLayer.h"
 #include "Muelsyse/Core/Application.h"
 
-#include <glad/glad.h>
+#include "External/glad/glad.h"
 #include "External/imgui.h"
 #include "External/imgui_impl_opengl3.h"
 #include "External/imgui_impl_glfw.h"

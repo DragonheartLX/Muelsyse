@@ -1,7 +1,7 @@
 #include "mulpch.h"
 #include "Muelsyse/Renderer/OpenGL/OpenGLVertexArray.h"
 
-#include <glad/glad.h>
+#include "External/glad/glad.h"
 
 namespace mul
 {
@@ -102,7 +102,7 @@ namespace mul
 							ShaderDataTypeToOpenGLBaseType(element.type),
 							element.normalized ? GL_TRUE : GL_FALSE,
 							layout.getStride(),
-							(const void*)(sizeof(float) * count * i));
+							(const void*)(element.offset + sizeof(float) * count * i));
 						glVertexAttribDivisor(m_VertexBufferIndex, 1);
 						m_VertexBufferIndex++;
 					}

@@ -2,7 +2,7 @@
 #include "Muelsyse/Renderer/OpenGL/OpenGLShader.h"
 
 #include <fstream>
-#include <glad/glad.h>
+#include "External/glad/glad.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <filesystem>
 

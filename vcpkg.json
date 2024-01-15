@@ -19,23 +19,11 @@
 			"version>=": "2023-04-11#1"
 		},
 		{
-			"name": "glad",
-			"version>=": "0.1.36",
-			"default-features": false,
-			"features": [
-				"loader",
-				"gl-api-46"
-			]
-		},
-		{
 			"name": "entt",
 			"version>=": "3.12.2"
 		}
 	],
 	"vcpkg-configuration": {
-		"overlay-ports": [
-			"./scripts/custom-ports"
-		],
 		"overlay-triplets": [
 			"./scripts/custom-triplets"
 		]

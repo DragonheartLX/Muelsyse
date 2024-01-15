@@ -1,7 +1,7 @@
 #include "mulpch.h"
 #include "Muelsyse/Renderer/OpenGL/OpenGLBuffer.h"
 
-#include <glad/glad.h>
+#include "External/glad/glad.h"
 
 namespace mul 
 {

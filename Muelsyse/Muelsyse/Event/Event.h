@@ -1,6 +1,8 @@
 #pragma once
-#include "mulpch.h"
 #include "Muelsyse/Core/Core.h"
+
+#include <string>
+#include <functional>
 
 namespace mul
 {
@@ -20,7 +22,7 @@ namespace mul
 		EventCategoryInput			= BIT(1),
 		EventCategoryKeyboard		= BIT(2),
 		EventCategoryMouse			= BIT(3),
-		EventCategoryMouseButtton	= BIT(4)
+		EventCategoryMouseButton	= BIT(4)
 	};
 
 	#define EVENT_CLASS_TYPE(type)	static EventType getStaticType() { return EventType::type; }\
@@ -62,7 +64,7 @@ namespace mul
 		{
 			if (m_Event.getEventType() == T::getStaticType())
 			{
-				m_Event.handled = func(static_cast<T&>(m_Event));
+				m_Event.handled |= func(static_cast<T&>(m_Event));
 				return true;
 			}
 			return false;

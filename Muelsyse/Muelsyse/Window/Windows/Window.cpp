@@ -6,7 +6,7 @@
 #include "Muelsyse/Renderer/OpenGL/OpenGLContext.h"
 #include "Muelsyse/Renderer/Renderer.h"
 
-#include <glad/glad.h>
+#include "External/glad/glad.h"
 #include <GLFW/glfw3.h>
 
 namespace mul 
@@ -97,19 +97,19 @@ namespace mul
 				{
 				case GLFW_PRESS:
 					{
-						KeyPressedEvent event(static_cast<KeyCode>(key), 0);
+						KeyPressedEvent event(key, 0);
 						data.eventCallback(event);
 						break;
 					}
 				case GLFW_RELEASE:
 					{
-						KeyReleasedEvent event(static_cast<KeyCode>(key));
+						KeyReleasedEvent event(key);
 						data.eventCallback(event);
 						break;
 					}
 				case GLFW_REPEAT:
 					{
-						KeyPressedEvent event(static_cast<KeyCode>(key), 1);
+						KeyPressedEvent event(key, 1);
 						data.eventCallback(event);
 						break;
 					}
@@ -120,7 +120,7 @@ namespace mul
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-				KeyTypedEvent event(static_cast<KeyCode>(keycode));
+				KeyTypedEvent event(keycode);
 				data.eventCallback(event);
 			});
 
@@ -132,13 +132,13 @@ namespace mul
 				{
 				case GLFW_PRESS:
 					{
-						MouseButtonPressedEvent event(static_cast<MouseCode>(button));
+						MouseButtonPressedEvent event(button);
 						data.eventCallback(event);
 						break;
 					}
 				case GLFW_RELEASE:
 					{
-						MouseButtonReleasedEvent event(static_cast<MouseCode>(button));
+						MouseButtonReleasedEvent event(button);
 						data.eventCallback(event);
 						break;
 					}

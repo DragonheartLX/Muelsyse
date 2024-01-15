@@ -26,13 +26,10 @@ find_package(glm CONFIG REQUIRED)
     target_link_libraries(MuelsyseLib PRIVATE glm::glm)
 
 find_package(spdlog CONFIG REQUIRED)
-    target_link_libraries(MuelsyseLib PUBLIC spdlog::spdlog_header_only)
+    target_link_libraries(MuelsyseLib PUBLIC spdlog::spdlog)
 
 find_package(Stb REQUIRED)
     target_include_directories(MuelsyseLib PRIVATE ${Stb_INCLUDE_DIR})
-
-find_package(glad CONFIG REQUIRED)
-    target_link_libraries(MuelsyseLib PRIVATE glad::glad)
 
 find_package(EnTT CONFIG REQUIRED)
     target_link_libraries(MuelsyseLib PRIVATE EnTT::EnTT)

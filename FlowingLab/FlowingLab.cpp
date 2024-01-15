@@ -7,5 +7,5 @@ FlowingLab::FlowingLab():
 {
 	// pushLayer(new ExampleLayer());
 	// pushLayer(new Sandbox2D());
-	pushLayer(new mul::EditorLayer());
+	pushLayer(new EditorLayer());
 };

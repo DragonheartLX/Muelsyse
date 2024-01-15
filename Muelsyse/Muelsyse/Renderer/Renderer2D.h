@@ -1,5 +1,6 @@
 #pragma once
 #include "Muelsyse/Core/Core.h"
+#include "Muelsyse/Camera/Camera.h"
 #include "Muelsyse/Camera/OrthographicCamera.h"
 #include "Muelsyse/Renderer/Texture.h"
 
@@ -11,7 +12,8 @@ namespace mul
 		static void init();
 		static void shutdown();
 
-		static void beginScene(const OrthographicCamera& camera);
+		static void beginScene(const Camera& camera, const glm::mat4& transform);
+		static void beginScene(const OrthographicCamera& camera); // TODO: Remove
 		static void endScene();
 		static void flush();
 		
@@ -35,12 +37,13 @@ namespace mul
 			uint32_t DrawCalls = 0;
 			uint32_t QuadCount = 0;
 
-			uint32_t getTotalVertexCount() { return QuadCount * 4; }
-			uint32_t getTotalIndexCount() { return QuadCount * 6; }
+			uint32_t getTotalVertexCount() const { return QuadCount * 4; }
+			uint32_t getTotalIndexCount() const { return QuadCount * 6; }
 		};
 		static void resetStats();
 		static Statistics getStats();
 	private:
-		static void m_flushAndReset();
+		static void m_StartBatch();
+		static void m_NextBatch();
 	};
 }
