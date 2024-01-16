@@ -27,6 +27,11 @@ namespace mul
 		return entity;
 	}
 
+	void Scene::destroyEntity(Entity entity)
+	{
+		m_Registry.destroy(entity);
+	}
+
 	void Scene::onUpdate(Timestep ts)
 	{
 		// Update scripts
@@ -94,5 +99,37 @@ namespace mul
 				cameraComponent.Camera.setViewportSize(width, height);
 		}
 
+	}
+
+	template<typename T>
+	void Scene::onComponentAdded(Entity entity, T& component)
+	{
+		static_assert(false);
+	}
+
+	template<>
+	void MUL_API Scene::onComponentAdded<TransformComponent>(Entity entity, TransformComponent& component)
+	{
+	}
+
+	template<>
+	void MUL_API Scene::onComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
+	{
+		component.Camera.setViewportSize(m_ViewportWidth, m_ViewportHeight);
+	}
+
+	template<>
+	void MUL_API Scene::onComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component)
+	{
+	}
+
+	template<>
+	void MUL_API Scene::onComponentAdded<TagComponent>(Entity entity, TagComponent& component)
+	{
+	}
+
+	template<>
+	void MUL_API Scene::onComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
+	{
 	}
 }

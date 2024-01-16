@@ -4,7 +4,7 @@
 
 #include "Muelsyse/Core/PlatformDetection.h"
 
-#ifdef MUL_DEBUG
+#ifdef MUL_DEBUG_ASSERT
 	#if defined(MUL_PLATFORM_WINDOWS)
 		#define MUL_DEBUGBREAK() __debugbreak()
 	#elif defined(HZ_PLATFORM_LINUX)

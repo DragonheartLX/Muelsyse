@@ -34,6 +34,12 @@ find_package(Stb REQUIRED)
 find_package(EnTT CONFIG REQUIRED)
     target_link_libraries(MuelsyseLib PRIVATE EnTT::EnTT)
 
+find_package(yaml-cpp CONFIG REQUIRED)
+    target_link_libraries(MuelsyseLib PRIVATE yaml-cpp::yaml-cpp)
+
+find_package(box2d CONFIG REQUIRED)
+    target_link_libraries(MuelsyseLib PRIVATE box2d::box2d)
+
 if(MUL_OPT_BUILD_SHARED)
     install(TARGETS MuelsyseLib DESTINATION bin)
 else()
