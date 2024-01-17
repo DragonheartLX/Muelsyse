@@ -12,6 +12,8 @@ namespace mul
 		void setContext(const Ref<Scene>& scene);
 
 		void onImGuiRender();
+
+		Entity getSelectedEntity() const { return m_SelectionContext; }
 	private:
 		void drawEntityNode(Entity entity, std::string& tag);
 		void drawComponents(Entity entity);

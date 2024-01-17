@@ -3,6 +3,7 @@
 #include "Muelsyse/Camera/Camera.h"
 #include "Muelsyse/Camera/OrthographicCamera.h"
 #include "Muelsyse/Renderer/Texture.h"
+#include "Muelsyse/Scene/EditorCamera.h"
 
 namespace mul
 {
@@ -13,6 +14,7 @@ namespace mul
 		static void shutdown();
 
 		static void beginScene(const Camera& camera, const glm::mat4& transform);
+		static void beginScene(const EditorCamera& camera);
 		static void beginScene(const OrthographicCamera& camera); // TODO: Remove
 		static void endScene();
 		static void flush();

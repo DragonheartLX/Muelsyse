@@ -128,29 +128,29 @@
             }
         },
         {
-            "name": "mingw-x64-static",
-            "displayName": "MinGW x64 Static",
+            "name": "clang-x64-static",
+            "displayName": "Clang x64 Static",
             "hidden": true,
-            "generator": "MinGW Makefiles",
+            "generator": "Ninja",
             "cacheVariables": 
             {
-                "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
                 "VCPKG_TARGET_TRIPLET": "x64-mingw-static",
-                "MUL_OPT_BUILD_SHARED": "OFF"
+                "MUL_OPT_BUILD_SHARED": "OFF",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": true
             }
         },
         {
-            "name": "mingw-x64-static-debug",
-            "hidden": true,
-            "displayName": "MinGW x64 Static Debug",
-            "description": "MinGW x64 Static Debug",
-            "inherits": "mingw-x64-static",
-            "binaryDir": "${sourceDir}/build/mingw-x64-static/Debug",
+            "name": "clang-x64-static-debug",
+            "displayName": "Clang x64 Static Debug",
+            "description": "Clang x64 Static Debug",
+            "inherits": "clang-x64-static",
+            "binaryDir": "${sourceDir}/build/clang-x64-static/Debug",
             "cacheVariables": {
-                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/Debug",
-                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/Debug",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-static",
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/clang-x64-static/Debug",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/clang-x64-static/Debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/clang-x64-static/Debug",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "MUL_OPT_NO_CONSOLE": "OFF",
                 "MUL_OPT_DEBUG_ASSERT": "ON",
@@ -158,16 +158,15 @@
             }
         },
         {
-            "name": "mingw-x64-static-release",
-            "hidden": true,
-            "displayName": "MinGW x64 Static Release",
-            "description": "MinGW x64 Static Release",
-            "inherits": "mingw-x64-static",
-            "binaryDir": "${sourceDir}/build/mingw-x64-static/Release",
+            "name": "clang-x64-static-release",
+            "displayName": "Clang x64 Static Release",
+            "description": "Clang x64 Static Release",
+            "inherits": "clang-x64-static",
+            "binaryDir": "${sourceDir}/build/clang-x64-static/Release",
             "cacheVariables": {
-                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/Release",
-                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/Release",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-static",
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/clang-x64-static/Release",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/clang-x64-static/Release",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/clang-x64-static/Release",
                 "CMAKE_BUILD_TYPE": "Release",
                 "MUL_OPT_NO_CONSOLE": "ON",
                 "MUL_OPT_DEBUG_ASSERT": "OFF",
@@ -175,16 +174,15 @@
             }
         },
         {
-            "name": "mingw-x64-static-RelWithDebInfo",
-            "hidden": true,
-            "displayName": "MinGW x64 Static RelWithDebInfo",
-            "description": "MinGW x64 Static RelWithDebInfo",
-            "inherits": "mingw-x64-static",
-            "binaryDir": "${sourceDir}/build/mingw-x64-static/RelWithDebInfo",
+            "name": "clang-x64-static-RelWithDebInfo",
+            "displayName": "Clang x64 Static RelWithDebInfo",
+            "description": "Clang x64 Static RelWithDebInfo",
+            "inherits": "clang-x64-static",
+            "binaryDir": "${sourceDir}/build/clang-x64-static/RelWithDebInfo",
             "cacheVariables": {
-                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/RelWithDebInfo",
-                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-static/RelWithDebInfo",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-static",
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/clang-x64-static/RelWithDebInfo",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/clang-x64-static/RelWithDebInfo",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/clang-x64-static/RelWithDebInfo",
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo",
                 "MUL_OPT_NO_CONSOLE": "OFF",
                 "MUL_OPT_DEBUG_ASSERT": "ON",
@@ -192,29 +190,29 @@
             }
         },
         {
-            "name": "mingw-x64-dynamic",
-            "displayName": "MinGW x64 Dynamic",
+            "name": "clang-x64-dynamic",
+            "displayName": "Clang x64 Dynamic",
             "hidden": true,
-            "generator": "MinGW Makefiles",
+            "generator": "Ninja",
             "cacheVariables": 
             {
-                "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
                 "VCPKG_TARGET_TRIPLET": "x64-mingw-dynamic",
-                "MUL_OPT_BUILD_SHARED": "ON"
+                "MUL_OPT_BUILD_SHARED": "ON",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": true
             }
         },
         {
-            "name": "mingw-x64-dynamic-debug",
-            "hidden": true,
-            "displayName": "MinGW x64 Dynamic Debug",
-            "description": "MinGW x64 Dynamic Debug",
-            "inherits": "mingw-x64-dynamic",
-            "binaryDir": "${sourceDir}/build/mingw-x64-dynamic/Debug",
+            "name": "clang-x64-dynamic-debug",
+            "displayName": "Clang x64 Dynamic Debug",
+            "description": "Clang x64 Dynamic Debug",
+            "inherits": "clang-x64-dynamic",
+            "binaryDir": "${sourceDir}/build/clang-x64-dynamic/Debug",
             "cacheVariables": {
-                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/Debug",
-                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/Debug",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-dynamic",
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/clang-x64-dynamic/Debug",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/clang-x64-dynamic/Debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/clang-x64-dynamic/Debug",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "MUL_OPT_NO_CONSOLE": "OFF",
                 "MUL_OPT_DEBUG_ASSERT": "ON",
@@ -222,16 +220,15 @@
             }
         },
         {
-            "name": "mingw-x64-dynamic-release",
-            "hidden": true,
-            "displayName": "MinGW x64 Dynamic Release",
-            "description": "MinGW x64 Dynamic Release",
-            "inherits": "mingw-x64-dynamic",
-            "binaryDir": "${sourceDir}/build/mingw-x64-dynamic/Release",
+            "name": "clang-x64-dynamic-release",
+            "displayName": "Clang x64 Dynamic Release",
+            "description": "Clang x64 Dynamic Release",
+            "inherits": "clang-x64-dynamic",
+            "binaryDir": "${sourceDir}/build/clang-x64-dynamic/Release",
             "cacheVariables": {
-                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/Release",
-                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/Release",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-dynamic",
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/clang-x64-dynamic/Release",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/clang-x64-dynamic/Release",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/clang-x64-dynamic/Release",
                 "CMAKE_BUILD_TYPE": "Release",
                 "MUL_OPT_NO_CONSOLE": "ON",
                 "MUL_OPT_DEBUG_ASSERT": "OFF",
@@ -239,16 +236,15 @@
             }
         },
         {
-            "name": "mingw-x64-dynamic-RelWithDebInfo",
-            "hidden": true,
-            "displayName": "MinGW x64 Dynamic RelWithDebInfo",
-            "description": "MinGW x64 Dynamic RelWithDebInfo",
-            "inherits": "mingw-x64-dynamic",
-            "binaryDir": "${sourceDir}/build/mingw-x64-dynamic/RelWithDebInfo",
+            "name": "clang-x64-dynamic-RelWithDebInfo",
+            "displayName": "Clang x64 Dynamic RelWithDebInfo",
+            "description": "Clang x64 Dynamic RelWithDebInfo",
+            "inherits": "clang-x64-dynamic",
+            "binaryDir": "${sourceDir}/build/clang-x64-dynamic/RelWithDebInfo",
             "cacheVariables": {
-                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/RelWithDebInfo",
-                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/mingw-x64-dynamic/RelWithDebInfo",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/mingw-x64-dynamic",
+                "EXECUTABLE_OUTPUT_PATH": "${sourceDir}/build/bin/clang-x64-dynamic/RelWithDebInfo",
+                "LIBRARY_OUTPUT_PATH": "${sourceDir}/build/bin/clang-x64-dynamic/RelWithDebInfo",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/clang-x64-dynamic/RelWithDebInfo",
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo",
                 "MUL_OPT_NO_CONSOLE": "OFF",
                 "MUL_OPT_DEBUG_ASSERT": "ON",
@@ -294,50 +290,44 @@
             "configuration": "Debug"
         },
         {
-            "name": "MinGW-x64-static-RelWithDebInfo",
-            "hidden": true,
-            "displayName": "MinGW x64 Static RelWithDebInfo",
-            "configurePreset": "mingw-x64-static-RelWithDebInfo",
+            "name": "Clang-x64-static-RelWithDebInfo",
+            "displayName": "Clang x64 Static RelWithDebInfo",
+            "configurePreset": "clang-x64-static-RelWithDebInfo",
             "configuration": "RelWithDebInfo",
             "jobs": 8
         },
         {
-            "name": "MinGW-x64-static-release",
-            "hidden": true,
-            "displayName": "MinGW x64 Static Release",
-            "configurePreset": "mingw-x64-static-release",
+            "name": "Clang-x64-static-release",
+            "displayName": "Clang x64 Static Release",
+            "configurePreset": "clang-x64-static-release",
             "configuration": "Release",
             "jobs": 8
         },
         {
-            "name": "MinGW-x64-static-debug",
-            "hidden": true,
-            "displayName": "MinGW x64 Static Debug",
-            "configurePreset": "mingw-x64-static-debug",
+            "name": "Clang-x64-static-debug",
+            "displayName": "Clang x64 Static Debug",
+            "configurePreset": "clang-x64-static-debug",
             "configuration": "Debug",
             "jobs": 8
         },
         {
-            "name": "MinGW-x64-dynamic-RelWithDebInfo",
-            "hidden": true,
-            "displayName": "MinGW x64 Dynamic RelWithDebInfo",
-            "configurePreset": "mingw-x64-dynamic-RelWithDebInfo",
+            "name": "Clang-x64-dynamic-RelWithDebInfo",
+            "displayName": "Clang x64 Dynamic RelWithDebInfo",
+            "configurePreset": "clang-x64-dynamic-RelWithDebInfo",
             "configuration": "RelWithDebInfo",
             "jobs": 8
         },
         {
-            "name": "MinGW-x64-dynamic-release",
-            "hidden": true,
-            "displayName": "MinGW x64 Dynamic Release",
-            "configurePreset": "mingw-x64-dynamic-release",
+            "name": "Clang-x64-dynamic-release",
+            "displayName": "Clang x64 Dynamic Release",
+            "configurePreset": "clang-x64-dynamic-release",
             "configuration": "Release",
             "jobs": 8
         },
         {
-            "name": "MinGW-x64-dynamic-debug",
-            "hidden": true,
-            "displayName": "MinGW x64 Dynamic Debug",
-            "configurePreset": "mingw-x64-dynamic-debug",
+            "name": "Clang-x64-dynamic-debug",
+            "displayName": "Clang x64 Dynamic Debug",
+            "configurePreset": "clang-x64-dynamic-debug",
             "configuration": "Debug",
             "jobs": 8
         }

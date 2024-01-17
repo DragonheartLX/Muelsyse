@@ -6,7 +6,7 @@
 #include "Muelsyse/Renderer/OpenGL/OpenGLContext.h"
 #include "Muelsyse/Renderer/Renderer.h"
 
-#include "External/glad/glad.h"
+#include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
 namespace mul 

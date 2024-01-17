@@ -125,6 +125,17 @@ namespace mul
 		m_StartBatch();
 	}
 
+	void Renderer2D::beginScene(const EditorCamera& camera)
+	{
+		MUL_PROFILE_FUNCTION();
+
+		glm::mat4 viewProj = camera.getViewProjection();
+
+		s_Data->TextureShader->bind();
+		s_Data->TextureShader->setMat4("u_ViewProjection", viewProj);
+
+		m_StartBatch();
+	}
 
 	void Renderer2D::beginScene(const OrthographicCamera& camera)
 	{

@@ -15,6 +15,7 @@ namespace mul
 	void SceneHierarchyPanel::setContext(const Ref<Scene>& context)
 	{
 		m_Context = context;
+		m_SelectionContext = {};
 	}
 
 	void SceneHierarchyPanel::onImGuiRender()
@@ -218,13 +219,19 @@ namespace mul
 		{
 			if (ImGui::MenuItem("Camera"))
 			{
-				m_SelectionContext.addComponent<CameraComponent>();
+				if (!m_SelectionContext.hasComponent<CameraComponent>())
+					m_SelectionContext.addComponent<CameraComponent>();
+				else
+					MUL_CORE_WARN("This entity already has the Camera Component!");
 				ImGui::CloseCurrentPopup();
 			}
 
 			if (ImGui::MenuItem("Sprite Renderer"))
 			{
-				m_SelectionContext.addComponent<SpriteRendererComponent>();
+				if (!m_SelectionContext.hasComponent<SpriteRendererComponent>())
+					m_SelectionContext.addComponent<SpriteRendererComponent>();
+				else
+					MUL_CORE_WARN("This entity already has the Sprite Renderer Component!");
 				ImGui::CloseCurrentPopup();
 			}
 

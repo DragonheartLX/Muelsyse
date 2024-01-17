@@ -20,15 +20,15 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     )
 endif()
 
-# Clang Setting
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    add_compile_options(
-        "$<$<CONFIG:>:-fms-runtime-lib=static>" #-------------------|
-        "$<$<CONFIG:Debug>:-fms-runtime-lib=static_dbg>" #----------|-- Statically link the runtime libraries
-        "$<$<CONFIG:Release>:-fms-runtime-lib=static>" #------------|
-        "$<$<CONFIG:RelWithDebInfo>:-fms-runtime-lib=static>" #-----|
-    )
-endif()
+# Clang-cl Setting
+# if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+#     add_compile_options(
+#         "$<$<CONFIG:>:-fms-runtime-lib=static>" #-------------------|
+#         "$<$<CONFIG:Debug>:-fms-runtime-lib=static_dbg>" #----------|-- Statically link the runtime libraries
+#         "$<$<CONFIG:Release>:-fms-runtime-lib=static>" #------------|
+#         "$<$<CONFIG:RelWithDebInfo>:-fms-runtime-lib=static>" #-----|
+#     )
+# endif()
 
 message("-- [Muelsyse] Build Type: ${CMAKE_BUILD_TYPE}")
 message("-- [Muelsyse] C Compiler: ${CMAKE_C_COMPILER_ID}")

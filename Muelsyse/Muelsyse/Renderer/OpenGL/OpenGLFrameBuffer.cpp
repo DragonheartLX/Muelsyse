@@ -2,7 +2,7 @@
 #include "Muelsyse/Renderer/FrameBuffer.h"
 #include "Muelsyse/Renderer/OpenGL/OpenGLFrameBuffer.h"
 
-#include "External/glad/glad.h"
+#include "glad/glad.h"
 
 namespace mul
 {

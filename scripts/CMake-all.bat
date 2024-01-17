@@ -28,25 +28,23 @@ cmake .. --preset msvc-x64-dynamic-release
 echo ----- Generate MSVC x64 Static Debug preset -----
 cmake .. --preset msvc-x64-dynamic-RelWithDebInfo
 
-goto DisableMinGWPresets
-echo ----- Generate MinGW x64 Static Debug preset -----
-cmake .. --preset mingw-x64-static-debug
+echo ----- Generate Clang x64 Static Debug preset -----
+cmake .. --preset clang-x64-static-debug
 
-echo ----- Generate MinGW x64 Static Debug preset -----
-cmake .. --preset mingw-x64-static-release
+echo ----- Generate Clang x64 Static Debug preset -----
+cmake .. --preset clang-x64-static-release
 
-echo ----- Generate MinGW x64 Static Debug preset -----
-cmake .. --preset mingw-x64-static-RelWithDebInfo
+echo ----- Generate Clang x64 Static Debug preset -----
+cmake .. --preset clang-x64-static-RelWithDebInfo
 
-echo ----- Generate MinGW x64 Static Debug preset -----
-cmake .. --preset mingw-x64-dynamic-debug
+echo ----- Generate Clang x64 Static Debug preset -----
+cmake .. --preset clang-x64-dynamic-debug
 
-echo ----- Generate MinGW x64 Static Debug preset -----
-cmake .. --preset mingw-x64-dynamic-release
+echo ----- Generate Clang x64 Static Debug preset -----
+cmake .. --preset clang-x64-dynamic-release
 
-echo ----- Generate MinGW x64 Static Debug preset -----
-cmake .. --preset mingw-x64-dynamic-RelWithDebInfo
-:DisableMinGWPresets
+echo ----- Generate Clang x64 Static Debug preset -----
+cmake .. --preset clang-x64-dynamic-RelWithDebInfo
 
 pushd %~dp0\..\
 echo ----- Build MSVC x64 Static Debug preset -----
@@ -67,25 +65,23 @@ cmake --build --preset MSVC-x64-dynamic-release
 echo ----- Build MSVC x64 Dynamic RelWithDebInfo preset -----
 cmake --build --preset MSVC-x64-dynamic-RelWithDebInfo
 
-goto DisableMinGWBuild
-echo ----- Build MinGW x64 Static Debug preset -----
-cmake --build --preset MinGW-x64-static-debug
+echo ----- Build Clang x64 Static Debug preset -----
+cmake --build --preset Clang-x64-static-debug
 
-echo ----- Build MinGW x64 Static Release preset -----
-cmake --build --preset MinGW-x64-static-release
+echo ----- Build Clang x64 Static Release preset -----
+cmake --build --preset Clang-x64-static-release
 
-echo ----- Build MinGW x64 Static RelWithDebInfo preset -----
-cmake --build --preset MinGW-x64-static-RelWithDebInfo
+echo ----- Build Clang x64 Static RelWithDebInfo preset -----
+cmake --build --preset Clang-x64-static-RelWithDebInfo
 
-echo ----- Build MinGW x64 Dynamic Debug preset -----
-cmake --build --preset MinGW-x64-dynamic-debug
+echo ----- Build Clang x64 Dynamic Debug preset -----
+cmake --build --preset Clang-x64-dynamic-debug
 
-echo ----- Build MinGW x64 Dynamic Release preset -----
-cmake --build --preset MinGW-x64-dynamic-release
+echo ----- Build Clang x64 Dynamic Release preset -----
+cmake --build --preset Clang-x64-dynamic-release
 
-echo ----- Build MinGW x64 Dynamic RelWithDebInfo preset -----
-cmake --build --preset MinGW-x64-dynamic-RelWithDebInfo
-:DisableMinGWBuild
+echo ----- Build Clang x64 Dynamic RelWithDebInfo preset -----
+cmake --build --preset Clang-x64-dynamic-RelWithDebInfo
 popd
 
 echo ----- Build Finshed -----

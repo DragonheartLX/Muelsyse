@@ -2,7 +2,7 @@
 #include "Muelsyse/Core/Core.h"
 #include "Muelsyse/Event/Event.h"
 
-#include <sstream>
+#include <functional>
 
 namespace mul 
 {

@@ -12,6 +12,7 @@ else()
 endif()
 
 target_include_directories(MuelsyseLib PUBLIC .)
+target_include_directories(MuelsyseLib PUBLIC External)
 
 target_precompile_headers(MuelsyseLib PRIVATE mulpch.h)
 

@@ -3,6 +3,12 @@
 #include <External/imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <Muelsyse/Scene/SceneSerializer.h>
+#include <Muelsyse/Utils/Utils.h>
+#include <ImGuizmo.h>
+#include <Muelsyse/Math/Math.h>
+
+using namespace mul;
 
 EditorLayer::EditorLayer()
 	: Layer("EditorLayer"), m_CameraController(1920.0f / 1080.0f), m_SquareColor({0.2f, 0.3f, 0.8f, 1.0f})
@@ -14,8 +20,6 @@ void EditorLayer::onAttach()
 {
 	MUL_PROFILE_FUNCTION();
 
-	m_BgTexture = Texture2D::create("assets/textures/picture.png");
-
 	FramebufferSpecification fbSpec;
 	fbSpec.width = 1920;
 	fbSpec.height = 1080;
@@ -23,6 +27,9 @@ void EditorLayer::onAttach()
 
 	m_ActiveScene = createRef<Scene>();
 
+	m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+
+#if 0
 	// Entity
 	auto square = m_ActiveScene->createEntity("Green Square");
 	square.addComponent<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
@@ -69,6 +76,7 @@ void EditorLayer::onAttach()
 
 	m_CameraEntity.addComponent<NativeScriptComponent>().bind<CameraController>();
 	m_SecondCamera.addComponent<NativeScriptComponent>().bind<CameraController>();
+#endif
 
 	m_SceneHierarchyPanel.setContext(m_ActiveScene);
 }
@@ -89,13 +97,15 @@ void EditorLayer::onUpdate(Timestep ts)
 	{
 		m_Framebuffer->resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		m_CameraController.onResize(m_ViewportSize.x, m_ViewportSize.y);
-
+		m_EditorCamera.setViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 		m_ActiveScene->onViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 	}
 
 	// Update
 	if (m_ViewportFocused)
 		m_CameraController.onUpdate(ts);
+
+	m_EditorCamera.onUpdate(ts);
 
 	// Render
 	Renderer2D::resetStats();
@@ -104,7 +114,7 @@ void EditorLayer::onUpdate(Timestep ts)
 	RenderCommand::setClearColor({0.1f, 0.1f, 0.1f, 1});
 	RenderCommand::clear();
 
-	m_ActiveScene->onUpdate(ts);
+	m_ActiveScene->onUpdateEditor(ts, m_EditorCamera);
 
 	m_Framebuffer->unBind();
 }
@@ -171,8 +181,18 @@ void EditorLayer::onImGuiRender()
 			// which we can't undo at the moment without finer window depth/z control.
 			// ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
 
+			if (ImGui::MenuItem("New", "Ctrl+N"))
+				newScene();
+
+			if (ImGui::MenuItem("Open...", "Ctrl+O"))
+				openScene();
+
+			if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+				saveSceneAs();
+
 			if (ImGui::MenuItem("Exit"))
 				Application::get().close();
+			
 			ImGui::EndMenu();
 		}
 
@@ -196,14 +216,64 @@ void EditorLayer::onImGuiRender()
 
 	m_ViewportFocused = ImGui::IsWindowFocused();
 	m_ViewportHovered = ImGui::IsWindowHovered();
-	Application::get().getImGuiLayer()->blockEvents(!m_ViewportFocused || !m_ViewportHovered);
+	Application::get().getImGuiLayer()->blockEvents(!m_ViewportFocused && !m_ViewportHovered);
 
 	ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-
 	m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
 
 	uint64_t textureID = m_Framebuffer->getColorAttachmentRendererID();
 	ImGui::Image(reinterpret_cast<void *>(textureID), ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
+
+	// Gizmos
+	Entity selectedEntity = m_SceneHierarchyPanel.getSelectedEntity();
+	if (selectedEntity && m_GizmoType != -1)
+	{
+		ImGuizmo::SetOrthographic(false);
+		ImGuizmo::SetDrawlist();
+
+		float windowWidth = (float)ImGui::GetWindowWidth();
+		float windowHeight = (float)ImGui::GetWindowHeight();
+		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+		// Runtime camera from entity
+		// auto cameraEntity = m_ActiveScene->getPrimaryCameraEntity();
+		// const auto& camera = cameraEntity.getComponent<CameraComponent>().Camera;
+		// const glm::mat4& cameraProjection = camera.getProjection();
+		// glm::mat4 cameraView = glm::inverse(cameraEntity.getComponent<TransformComponent>().getTransform());
+
+		// Editor camera
+		const glm::mat4& cameraProjection = m_EditorCamera.getProjection();
+		glm::mat4 cameraView = m_EditorCamera.getViewMatrix();
+
+		// Entity transform
+		auto& tc = selectedEntity.getComponent<TransformComponent>();
+		glm::mat4 transform = tc.getTransform();
+
+		// Snapping
+		bool snap = Input::isKeyPressed(Key::LeftControl);
+		float snapValue = 0.5f; // Snap to 0.5m for translation/scale
+		// Snap to 45 degrees for rotation
+		if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
+			snapValue = 45.0f;
+
+		float snapValues[3] = { snapValue, snapValue, snapValue };
+
+		ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+			(ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
+			nullptr, snap ? snapValues : nullptr);
+
+		if (ImGuizmo::IsUsing())
+		{
+			glm::vec3 translation, rotation, scale;
+			Math::decomposeTransform(transform, translation, rotation, scale);
+
+			glm::vec3 deltaRotation = rotation - tc.Rotation;
+			tc.Translation = translation;
+			tc.Rotation += deltaRotation;
+			tc.Scale = scale;
+		}
+	}
+
 	ImGui::End();
 	ImGui::PopStyleVar();
 
@@ -213,4 +283,86 @@ void EditorLayer::onImGuiRender()
 void EditorLayer::onEvent(Event &e)
 {
 	m_CameraController.onEvent(e);
+	m_EditorCamera.onEvent(e);
+
+	EventDispatcher dispatcher(e);
+	dispatcher.dispatcher<KeyPressedEvent>(MUL_BIND_EVENT_FUNC(EditorLayer::onKeyPressed));
+}
+
+bool EditorLayer::onKeyPressed(KeyPressedEvent& e)
+{
+	// Shortcuts
+	if (e.getRepeatCount() > 0)
+		return false;
+
+	bool control = Input::isKeyPressed(Key::LeftControl) || Input::isKeyPressed(Key::RightControl);
+	bool shift = Input::isKeyPressed(Key::LeftShift) || Input::isKeyPressed(Key::RightShift);
+	switch (e.getKeyCode())
+	{
+		case Key::N:
+		{
+			if (control)
+				newScene();
+			break;
+		}
+		case Key::O:
+		{
+			if (control)
+				openScene();
+			break;
+		}
+		case Key::S:
+		{
+			if (control && shift)
+				saveSceneAs();
+			break;
+		}
+
+		// Gizmos
+		case Key::Q:
+			m_GizmoType = -1;
+			break;
+		case Key::W:
+			m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+			break;
+		case Key::E:
+			m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+			break;
+		case Key::R:
+			m_GizmoType = ImGuizmo::OPERATION::SCALE;
+			break;
+	}
+
+	return true;
+}
+
+void EditorLayer::newScene()
+{
+	m_ActiveScene = createRef<Scene>();
+	m_ActiveScene->onViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+	m_SceneHierarchyPanel.setContext(m_ActiveScene);
+}
+
+void EditorLayer::openScene()
+{
+	std::optional<std::string> filepath = FileDialogs::openFile("Muelsyse Scene (*.flowing)", "*.flowing");
+	if (filepath)
+	{
+		m_ActiveScene = createRef<Scene>();
+		m_ActiveScene->onViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHierarchyPanel.setContext(m_ActiveScene);
+
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.deserialize(*filepath);
+	}
+}
+
+void EditorLayer::saveSceneAs()
+{
+	std::optional<std::string> filepath = FileDialogs::saveFile("Muelsyse Scene (*.flowing)", "*.flowing");
+	if (filepath)
+	{
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.serialize(*filepath);
+	}
 }

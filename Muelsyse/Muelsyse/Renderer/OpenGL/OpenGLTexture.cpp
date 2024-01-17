@@ -3,7 +3,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-#include "External/glad/glad.h"
+#include "glad/glad.h"
 #include <filesystem>
 
 namespace mul 

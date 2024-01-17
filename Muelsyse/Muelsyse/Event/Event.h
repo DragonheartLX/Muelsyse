@@ -2,7 +2,6 @@
 #include "Muelsyse/Core/Core.h"
 
 #include <string>
-#include <functional>
 
 namespace mul
 {

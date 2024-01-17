@@ -1,7 +1,7 @@
 #include "mulpch.h"
 #include "Muelsyse/Renderer/OpenGL/OpenGLVertexArray.h"
 
-#include "External/glad/glad.h"
+#include "glad/glad.h"
 
 namespace mul
 {
