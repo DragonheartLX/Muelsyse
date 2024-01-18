@@ -2,11 +2,13 @@
 #version 460
 
 layout(location = 0) out vec4 color;
+layout(location = 1) out int color2;
 
 in vec4 v_Color;
 in vec2 v_TexCoord;
 in flat float v_TexIndex;
 in float v_TilingFactor;
+in flat int v_EntityID;
 
 uniform vec4 u_Color;
 uniform float u_TilingFactor;
@@ -17,6 +19,7 @@ uniform sampler2D u_Textures[32];
 void main()
 {
 	vec4 texColor = v_Color;
+
 	switch(int(v_TexIndex))
 	{
 		case 0: 	texColor *= texture(u_Textures[0],  v_TexCoord * v_TilingFactor); break;
@@ -52,5 +55,8 @@ void main()
 		case 30: 	texColor *= texture(u_Textures[30], v_TexCoord * v_TilingFactor); break;
 		case 31: 	texColor *= texture(u_Textures[31], v_TexCoord * v_TilingFactor); break;
 	}
+	
 	color = texColor;
+
+	color2 = v_EntityID;
 }

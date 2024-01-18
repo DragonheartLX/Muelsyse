@@ -14,10 +14,22 @@
 
 namespace mul
 {
+	struct ApplicationCommandLineArgs
+	{
+		int Count = 0;
+		char** Args = nullptr;
+
+		const char* operator[](int index) const
+		{
+			MUL_CORE_ASSERT(index < Count);
+			return Args[index];
+		}
+	};
+
 	class MUL_API Application
 	{
 	public:
-		Application(const std::string& name = "Flowing Application");
+		Application(const std::string& name = "Flowing Application", ApplicationCommandLineArgs args = ApplicationCommandLineArgs());
 		virtual ~Application();
 
 		void onEvent(Event& e);
@@ -32,12 +44,15 @@ namespace mul
 		ImGuiLayer* getImGuiLayer() { return m_ImGuiLayer; }
 
 		static Application& get() { return *s_Instance; }
+
+		ApplicationCommandLineArgs getCommandLineArgs() const { return m_CommandLineArgs; }
 	private:
 		void m_Run();
 
 		bool m_OnWindowClose(WindowCloseEvent& e);
 		bool m_OnWindowResize(WindowResizeEvent& e);
 		
+		ApplicationCommandLineArgs m_CommandLineArgs;
 		ImGuiLayer* m_ImGuiLayer;
 		Scope<Window> m_Window;
 		bool m_Running = true;
@@ -55,5 +70,5 @@ namespace mul
 		#endif
 	};
 
-	Application* createApplication();
+	Application* createApplication(ApplicationCommandLineArgs args);
 }

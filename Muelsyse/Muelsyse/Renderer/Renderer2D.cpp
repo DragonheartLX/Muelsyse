@@ -4,8 +4,10 @@
 #include "Muelsyse/Renderer/Shader.h"
 #include "Muelsyse/Renderer/RenderCommand.h"
 #include "Muelsyse/Renderer/OpenGL/OpenGLShader.h"
+#include "Muelsyse/Renderer/UniformBuffer.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace mul
 {
@@ -16,6 +18,8 @@ namespace mul
 		glm::vec2 TexCoord;
 		float TexIndex;
 		float TilingFactor;
+		// Editor-only
+		int EntityID;
 	};
 
 	struct Renderer2DData
@@ -40,6 +44,13 @@ namespace mul
 		glm::vec4 QuadVertexPositions[4];
 
 		Renderer2D::Statistics Stats;
+
+		struct CameraData
+		{
+			glm::mat4 ViewProjection;
+		};
+		CameraData CameraBuffer;
+		Ref<UniformBuffer> CameraUniformBuffer;
 	};
 
 	static Renderer2DData* s_Data;
@@ -54,11 +65,12 @@ namespace mul
 		s_Data->QuadVertexBuffer = VertexBuffer::create(s_Data->MaxVertices * sizeof(QuadVertex));
 
 		s_Data->QuadVertexBuffer->setLayout({
-			{ ShaderDataType::Float3, "a_Position" },
-			{ ShaderDataType::Float4, "a_Color" },
-			{ ShaderDataType::Float2, "a_TexCoord" },
-			{ ShaderDataType::Float, "a_TexIndex" },
-			{ ShaderDataType::Float, "a_TilingFactor" }
+			{ ShaderDataType::Float3, 	"a_Position" 	},
+			{ ShaderDataType::Float4, 	"a_Color" 		},
+			{ ShaderDataType::Float2, 	"a_TexCoord" 	},
+			{ ShaderDataType::Float, 	"a_TexIndex" 	},
+			{ ShaderDataType::Float, 	"a_TilingFactor"},
+			{ ShaderDataType::Int,    	"a_EntityID"    }
 		});
 		s_Data->QuadVertexArray->addVertexBuffer(s_Data->QuadVertexBuffer);
 
@@ -92,9 +104,7 @@ namespace mul
 		for (uint32_t i = 0; i < s_Data->MaxTextureSlots; i++)
 			samplers[i] = i;
 		
-		s_Data->TextureShader = Shader::create("assets/shaders/Texture.vert", "assets/shaders/Texture.frag");
-		s_Data->TextureShader->bind();
-		s_Data->TextureShader->setIntArray("u_Textures", samplers, s_Data->MaxTextureSlots);
+		s_Data->TextureShader = Shader::create("assets/shaders/Texture.glsl");
 
 		// Set first texture slot to 0
 		s_Data->TextureSlots[0] = s_Data->WhiteTexture;
@@ -103,6 +113,8 @@ namespace mul
 		s_Data->QuadVertexPositions[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
 		s_Data->QuadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
 		s_Data->QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+
+		s_Data->CameraUniformBuffer = UniformBuffer::create(sizeof(Renderer2DData::CameraData), 0);
 	}
 
 	void Renderer2D::shutdown()
@@ -117,10 +129,8 @@ namespace mul
 	{
 		MUL_PROFILE_FUNCTION();
 
-		glm::mat4 viewProj = camera.getProjection() * glm::inverse(transform);
-
-		s_Data->TextureShader->bind();
-		s_Data->TextureShader->setMat4("u_ViewProjection", viewProj);
+		s_Data->CameraBuffer.ViewProjection = camera.getProjection() * glm::inverse(transform);
+		s_Data->CameraUniformBuffer->setData(&s_Data->CameraBuffer, sizeof(Renderer2DData::CameraData));
 
 		m_StartBatch();
 	}
@@ -129,10 +139,8 @@ namespace mul
 	{
 		MUL_PROFILE_FUNCTION();
 
-		glm::mat4 viewProj = camera.getViewProjection();
-
-		s_Data->TextureShader->bind();
-		s_Data->TextureShader->setMat4("u_ViewProjection", viewProj);
+		s_Data->CameraBuffer.ViewProjection = camera.getViewProjection();
+		s_Data->CameraUniformBuffer->setData(&s_Data->CameraBuffer, sizeof(Renderer2DData::CameraData));
 
 		m_StartBatch();
 	}
@@ -174,6 +182,7 @@ namespace mul
 		for (uint32_t i = 0; i < s_Data->TextureSlotIndex; i++)
 			s_Data->TextureSlots[i]->bind(i);
 		
+		s_Data->TextureShader->bind();
 		RenderCommand::drawIndexed(s_Data->QuadVertexArray, s_Data->QuadIndexCount);
 		s_Data->Stats.DrawCalls++;
 	}
@@ -214,7 +223,7 @@ namespace mul
 		drawQuad(transform, texture, tilingFactor);
 	}
 
-	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color)
+	void Renderer2D::drawQuad(const glm::mat4& transform, const glm::vec4& color, int entityID)
 	{
 		MUL_PROFILE_FUNCTION();
 
@@ -233,6 +242,7 @@ namespace mul
 			s_Data->QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			s_Data->QuadVertexBufferPtr->TexIndex = textureIndex;
 			s_Data->QuadVertexBufferPtr->TilingFactor = tilingFactor;
+			s_Data->QuadVertexBufferPtr->EntityID = entityID;
 			s_Data->QuadVertexBufferPtr++;
 		}
 
@@ -241,7 +251,7 @@ namespace mul
 		s_Data->Stats.QuadCount++;
 	}
 
-	void Renderer2D::drawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	void Renderer2D::drawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor, int entityID)
 	{
 		MUL_PROFILE_FUNCTION();
 
@@ -278,6 +288,7 @@ namespace mul
 			s_Data->QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			s_Data->QuadVertexBufferPtr->TexIndex = textureIndex;
 			s_Data->QuadVertexBufferPtr->TilingFactor = tilingFactor;
+			s_Data->QuadVertexBufferPtr->EntityID = entityID;
 			s_Data->QuadVertexBufferPtr++;
 		}
 
@@ -317,6 +328,12 @@ namespace mul
 
 		drawQuad(transform, texture, tilingFactor, tintColor);
 	}
+
+	void Renderer2D::drawSprite(const glm::mat4& transform, SpriteRendererComponent& src, int entityID)
+	{
+		drawQuad(transform, src.Color, entityID);
+	}
+
 
 	void Renderer2D::resetStats()
 	{

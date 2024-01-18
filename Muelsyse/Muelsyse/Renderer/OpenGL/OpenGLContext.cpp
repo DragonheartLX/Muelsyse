@@ -24,9 +24,9 @@ namespace mul
 		// https://github.com/gabime/spdlog/issues/2719
 		// https://github.com/fmtlib/fmt/issues/3307
 		MUL_CORE_INFO("=====OpenGL Info=====");
-		MUL_CORE_INFO("Vendor: {0}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
-		MUL_CORE_INFO("Renderer: {0}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
-		MUL_CORE_INFO("Version: {0}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+		MUL_CORE_INFO(">> Vendor: {0}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+		MUL_CORE_INFO(">> Renderer: {0}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+		MUL_CORE_INFO(">> Version: {0}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 		MUL_CORE_INFO("=====================");
 
 		#ifdef MUL_DEBUG_ASSERT

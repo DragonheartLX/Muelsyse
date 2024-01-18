@@ -2,8 +2,8 @@
 // #include "ExampleLayer.h"
 // #include "FlowingLab2D.h"
 
-FlowingLab::FlowingLab():
-	Application("FlowingLab Editor")
+FlowingLab::FlowingLab(ApplicationCommandLineArgs args):
+	Application("FlowingLab Editor", args)
 {
 	// pushLayer(new ExampleLayer());
 	// pushLayer(new Sandbox2D());

@@ -48,11 +48,14 @@ ExampleLayer::ExampleLayer():
 	mul::Ref<mul::IndexBuffer> squareIB = mul::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 	m_SquareVA->setIndexBuffer(squareIB);
 
-	m_Shader = mul::Shader::create("assets/shaders/Basic.vert", "assets/shaders/Basic.frag");
+	//m_Shader = mul::Shader::create("assets/shaders/Basic.vert", "assets/shaders/Basic.frag");
+	m_Shader = mul::Shader::create("assets/shaders/Basic.glsl");
 
-	m_FlatColorShader = mul::Shader::create("assets/shaders/FlatColor.vert", "assets/shaders/FlatColor.frag");
+	//m_FlatColorShader = mul::Shader::create("assets/shaders/FlatColor.vert", "assets/shaders/FlatColor.frag");
+	m_FlatColorShader = mul::Shader::create("assets/shaders/FlatColor.glsl");
 
-	m_TextureShader = mul::Shader::create("assets/shaders/Texture.vert", "assets/shaders/Texture.frag");
+	//m_TextureShader = mul::Shader::create("assets/shaders/Texture.vert", "assets/shaders/Texture.frag");
+	m_TextureShader = mul::Shader::create("assets/shaders/Texture.glsl");
 
 	m_Texture = mul::Texture2D::create("assets/textures/picture.png");
 	m_bgTexture = mul::Texture2D::create("assets/textures/bg.png");

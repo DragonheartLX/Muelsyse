@@ -41,6 +41,15 @@ find_package(yaml-cpp CONFIG REQUIRED)
 find_package(box2d CONFIG REQUIRED)
     target_link_libraries(MuelsyseLib PRIVATE box2d::box2d)
 
+find_package(unofficial-shaderc CONFIG REQUIRED)
+    target_link_libraries(MuelsyseLib PRIVATE unofficial::shaderc::shaderc)
+  
+find_package(spirv_cross_core CONFIG REQUIRED)
+    target_link_libraries(MuelsyseLib PRIVATE spirv-cross-core)
+  
+find_package(spirv_cross_glsl CONFIG REQUIRED)
+    target_link_libraries(MuelsyseLib PRIVATE spirv-cross-glsl)
+
 if(MUL_OPT_BUILD_SHARED)
     install(TARGETS MuelsyseLib DESTINATION bin)
 else()

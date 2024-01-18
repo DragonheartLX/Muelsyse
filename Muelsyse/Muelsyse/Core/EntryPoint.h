@@ -1,6 +1,6 @@
 #pragma once
 
-extern mul::Application* mul::createApplication();
+extern mul::Application* mul::createApplication(ApplicationCommandLineArgs args);
 
 #ifdef MUL_NO_CONSOLE
 	#include <windows.h>
@@ -15,7 +15,7 @@ extern mul::Application* mul::createApplication();
 
 		MUL_CORE_INFO("Muelsyse version: {0}", MUL_VERSION_STRING);
 		MUL_PROFILE_BEGIN_SESSION("Startup", "MuelsyseProfile-Startup.json");
-		mul::Application* app = mul::createApplication();
+		mul::Application* app = mul::createApplication({ argc, argv });
 		MUL_PROFILE_END_SESSION();
 
 		MUL_PROFILE_BEGIN_SESSION("Runtime", "MuelsyseProfile-Runtime.json");
@@ -30,4 +30,4 @@ extern mul::Application* mul::createApplication();
 		return 0;
 	}
 
-#define FLOWING(X) mul::Application* mul::createApplication() { return new X(); }
+#define FLOWING(X) mul::Application* mul::createApplication(mul::ApplicationCommandLineArgs args) { return new X(args); }

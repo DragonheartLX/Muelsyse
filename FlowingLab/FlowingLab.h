@@ -7,7 +7,7 @@
 class FlowingLab: public mul::Application
 {
 public:
-	FlowingLab();
+	FlowingLab(ApplicationCommandLineArgs args);
 	~FlowingLab() {};
 
 private:

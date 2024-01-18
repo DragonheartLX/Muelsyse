@@ -78,7 +78,7 @@ namespace mul
 			{
 				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-				Renderer2D::drawQuad(transform.getTransform(), sprite.Color);
+				Renderer2D::drawSprite(transform.getTransform(), sprite, (int)entity);
 			}
 
 			Renderer2D::endScene();
@@ -94,7 +94,7 @@ namespace mul
 		{
 			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-			Renderer2D::drawQuad(transform.getTransform(), sprite.Color);
+			Renderer2D::drawSprite(transform.getTransform(), sprite, (int)entity);
 		}
 
 		Renderer2D::endScene();
@@ -142,7 +142,8 @@ namespace mul
 	template<>
 	void MUL_API Scene::onComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
 	{
-		component.Camera.setViewportSize(m_ViewportWidth, m_ViewportHeight);
+		if (m_ViewportWidth > 0 && m_ViewportHeight > 0)
+			component.Camera.setViewportSize(m_ViewportWidth, m_ViewportHeight);
 	}
 
 	template<>

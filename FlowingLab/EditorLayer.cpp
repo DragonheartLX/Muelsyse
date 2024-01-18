@@ -11,7 +11,7 @@
 using namespace mul;
 
 EditorLayer::EditorLayer()
-	: Layer("EditorLayer"), m_CameraController(1920.0f / 1080.0f), m_SquareColor({0.2f, 0.3f, 0.8f, 1.0f})
+	: Layer("EditorLayer"), m_CameraController(1920.0f / 1080.0f)
 {
 	
 }
@@ -21,11 +21,20 @@ void EditorLayer::onAttach()
 	MUL_PROFILE_FUNCTION();
 
 	FramebufferSpecification fbSpec;
+	fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
 	fbSpec.width = 1920;
 	fbSpec.height = 1080;
 	m_Framebuffer = Framebuffer::create(fbSpec);
 
 	m_ActiveScene = createRef<Scene>();
+
+	auto commandLineArgs = Application::get().getCommandLineArgs();
+	if (commandLineArgs.Count > 1)
+	{
+		auto sceneFilePath = commandLineArgs[1];
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.deserialize(sceneFilePath);
+	}
 
 	m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
@@ -114,7 +123,24 @@ void EditorLayer::onUpdate(Timestep ts)
 	RenderCommand::setClearColor({0.1f, 0.1f, 0.1f, 1});
 	RenderCommand::clear();
 
+	// Clear our entity ID attachment to -1
+	m_Framebuffer->clearAttachment(1, -1);
+	
 	m_ActiveScene->onUpdateEditor(ts, m_EditorCamera);
+
+	auto[mx, my] = ImGui::GetMousePos();
+	mx -= m_ViewportBounds[0].x;
+	my -= m_ViewportBounds[0].y;
+	glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+	my = viewportSize.y - my;
+	int mouseX = (int)mx;
+	int mouseY = (int)my;
+
+	if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+	{
+		int pixelData = m_Framebuffer->readPixel(1, mouseX, mouseY);
+		m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
+	}
 
 	m_Framebuffer->unBind();
 }
@@ -202,6 +228,12 @@ void EditorLayer::onImGuiRender()
 	m_SceneHierarchyPanel.onImGuiRender();
 
 	ImGui::Begin("Stats");
+
+	std::string name = "None";
+	if (m_HoveredEntity)
+		name = m_HoveredEntity.getComponent<TagComponent>().Tag;
+	ImGui::Text("Hovered Entity: %s", name.c_str());
+	
 	auto stats = Renderer2D::getStats();
 	ImGui::Text("Renderer2D Stats:");
 	ImGui::Text("Draw Calls: %d", stats.DrawCalls);
@@ -213,6 +245,11 @@ void EditorLayer::onImGuiRender()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
 	ImGui::Begin("Viewport");
+	auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+	auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+	auto viewportOffset = ImGui::GetWindowPos();
+	m_ViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+	m_ViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
 
 	m_ViewportFocused = ImGui::IsWindowFocused();
 	m_ViewportHovered = ImGui::IsWindowHovered();
@@ -231,9 +268,7 @@ void EditorLayer::onImGuiRender()
 		ImGuizmo::SetOrthographic(false);
 		ImGuizmo::SetDrawlist();
 
-		float windowWidth = (float)ImGui::GetWindowWidth();
-		float windowHeight = (float)ImGui::GetWindowHeight();
-		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+		ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y, m_ViewportBounds[1].x - m_ViewportBounds[0].x, m_ViewportBounds[1].y - m_ViewportBounds[0].y);
 
 		// Runtime camera from entity
 		// auto cameraEntity = m_ActiveScene->getPrimaryCameraEntity();
@@ -287,6 +322,7 @@ void EditorLayer::onEvent(Event &e)
 
 	EventDispatcher dispatcher(e);
 	dispatcher.dispatcher<KeyPressedEvent>(MUL_BIND_EVENT_FUNC(EditorLayer::onKeyPressed));
+	dispatcher.dispatcher<MouseButtonPressedEvent>(MUL_BIND_EVENT_FUNC(EditorLayer::onMouseButtonPressed));
 }
 
 bool EditorLayer::onKeyPressed(KeyPressedEvent& e)
@@ -297,6 +333,7 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& e)
 
 	bool control = Input::isKeyPressed(Key::LeftControl) || Input::isKeyPressed(Key::RightControl);
 	bool shift = Input::isKeyPressed(Key::LeftShift) || Input::isKeyPressed(Key::RightShift);
+
 	switch (e.getKeyCode())
 	{
 		case Key::N:
@@ -320,20 +357,42 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& e)
 
 		// Gizmos
 		case Key::Q:
-			m_GizmoType = -1;
+		{
+			if (!ImGuizmo::IsUsing())
+				m_GizmoType = -1;
 			break;
+		}
 		case Key::W:
-			m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+		{
+			if (!ImGuizmo::IsUsing())
+				m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
 			break;
+		}
 		case Key::E:
-			m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+		{
+			if (!ImGuizmo::IsUsing())
+				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
 			break;
+		}
 		case Key::R:
-			m_GizmoType = ImGuizmo::OPERATION::SCALE;
+		{
+			if (!ImGuizmo::IsUsing())
+				m_GizmoType = ImGuizmo::OPERATION::SCALE;
 			break;
+		}
 	}
 
 	return true;
+}
+
+bool EditorLayer::onMouseButtonPressed(MouseButtonPressedEvent& e)
+{
+	if (e.getMouseButton() == Mouse::ButtonLeft)
+	{
+		if (m_ViewportHovered && !ImGuizmo::IsOver() && !Input::isKeyPressed(Key::LeftAlt))
+			m_SceneHierarchyPanel.setSelectedEntity(m_HoveredEntity);
+	}
+	return false;
 }
 
 void EditorLayer::newScene()

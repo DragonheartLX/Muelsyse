@@ -17,7 +17,7 @@ namespace mul
 		return str;
 	}
 
-	std::optional<std::string> FileDialogs::openFile(const char* filterDes, const char* filter)
+	std::string FileDialogs::openFile(const char* filterDes, const char* filter)
 	{
 		std::string path;
 		HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
@@ -71,10 +71,10 @@ namespace mul
 		if(!path.empty())
 			return path;
 		
-		return std::nullopt;
+		return std::string();
 	}
 
-	std::optional<std::string> FileDialogs::saveFile(const char* filterDes, const char* filter)
+	std::string FileDialogs::saveFile(const char* filterDes, const char* filter)
 	{
 		std::string path;
 		HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
@@ -129,6 +129,6 @@ namespace mul
 		if(!path.empty())
 			return path;
 		
-		return std::nullopt;
+		return std::string();
 	}
 }

@@ -51,6 +51,11 @@ namespace mul
 		ImGui::End();
 	}
 
+	void SceneHierarchyPanel::setSelectedEntity(Entity entity)
+	{
+		m_SelectionContext = entity;
+	}
+
 	void SceneHierarchyPanel::drawEntityNode(Entity entity, std::string& tag)
 	{
 		ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
