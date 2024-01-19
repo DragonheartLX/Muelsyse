@@ -149,8 +149,8 @@ namespace mul
 	{
 		MUL_PROFILE_FUNCTION();
 
-		s_Data->TextureShader->bind();
-		s_Data->TextureShader->setMat4("u_ViewProjection", camera.getViewProjectionMatrix());
+		s_Data->CameraBuffer.ViewProjection = camera.getProjectionMatrix();
+		s_Data->CameraUniformBuffer->setData(&s_Data->CameraBuffer, sizeof(Renderer2DData::CameraData));
 
 		m_StartBatch();
 	}
@@ -331,7 +331,10 @@ namespace mul
 
 	void Renderer2D::drawSprite(const glm::mat4& transform, SpriteRendererComponent& src, int entityID)
 	{
-		drawQuad(transform, src.Color, entityID);
+		if (src.Texture)
+			drawQuad(transform, src.Texture, src.TilingFactor, src.Color, entityID);
+		else
+			drawQuad(transform, src.Color, entityID);
 	}
 
 

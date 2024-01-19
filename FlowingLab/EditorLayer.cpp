@@ -1,6 +1,6 @@
 #include "EditorLayer.h"
 
-#include <External/imgui.h>
+#include <imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <Muelsyse/Scene/SceneSerializer.h>
@@ -9,6 +9,11 @@
 #include <Muelsyse/Math/Math.h>
 
 using namespace mul;
+
+namespace mul
+{
+	extern const std::filesystem::path g_AssetPath;
+}
 
 EditorLayer::EditorLayer()
 	: Layer("EditorLayer"), m_CameraController(1920.0f / 1080.0f)
@@ -226,6 +231,7 @@ void EditorLayer::onImGuiRender()
 	}
 
 	m_SceneHierarchyPanel.onImGuiRender();
+	m_ContentBrowserPanel.onImGuiRender();
 
 	ImGui::Begin("Stats");
 
@@ -260,6 +266,16 @@ void EditorLayer::onImGuiRender()
 
 	uint64_t textureID = m_Framebuffer->getColorAttachmentRendererID();
 	ImGui::Image(reinterpret_cast<void *>(textureID), ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+		{
+			const wchar_t* path = (const wchar_t*)payload->Data;
+			openScene(std::filesystem::path(g_AssetPath) / path);
+		}
+		ImGui::EndDragDropTarget();
+	}
 
 	// Gizmos
 	Entity selectedEntity = m_SceneHierarchyPanel.getSelectedEntity();
@@ -404,16 +420,19 @@ void EditorLayer::newScene()
 
 void EditorLayer::openScene()
 {
-	std::optional<std::string> filepath = FileDialogs::openFile("Muelsyse Scene (*.flowing)", "*.flowing");
-	if (filepath)
-	{
-		m_ActiveScene = createRef<Scene>();
-		m_ActiveScene->onViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		m_SceneHierarchyPanel.setContext(m_ActiveScene);
+	std::string filepath = FileDialogs::openFile("Muelsyse Scene (*.flowing)", "*.flowing");
+	if (!filepath.empty())
+		openScene(filepath);
+}
 
-		SceneSerializer serializer(m_ActiveScene);
-		serializer.deserialize(*filepath);
-	}
+void EditorLayer::openScene(const std::filesystem::path& path)
+{
+	m_ActiveScene = createRef<Scene>();
+	m_ActiveScene->onViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+	m_SceneHierarchyPanel.setContext(m_ActiveScene);
+
+	SceneSerializer serializer(m_ActiveScene);
+	serializer.deserialize(path.string());
 }
 
 void EditorLayer::saveSceneAs()

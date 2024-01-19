@@ -2,6 +2,7 @@
 #include <Muelsyse.h>
 
 #include "Panels/SceneHierarchyPanel.h"
+#include "Panels/ContentBrowserPanel.h"
 
 using namespace mul;
 
@@ -24,6 +25,7 @@ private:
 
 	void newScene();
 	void openScene();
+	void openScene(const std::filesystem::path& path);
 	void saveSceneAs();
 
 	mul::OrthographicCameraController m_CameraController;
@@ -42,4 +44,5 @@ private:
 
 	// Panels
 	SceneHierarchyPanel m_SceneHierarchyPanel;
+	ContentBrowserPanel m_ContentBrowserPanel;
 };
