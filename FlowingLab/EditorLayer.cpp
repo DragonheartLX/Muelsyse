@@ -15,8 +15,8 @@ namespace mul
 	extern const std::filesystem::path g_AssetPath;
 }
 
-EditorLayer::EditorLayer()
-	: Layer("EditorLayer"), m_CameraController(1920.0f / 1080.0f)
+EditorLayer::EditorLayer(): 
+	Layer("EditorLayer")
 {
 	
 }
@@ -25,15 +25,20 @@ void EditorLayer::onAttach()
 {
 	MUL_PROFILE_FUNCTION();
 
+	m_IconPlay = Texture2D::create("Resources/Icons/PlayButton.png");
+	m_IconSimulate = Texture2D::create("Resources/Icons/SimulateButton.png");
+	m_IconStop = Texture2D::create("Resources/Icons/StopButton.png");
+
 	FramebufferSpecification fbSpec;
 	fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
 	fbSpec.width = 1920;
 	fbSpec.height = 1080;
 	m_Framebuffer = Framebuffer::create(fbSpec);
 
-	m_ActiveScene = createRef<Scene>();
+	m_EditorScene = createRef<Scene>();
+	m_ActiveScene = m_EditorScene;
 
-	auto commandLineArgs = Application::get().getCommandLineArgs();
+	auto commandLineArgs = Application::get().getSpecification().CommandLineArgs;
 	if (commandLineArgs.Count > 1)
 	{
 		auto sceneFilePath = commandLineArgs[1];
@@ -42,57 +47,7 @@ void EditorLayer::onAttach()
 	}
 
 	m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
-
-#if 0
-	// Entity
-	auto square = m_ActiveScene->createEntity("Green Square");
-	square.addComponent<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
-
-	auto redSquare = m_ActiveScene->createEntity("Red Square");
-	redSquare.addComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
-
-	m_SquareEntity = square;
-	m_CameraEntity = m_ActiveScene->createEntity("Camera A");
-	m_CameraEntity.addComponent<CameraComponent>();
-
-	m_SecondCamera = m_ActiveScene->createEntity("Camera B");
-	auto &cc = m_SecondCamera.addComponent<CameraComponent>();
-	cc.Primary = false;
-
-	class CameraController : public ScriptableEntity
-	{
-	public:
-		virtual void onCreate() override
-		{
-			auto &translation = getComponent<TransformComponent>().Translation;
-			translation.x = rand() % 10 - 5.0f;
-		}
-
-		virtual void onDestroy() override
-		{
-		}
-
-		virtual void onUpdate(Timestep ts) override
-		{
-			auto &translation = getComponent<TransformComponent>().Translation;
-			float speed = 5.0f;
-
-			if (Input::isKeyPressed(Key::A))
-				translation.x -= speed * ts;
-			if (Input::isKeyPressed(Key::D))
-				translation.x += speed * ts;
-			if (Input::isKeyPressed(Key::W))
-				translation.y += speed * ts;
-			if (Input::isKeyPressed(Key::S))
-				translation.y -= speed * ts;
-		}
-	};
-
-	m_CameraEntity.addComponent<NativeScriptComponent>().bind<CameraController>();
-	m_SecondCamera.addComponent<NativeScriptComponent>().bind<CameraController>();
-#endif
-
-	m_SceneHierarchyPanel.setContext(m_ActiveScene);
+	// Renderer2D::setLineWidth(1.0f);
 }
 
 void EditorLayer::onDetach()
@@ -110,16 +65,9 @@ void EditorLayer::onUpdate(Timestep ts)
 		(spec.width != m_ViewportSize.x || spec.height != m_ViewportSize.y))
 	{
 		m_Framebuffer->resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		m_CameraController.onResize(m_ViewportSize.x, m_ViewportSize.y);
 		m_EditorCamera.setViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 		m_ActiveScene->onViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 	}
-
-	// Update
-	if (m_ViewportFocused)
-		m_CameraController.onUpdate(ts);
-
-	m_EditorCamera.onUpdate(ts);
 
 	// Render
 	Renderer2D::resetStats();
@@ -131,7 +79,28 @@ void EditorLayer::onUpdate(Timestep ts)
 	// Clear our entity ID attachment to -1
 	m_Framebuffer->clearAttachment(1, -1);
 	
-	m_ActiveScene->onUpdateEditor(ts, m_EditorCamera);
+	switch (m_SceneState)
+	{
+		case SceneState::Edit:
+		{
+			m_EditorCamera.onUpdate(ts);
+
+			m_ActiveScene->onUpdateEditor(ts, m_EditorCamera);
+			break;
+		}
+		case SceneState::Simulate:
+		{
+			m_EditorCamera.onUpdate(ts);
+
+			m_ActiveScene->onUpdateSimulation(ts, m_EditorCamera);
+			break;
+		}
+		case SceneState::Play:
+		{
+			m_ActiveScene->onUpdateRuntime(ts);
+			break;
+		}
+	}
 
 	auto[mx, my] = ImGui::GetMousePos();
 	mx -= m_ViewportBounds[0].x;
@@ -146,6 +115,8 @@ void EditorLayer::onUpdate(Timestep ts)
 		int pixelData = m_Framebuffer->readPixel(1, mouseX, mouseY);
 		m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
 	}
+
+	onOverlayRender();
 
 	m_Framebuffer->unBind();
 }
@@ -218,6 +189,9 @@ void EditorLayer::onImGuiRender()
 			if (ImGui::MenuItem("Open...", "Ctrl+O"))
 				openScene();
 
+			if (ImGui::MenuItem("Save", "Ctrl+S"))
+				saveScene();
+
 			if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
 				saveSceneAs();
 
@@ -247,6 +221,10 @@ void EditorLayer::onImGuiRender()
 	ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 	ImGui::Text("Indices: %d", stats.getTotalIndexCount());
 
+	ImGui::End();
+
+	ImGui::Begin("Settings");
+	ImGui::Checkbox("Show physics colliders", &m_ShowPhysicsColliders);
 	ImGui::End();
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
@@ -328,13 +306,62 @@ void EditorLayer::onImGuiRender()
 	ImGui::End();
 	ImGui::PopStyleVar();
 
+	UI_Toolbar();
+
+	ImGui::End();
+}
+
+void EditorLayer::UI_Toolbar()
+{
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+	auto& colors = ImGui::GetStyle().Colors;
+	const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
+	const auto& buttonActive = colors[ImGuiCol_ButtonActive];
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
+
+	ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+	bool toolbarEnabled = (bool)m_ActiveScene;
+
+	ImVec4 tintColor = ImVec4(1, 1, 1, 1);
+	if (!toolbarEnabled)
+		tintColor.w = 0.5f;
+
+	float size = ImGui::GetWindowHeight() - 4.0f;
+	{
+		Ref<Texture2D> icon = (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Simulate) ? m_IconPlay : m_IconStop;
+		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+		if (ImGui::ImageButton(reinterpret_cast<ImTextureID>(icon->getRendererID()), ImVec2(size, size), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), tintColor) && toolbarEnabled)
+		{
+			if (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Simulate)
+				onScenePlay();
+			else if (m_SceneState == SceneState::Play)
+				onSceneStop();
+		}
+	}
+	ImGui::SameLine();
+	{
+		Ref<Texture2D> icon = (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Play) ? m_IconSimulate : m_IconStop;		//ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+		if (ImGui::ImageButton(reinterpret_cast<ImTextureID>(icon->getRendererID()), ImVec2(size, size), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), tintColor) && toolbarEnabled)
+		{
+			if (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Play)
+				onSceneSimulate();
+			else if (m_SceneState == SceneState::Simulate)
+				onSceneStop();
+		}
+	}
+	ImGui::PopStyleVar(2);
+	ImGui::PopStyleColor(3);
 	ImGui::End();
 }
 
 void EditorLayer::onEvent(Event &e)
 {
-	m_CameraController.onEvent(e);
-	m_EditorCamera.onEvent(e);
+	if ((m_SceneState == SceneState::Edit || m_SceneState == SceneState::Simulate) && m_ViewportHovered)
+		m_EditorCamera.onEvent(e);
 
 	EventDispatcher dispatcher(e);
 	dispatcher.dispatcher<KeyPressedEvent>(MUL_BIND_EVENT_FUNC(EditorLayer::onKeyPressed));
@@ -344,7 +371,7 @@ void EditorLayer::onEvent(Event &e)
 bool EditorLayer::onKeyPressed(KeyPressedEvent& e)
 {
 	// Shortcuts
-	if (e.getRepeatCount() > 0)
+	if (e.isRepeat())
 		return false;
 
 	bool control = Input::isKeyPressed(Key::LeftControl) || Input::isKeyPressed(Key::RightControl);
@@ -366,8 +393,23 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& e)
 		}
 		case Key::S:
 		{
-			if (control && shift)
-				saveSceneAs();
+			if (control)
+			{
+				if (shift)
+					saveSceneAs();
+				else
+					saveScene();
+			}
+
+			break;
+		}
+
+		// Scene Commands
+		case Key::D:
+		{
+			if (control)
+				onDuplicateEntity();
+
 			break;
 		}
 
@@ -411,15 +453,80 @@ bool EditorLayer::onMouseButtonPressed(MouseButtonPressedEvent& e)
 	return false;
 }
 
+void EditorLayer::onOverlayRender()
+{
+	if (m_SceneState == SceneState::Play)
+	{
+		Entity camera = m_ActiveScene->getPrimaryCameraEntity();
+		if (!camera)
+			return;
+		
+		Renderer2D::beginScene(camera.getComponent<CameraComponent>().Camera, camera.getComponent<TransformComponent>().getTransform());
+	}
+	else
+	{
+		Renderer2D::beginScene(m_EditorCamera);
+	}
+
+	if (m_ShowPhysicsColliders)
+	{
+		// Box Colliders
+		{
+			auto view = m_ActiveScene->getAllEntitiesWith<TransformComponent, BoxCollider2DComponent>();
+			for (auto entity : view)
+			{
+				auto [tc, bc2d] = view.get<TransformComponent, BoxCollider2DComponent>(entity);
+
+				glm::vec3 translation = tc.Translation + glm::vec3(bc2d.Offset, 0.001f);
+				glm::vec3 scale = tc.Scale * glm::vec3(bc2d.Size * 2.0f, 1.0f);
+
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+					* glm::rotate(glm::mat4(1.0f), tc.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f))
+					* glm::scale(glm::mat4(1.0f), scale);
+
+				Renderer2D::drawRect(transform, glm::vec4(0, 1, 0, 1));
+			}
+		}
+
+		// Circle Colliders
+		{
+			auto view = m_ActiveScene->getAllEntitiesWith<TransformComponent, CircleCollider2DComponent>();
+			for (auto entity : view)
+			{
+				auto [tc, cc2d] = view.get<TransformComponent, CircleCollider2DComponent>(entity);
+
+				glm::vec3 translation = tc.Translation + glm::vec3(cc2d.Offset, 0.001f);
+				glm::vec3 scale = tc.Scale * glm::vec3(cc2d.Radius * 2.0f);
+
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+					* glm::scale(glm::mat4(1.0f), scale);
+
+				Renderer2D::drawCircle(transform, glm::vec4(0, 1, 0, 1), 0.01f);
+			}
+		}
+	}
+
+	// Draw selected entity outline 
+	if (Entity selectedEntity = m_SceneHierarchyPanel.getSelectedEntity())
+	{
+		const TransformComponent& transform = selectedEntity.getComponent<TransformComponent>();
+		Renderer2D::drawRect(transform.getTransform(), glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
+	}
+
+	Renderer2D::endScene();
+}
+
 void EditorLayer::newScene()
 {
 	m_ActiveScene = createRef<Scene>();
 	m_ActiveScene->onViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 	m_SceneHierarchyPanel.setContext(m_ActiveScene);
+
+	m_EditorScenePath = std::filesystem::path();
 }
 
 void EditorLayer::openScene()
-{
+{	
 	std::string filepath = FileDialogs::openFile("Muelsyse Scene (*.flowing)", "*.flowing");
 	if (!filepath.empty())
 		openScene(filepath);
@@ -427,20 +534,100 @@ void EditorLayer::openScene()
 
 void EditorLayer::openScene(const std::filesystem::path& path)
 {
-	m_ActiveScene = createRef<Scene>();
-	m_ActiveScene->onViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-	m_SceneHierarchyPanel.setContext(m_ActiveScene);
+	if (m_SceneState != SceneState::Edit)
+			onSceneStop();
+	
+	if (path.extension().string() != ".flowing")
+	{
+		MUL_WARN("Could not load {0} - not a scene file", path.filename().string());
+		return;
+	}
+		
+	Ref<Scene> newScene = createRef<Scene>();
+	SceneSerializer serializer(newScene);
+	if (serializer.deserialize(path.string()))
+	{
+		m_EditorScene = newScene;
+		m_EditorScene->onViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHierarchyPanel.setContext(m_EditorScene);
 
-	SceneSerializer serializer(m_ActiveScene);
-	serializer.deserialize(path.string());
+		m_ActiveScene = m_EditorScene;
+		m_EditorScenePath = path;
+	}
+}
+
+void EditorLayer::saveScene()
+{
+	if (!m_EditorScenePath.empty())
+		serializeScene(m_ActiveScene, m_EditorScenePath);
+	else
+		saveSceneAs();
 }
 
 void EditorLayer::saveSceneAs()
 {
-	std::optional<std::string> filepath = FileDialogs::saveFile("Muelsyse Scene (*.flowing)", "*.flowing");
-	if (filepath)
+	std::string filepath = FileDialogs::saveFile("Muelsyse Scene (*.flowing)", "*.flowing");
+	if (!filepath.empty())
 	{
-		SceneSerializer serializer(m_ActiveScene);
-		serializer.serialize(*filepath);
+		serializeScene(m_ActiveScene, filepath);
+		m_EditorScenePath = filepath;
 	}
+}
+
+void EditorLayer::serializeScene(Ref<Scene> scene, const std::filesystem::path& path)
+{
+	SceneSerializer serializer(scene);
+	serializer.serialize(path.string());
+}
+
+void EditorLayer::onScenePlay()
+{
+	if (m_SceneState == SceneState::Simulate)
+		onSceneStop();
+	
+	m_SceneState = SceneState::Play;
+
+	m_ActiveScene = Scene::copy(m_EditorScene);
+	m_ActiveScene->onRuntimeStart();
+
+	m_SceneHierarchyPanel.setContext(m_ActiveScene);
+}
+
+void EditorLayer::onSceneSimulate()
+{
+	if (m_SceneState == SceneState::Play)
+		onSceneStop();
+
+	m_SceneState = SceneState::Simulate;
+
+	m_ActiveScene = Scene::copy(m_EditorScene);
+	m_ActiveScene->onSimulationStart();
+
+	m_SceneHierarchyPanel.setContext(m_ActiveScene);
+}
+
+void EditorLayer::onSceneStop()
+{
+	MUL_CORE_ASSERT(m_SceneState == SceneState::Play || m_SceneState == SceneState::Simulate);
+
+	if (m_SceneState == SceneState::Play)
+		m_ActiveScene->onRuntimeStop();
+	else if (m_SceneState == SceneState::Simulate)
+		m_ActiveScene->onSimulationStop();
+	
+	m_SceneState = SceneState::Edit;
+
+	m_ActiveScene = m_EditorScene;
+
+	m_SceneHierarchyPanel.setContext(m_ActiveScene);
+}
+
+void EditorLayer::onDuplicateEntity()
+{
+	if (m_SceneState != SceneState::Edit)
+		return;
+
+	Entity selectedEntity = m_SceneHierarchyPanel.getSelectedEntity();
+	if (selectedEntity)
+		m_EditorScene->duplicateEntity(selectedEntity);
 }

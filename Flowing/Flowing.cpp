@@ -4,11 +4,11 @@
 class Flowing : public mul::Application
 {
 public:
-	Flowing() {};
+	Flowing(const mul::ApplicationSpecification& specification): mul::Application(specification) {};
 	~Flowing() {};
 
 private:
 
 };
 
-FLOWING(Flowing);
+FLOWING(Flowing, "./");

@@ -59,17 +59,20 @@ namespace mul
 
 	void EditorCamera::onUpdate(Timestep ts)
 	{
-		const glm::vec2& mouse{ Input::getMouseX(), Input::getMouseY() };
-		glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.003f;
-		m_InitialMousePosition = mouse;
-
-		if (Input::isMouseButtonPressed(Mouse::ButtonMiddle))
-			m_MousePan(delta);
-		else if (Input::isMouseButtonPressed(Mouse::ButtonLeft))
-			m_MouseRotate(delta);
-		else if (Input::isMouseButtonPressed(Mouse::ButtonRight))
-			m_MouseZoom(delta.y);
-
+		if (Input::isKeyPressed(Key::LeftAlt))
+		{
+			const glm::vec2& mouse{ Input::getMouseX(), Input::getMouseY() };
+			glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.003f;
+			m_InitialMousePosition = mouse;
+		
+			if (Input::isMouseButtonPressed(Mouse::ButtonMiddle))
+				m_MousePan(delta);
+			else if (Input::isMouseButtonPressed(Mouse::ButtonLeft))
+				m_MouseRotate(delta);
+			else if (Input::isMouseButtonPressed(Mouse::ButtonRight))
+				m_MouseZoom(delta.y);
+		}
+		
 		m_UpdateView();
 	}
 

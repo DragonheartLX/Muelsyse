@@ -27,9 +27,19 @@ namespace mul
 			s_RendererAPI->clear();
 		}
 
-		static void drawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count = 0)
+		static void drawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0)
 		{
-			s_RendererAPI->drawIndexed(vertexArray, count);
+			s_RendererAPI->drawIndexed(vertexArray, indexCount);
+		}
+
+		static void drawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
+		{
+			s_RendererAPI->drawLines(vertexArray, vertexCount);
+		}
+
+		static void setLineWidth(float width)
+		{
+			s_RendererAPI->setLineWidth(width);
 		}
 	private:
 		static Scope<RendererAPI> s_RendererAPI;

@@ -7,11 +7,11 @@
 class FlowingLab: public mul::Application
 {
 public:
-	FlowingLab(ApplicationCommandLineArgs args);
+	FlowingLab(const mul::ApplicationSpecification& specification);
 	~FlowingLab() {};
 
 private:
 
 };
 
-FLOWING(FlowingLab);
+FLOWING(FlowingLab, "../../");

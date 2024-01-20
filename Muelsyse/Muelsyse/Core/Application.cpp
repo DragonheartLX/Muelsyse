@@ -1,21 +1,24 @@
 #include "Muelsyse/Core/Application.h"
 #include "Muelsyse/Renderer/Renderer.h"
-
-#include <glfw/glfw3.h>
+#include "Muelsyse/Utils/Utils.h"
 
 namespace mul
 {
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application(const std::string& name, ApplicationCommandLineArgs args): 
-		m_CommandLineArgs(args)
+	Application::Application(const ApplicationSpecification& specification): 
+		m_Specification(specification)
 	{
 		MUL_PROFILE_FUNCTION();
 
 		MUL_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
-		m_Window = Window::create(WindowProps(name));
+		// Set working directory here
+		if (!m_Specification.WorkingDirectory.empty())
+			std::filesystem::current_path(m_Specification.WorkingDirectory);
+
+		m_Window = Window::create(WindowProps(m_Specification.Name));
 		m_Window->setEventCallback(MUL_BIND_EVENT_FUNC(Application::onEvent));
 
 		Renderer::init();
@@ -38,7 +41,7 @@ namespace mul
 		{
 			MUL_PROFILE_SCOPE("RunLoop");
 
-			float time = (float)glfwGetTime();
+			float time = Time::getTime();
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 

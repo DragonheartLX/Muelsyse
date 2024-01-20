@@ -1,73 +1,30 @@
-Scene: PhysicTest
+Scene: Untitled
 Entities:
-  - Entity: 12837192831273
+  - Entity: 2045847274516008956
     TagComponent:
-      Tag: Bottom Platform
+      Tag: Wall
     TransformComponent:
-      Translation: [5.96046448e-08, -10, 0]
-      Rotation: [0, 0, 0]
-      Scale: [20, 0.5, 1]
+      Translation: [15.5318403, -3.7517817, 0]
+      Rotation: [0, 0, 0.939303637]
+      Scale: [7.80188704, 0.382641375, 1]
     SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
-  - Entity: 12837192831273
-    TagComponent:
-      Tag: Left Wall
-    TransformComponent:
-      Translation: [-10, 4.75, 0]
-      Rotation: [0, 0, 1.57079637]
-      Scale: [29.9973888, 0.499959201, 1]
-    SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
-  - Entity: 12837192831273
-    TagComponent:
-      Tag: Right Wall
-    TransformComponent:
-      Translation: [10, 4.75, 0]
-      Rotation: [0, 0, 1.57079637]
-      Scale: [29.9996166, 0.49999401, 1]
-    SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
-  - Entity: 12837192831273
-    TagComponent:
-      Tag: Platform 01
-    TransformComponent:
-      Translation: [4.67666006, -5.09131575, 0]
-      Rotation: [0, 0, 0.294339687]
-      Scale: [9.67970562, 0.499044687, 1]
-    SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
-  - Entity: 12837192831273
-    TagComponent:
-      Tag: Platform 02
-    TransformComponent:
-      Translation: [-3.7860136, 1.88562799, 0]
-      Rotation: [0, 0, -0.462087154]
-      Scale: [12.657382, 0.497983694, 1]
-    SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
-  - Entity: 12837192831273
-    TagComponent:
-      Tag: Platform 03
-    TransformComponent:
-      Translation: [4.64768124, 9.79718208, 0]
-      Rotation: [0, 0, 0.356508464]
-      Scale: [10.6189709, 0.49973774, 1]
-    SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
-  - Entity: 12837192831273
-    TagComponent:
-      Tag: Platform 04
-    TransformComponent:
-      Translation: [-5.5255127, 14.5399895, 0]
-      Rotation: [0, 0, -0.310826331]
-      Scale: [9.5750103, 0.502702057, 1]
-    SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
-  - Entity: 12837192831273
+      Color: [0.0633562282, 0.286218405, 0.965250969, 1]
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: Static
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 2883994534333321736
     TagComponent:
       Tag: Player
     TransformComponent:
-      Translation: [-6.94392586, 17.9291916, 0]
+      Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     CameraComponent:
@@ -81,5 +38,57 @@ Entities:
         OrthographicFar: 1
       Primary: true
       FixedAspectRatio: false
+    CircleRendererComponent:
+      Color: [0.99227798, 0.567001164, 0.0344806984, 1]
+      Thickness: 1
+      Fade: 0
+    Rigidbody2DComponent:
+      BodyType: Dynamic
+      FixedRotation: false
+    CircleCollider2DComponent:
+      Offset: [0, 0]
+      Radius: 0.5
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 8441006191599875802
+    TagComponent:
+      Tag: Platform
+    TransformComponent:
+      Translation: [5.69999981, -7, 0]
+      Rotation: [0, 0, 0]
+      Scale: [14.8000002, 0.5, 1]
     SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
+      Color: [0.965250969, 0.66437, 0.0484489091, 1]
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: Static
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5
+  - Entity: 16866406760725907510
+    TagComponent:
+      Tag: Wall
+    TransformComponent:
+      Translation: [-2.70000005, -1, 0]
+      Rotation: [0, 0, -0.186750218]
+      Scale: [5, 0.100000001, 1]
+    SpriteRendererComponent:
+      Color: [0.949806929, 0.0183360148, 0.147806838, 1]
+      TilingFactor: 1
+    Rigidbody2DComponent:
+      BodyType: Static
+      FixedRotation: true
+    BoxCollider2DComponent:
+      Offset: [0, 0]
+      Size: [0.5, 0.5]
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5

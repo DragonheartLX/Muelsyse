@@ -22,6 +22,27 @@ namespace mul
 		int EntityID;
 	};
 
+	struct CircleVertex
+	{
+		glm::vec3 WorldPosition;
+		glm::vec3 LocalPosition;
+		glm::vec4 Color;
+		float Thickness;
+		float Fade;
+
+		// Editor-only
+		int EntityID;
+	};	
+
+	struct LineVertex
+	{
+		glm::vec3 Position;
+		glm::vec4 Color;
+
+		// Editor-only
+		int EntityID;
+	};
+
 	struct Renderer2DData
 	{
 		static const uint32_t MaxQuads = 10000;
@@ -31,12 +52,30 @@ namespace mul
 
 		Ref<VertexArray> QuadVertexArray;
 		Ref<VertexBuffer> QuadVertexBuffer;
-		Ref<Shader> TextureShader;
+		Ref<Shader> QuadShader;
 		Ref<Texture2D> WhiteTexture;
+
+		Ref<VertexArray> CircleVertexArray;
+		Ref<VertexBuffer> CircleVertexBuffer;
+		Ref<Shader> CircleShader;
+
+		Ref<VertexArray> LineVertexArray;
+		Ref<VertexBuffer> LineVertexBuffer;
+		Ref<Shader> LineShader;
 
 		uint32_t QuadIndexCount = 0;
 		QuadVertex* QuadVertexBufferBase = nullptr;
 		QuadVertex* QuadVertexBufferPtr = nullptr;
+
+		uint32_t CircleIndexCount = 0;
+		CircleVertex* CircleVertexBufferBase = nullptr;
+		CircleVertex* CircleVertexBufferPtr = nullptr;
+
+		uint32_t LineVertexCount = 0;
+		LineVertex* LineVertexBufferBase = nullptr;
+		LineVertex* LineVertexBufferPtr = nullptr;
+
+		float LineWidth = 1.0f;
 
 		std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
 		uint32_t TextureSlotIndex = 1; // 0 = white texture
@@ -96,6 +135,34 @@ namespace mul
 		s_Data->QuadVertexArray->setIndexBuffer(quadIB);
 		delete[] quadIndices;
 
+		// Circles
+		s_Data->CircleVertexArray = VertexArray::create();
+
+		s_Data->CircleVertexBuffer = VertexBuffer::create(s_Data->MaxVertices * sizeof(CircleVertex));
+		s_Data->CircleVertexBuffer->setLayout({
+			{ ShaderDataType::Float3, "a_WorldPosition" },
+			{ ShaderDataType::Float3, "a_LocalPosition" },
+			{ ShaderDataType::Float4, "a_Color"         },
+			{ ShaderDataType::Float,  "a_Thickness"     },
+			{ ShaderDataType::Float,  "a_Fade"          },
+			{ ShaderDataType::Int,    "a_EntityID"      }
+		});
+		s_Data->CircleVertexArray->addVertexBuffer(s_Data->CircleVertexBuffer);
+		s_Data->CircleVertexArray->setIndexBuffer(quadIB); // Use quad IB
+		s_Data->CircleVertexBufferBase = new CircleVertex[s_Data->MaxVertices];
+
+		// Lines
+		s_Data->LineVertexArray = VertexArray::create();
+
+		s_Data->LineVertexBuffer = VertexBuffer::create(s_Data->MaxVertices * sizeof(LineVertex));
+		s_Data->LineVertexBuffer->setLayout({
+			{ ShaderDataType::Float3, "a_Position" },
+			{ ShaderDataType::Float4, "a_Color"    },
+			{ ShaderDataType::Int,    "a_EntityID" }
+		});
+		s_Data->LineVertexArray->addVertexBuffer(s_Data->LineVertexBuffer);
+		s_Data->LineVertexBufferBase = new LineVertex[s_Data->MaxVertices];
+
 		s_Data->WhiteTexture = Texture2D::create(1, 1);
 		uint32_t whiteTextureData = 0xffffffff;
 		s_Data->WhiteTexture->setData(&whiteTextureData, sizeof(uint32_t));
@@ -104,7 +171,9 @@ namespace mul
 		for (uint32_t i = 0; i < s_Data->MaxTextureSlots; i++)
 			samplers[i] = i;
 		
-		s_Data->TextureShader = Shader::create("assets/shaders/Texture.glsl");
+		s_Data->QuadShader = Shader::create("assets/shaders/Renderer2D_Quad.glsl");
+		s_Data->CircleShader = Shader::create("assets/shaders/Renderer2D_Circle.glsl");
+		s_Data->LineShader = Shader::create("assets/shaders/Renderer2D_Line.glsl");
 
 		// Set first texture slot to 0
 		s_Data->TextureSlots[0] = s_Data->WhiteTexture;
@@ -167,24 +236,51 @@ namespace mul
 		s_Data->QuadIndexCount = 0;	
 		s_Data->QuadVertexBufferPtr = s_Data->QuadVertexBufferBase;
 
+		s_Data->CircleIndexCount = 0;
+		s_Data->CircleVertexBufferPtr = s_Data->CircleVertexBufferBase;
+
+		s_Data->LineVertexCount = 0;
+		s_Data->LineVertexBufferPtr = s_Data->LineVertexBufferBase;
+
 		s_Data->TextureSlotIndex = 1;
 	}
 
 	void Renderer2D::flush()
 	{
-		if (s_Data->QuadIndexCount == 0)
-			return; // Nothing to draw
-		
-		uint32_t dataSize = (uint32_t)((uint8_t*)s_Data->QuadVertexBufferPtr - (uint8_t*)s_Data->QuadVertexBufferBase);
-		s_Data->QuadVertexBuffer->setData(s_Data->QuadVertexBufferBase, dataSize);
+		if (s_Data->QuadIndexCount)
+		{
+			uint32_t dataSize = (uint32_t)((uint8_t*)s_Data->QuadVertexBufferPtr - (uint8_t*)s_Data->QuadVertexBufferBase);
+			s_Data->QuadVertexBuffer->setData(s_Data->QuadVertexBufferBase, dataSize);
 
-		// Bind textures
-		for (uint32_t i = 0; i < s_Data->TextureSlotIndex; i++)
-			s_Data->TextureSlots[i]->bind(i);
-		
-		s_Data->TextureShader->bind();
-		RenderCommand::drawIndexed(s_Data->QuadVertexArray, s_Data->QuadIndexCount);
-		s_Data->Stats.DrawCalls++;
+			// Bind textures
+			for (uint32_t i = 0; i < s_Data->TextureSlotIndex; i++)
+				s_Data->TextureSlots[i]->bind(i);
+
+			s_Data->QuadShader->bind();
+			RenderCommand::drawIndexed(s_Data->QuadVertexArray, s_Data->QuadIndexCount);
+			s_Data->Stats.DrawCalls++;
+		}
+
+		if (s_Data->CircleIndexCount)
+		{
+			uint32_t dataSize = (uint32_t)((uint8_t*)s_Data->CircleVertexBufferPtr - (uint8_t*)s_Data->CircleVertexBufferBase);
+			s_Data->CircleVertexBuffer->setData(s_Data->CircleVertexBufferBase, dataSize);
+
+			s_Data->CircleShader->bind();
+			RenderCommand::drawIndexed(s_Data->CircleVertexArray, s_Data->CircleIndexCount);
+			s_Data->Stats.DrawCalls++;
+		}
+
+		if (s_Data->LineVertexCount)
+		{
+			uint32_t dataSize = (uint32_t)((uint8_t*)s_Data->LineVertexBufferPtr - (uint8_t*)s_Data->LineVertexBufferBase);
+			s_Data->LineVertexBuffer->setData(s_Data->LineVertexBufferBase, dataSize);
+
+			s_Data->LineShader->bind();
+			RenderCommand::setLineWidth(s_Data->LineWidth);
+			RenderCommand::drawLines(s_Data->LineVertexArray, s_Data->LineVertexCount);
+			s_Data->Stats.DrawCalls++;
+		}
 	}
 
 	void Renderer2D::m_NextBatch()
@@ -329,6 +425,70 @@ namespace mul
 		drawQuad(transform, texture, tilingFactor, tintColor);
 	}
 
+	void Renderer2D::drawCircle(const glm::mat4& transform, const glm::vec4& color, float thickness /*= 1.0f*/, float fade /*= 0.005f*/, int entityID /*= -1*/)
+	{
+		MUL_PROFILE_FUNCTION();
+
+		// TODO: implement for circles
+		// if (s_Data->QuadIndexCount >= Renderer2DData::MaxIndices)
+		// 	NextBatch();
+
+		for (size_t i = 0; i < 4; i++)
+		{
+			s_Data->CircleVertexBufferPtr->WorldPosition = transform * s_Data->QuadVertexPositions[i];
+			s_Data->CircleVertexBufferPtr->LocalPosition = s_Data->QuadVertexPositions[i] * 2.0f;
+			s_Data->CircleVertexBufferPtr->Color = color;
+			s_Data->CircleVertexBufferPtr->Thickness = thickness;
+			s_Data->CircleVertexBufferPtr->Fade = fade;
+			s_Data->CircleVertexBufferPtr->EntityID = entityID;
+			s_Data->CircleVertexBufferPtr++;
+		}
+
+		s_Data->CircleIndexCount += 6;
+
+		s_Data->Stats.QuadCount++;
+	}
+
+	void Renderer2D::drawLine(const glm::vec3& p0, glm::vec3& p1, const glm::vec4& color, int entityID)
+	{
+		s_Data->LineVertexBufferPtr->Position = p0;
+		s_Data->LineVertexBufferPtr->Color = color;
+		s_Data->LineVertexBufferPtr->EntityID = entityID;
+		s_Data->LineVertexBufferPtr++;
+
+		s_Data->LineVertexBufferPtr->Position = p1;
+		s_Data->LineVertexBufferPtr->Color = color;
+		s_Data->LineVertexBufferPtr->EntityID = entityID;
+		s_Data->LineVertexBufferPtr++;
+
+		s_Data->LineVertexCount += 2;
+	}
+
+	void Renderer2D::drawRect(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, int entityID)
+	{
+		glm::vec3 p0 = glm::vec3(position.x - size.x * 0.5f, position.y - size.y * 0.5f, position.z);
+		glm::vec3 p1 = glm::vec3(position.x + size.x * 0.5f, position.y - size.y * 0.5f, position.z);
+		glm::vec3 p2 = glm::vec3(position.x + size.x * 0.5f, position.y + size.y * 0.5f, position.z);
+		glm::vec3 p3 = glm::vec3(position.x - size.x * 0.5f, position.y + size.y * 0.5f, position.z);
+
+		drawLine(p0, p1, color, entityID);
+		drawLine(p1, p2, color, entityID);
+		drawLine(p2, p3, color, entityID);
+		drawLine(p3, p0, color, entityID);
+	}
+
+	void Renderer2D::drawRect(const glm::mat4& transform, const glm::vec4& color, int entityID)
+	{
+		glm::vec3 lineVertices[4];
+		for (size_t i = 0; i < 4; i++)
+			lineVertices[i] = transform * s_Data->QuadVertexPositions[i];
+
+		drawLine(lineVertices[0], lineVertices[1], color, entityID);
+		drawLine(lineVertices[1], lineVertices[2], color, entityID);
+		drawLine(lineVertices[2], lineVertices[3], color, entityID);
+		drawLine(lineVertices[3], lineVertices[0], color, entityID);
+	}
+
 	void Renderer2D::drawSprite(const glm::mat4& transform, SpriteRendererComponent& src, int entityID)
 	{
 		if (src.Texture)
@@ -337,6 +497,15 @@ namespace mul
 			drawQuad(transform, src.Color, entityID);
 	}
 
+	float Renderer2D::getLineWidth()
+	{
+		return s_Data->LineWidth;
+	}
+
+	void Renderer2D::setLineWidth(float width)
+	{
+		s_Data->LineWidth = width;
+	}
 
 	void Renderer2D::resetStats()
 	{

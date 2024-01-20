@@ -24,22 +24,25 @@ namespace mul
 	{
 		ImGui::Begin("Scene Hierarchy");
 
-		for(auto [entityID, tag]: m_Context->m_Registry.storage<TagComponent>().each())
+		if (m_Context)
 		{
-			Entity entity{ entityID , m_Context.get() };
-			drawEntityNode(entity, tag.Tag);
-		}
+			for(auto [entityID, tag]: m_Context->m_Registry.storage<TagComponent>().each())
+			{
+				Entity entity{ entityID , m_Context.get() };
+				drawEntityNode(entity, tag.Tag);
+			}
 
-		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
-			m_SelectionContext = {};
+			if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
+				m_SelectionContext = {};
 
-		// Right-click on blank space
-		if (ImGui::BeginPopupContextWindow(0, 1))
-		{
-			if (ImGui::MenuItem("Create Empty Entity"))
-				m_Context->createEntity("Empty Entity");
+			// Right-click on blank space
+			if (ImGui::BeginPopupContextWindow(0, ImGuiPopupFlags_NoOpenOverItems | ImGuiPopupFlags_MouseButtonRight))
+			{
+				if (ImGui::MenuItem("Create Empty Entity"))
+					m_Context->createEntity("Empty Entity");
 
-			ImGui::EndPopup();
+				ImGui::EndPopup();
+			}
 		}
 
 		ImGui::End();
@@ -79,10 +82,10 @@ namespace mul
 
 		if (opened)
 		{
-			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-			bool opened = ImGui::TreeNodeEx((void*)9817239, flags, "%s", tag.c_str());
-			if (opened)
-				ImGui::TreePop();
+			//ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+			//bool opened = ImGui::TreeNodeEx((void*)9817239, flags, "%s", tag.c_str());
+			//if (opened)
+			//	ImGui::TreePop();
 			ImGui::TreePop();
 		}
 
@@ -94,7 +97,7 @@ namespace mul
 		}
 	}
 
-	static void drawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
+	static void drawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 110.0f)
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		auto boldFont = io.Fonts->Fonts[0];
@@ -173,8 +176,8 @@ namespace mul
 			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 			ImGui::Separator();
 			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, "%s", name.c_str());
-			ImGui::PopStyleVar(
-			);
+			ImGui::PopStyleVar();
+
 			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
 			if (ImGui::Button("+", ImVec2{ lineHeight, lineHeight }))
 			{
@@ -210,10 +213,13 @@ namespace mul
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
 			strcpy_s(buffer, sizeof(buffer), tag.c_str());
+
+			ImGui::PushItemWidth(200);
 			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
 			{
 				tag = std::string(buffer);
 			}
+			ImGui::PopItemWidth();
 		}
 
 		ImGui::SameLine();
@@ -224,23 +230,12 @@ namespace mul
 
 		if (ImGui::BeginPopup("AddComponent"))
 		{
-			if (ImGui::MenuItem("Camera"))
-			{
-				if (!m_SelectionContext.hasComponent<CameraComponent>())
-					m_SelectionContext.addComponent<CameraComponent>();
-				else
-					MUL_CORE_WARN("This entity already has the Camera Component!");
-				ImGui::CloseCurrentPopup();
-			}
-
-			if (ImGui::MenuItem("Sprite Renderer"))
-			{
-				if (!m_SelectionContext.hasComponent<SpriteRendererComponent>())
-					m_SelectionContext.addComponent<SpriteRendererComponent>();
-				else
-					MUL_CORE_WARN("This entity already has the Sprite Renderer Component!");
-				ImGui::CloseCurrentPopup();
-			}
+			displayAddComponentEntry<CameraComponent>("Camera");
+			displayAddComponentEntry<SpriteRendererComponent>("Sprite Renderer");
+			displayAddComponentEntry<CircleRendererComponent>("Circle Renderer");
+			displayAddComponentEntry<Rigidbody2DComponent>("Rigidbody 2D");
+			displayAddComponentEntry<BoxCollider2DComponent>("Box Collider 2D");
+			displayAddComponentEntry<CircleCollider2DComponent>("Circle Collider 2D");
 
 			ImGui::EndPopup();
 		}
@@ -264,6 +259,7 @@ namespace mul
 
 			const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
 			const char* currentProjectionTypeString = projectionTypeStrings[(int)camera.getProjectionType()];
+			ImGui::PushItemWidth(150);
 			if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
 			{
 				for (int i = 0; i < 2; i++)
@@ -295,6 +291,8 @@ namespace mul
 				float perspectiveFar = camera.getPerspectiveFarClip();
 				if (ImGui::DragFloat("Far", &perspectiveFar))
 					camera.setPerspectiveFarClip(perspectiveFar);
+
+				ImGui::PopItemWidth();
 			}
 
 			if (camera.getProjectionType() == SceneCamera::ProjectionType::Orthographic)
@@ -311,6 +309,8 @@ namespace mul
 				if (ImGui::DragFloat("Far", &orthoFar))
 					camera.setOrthographicFarClip(orthoFar);
 
+				ImGui::PopItemWidth();
+
 				ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
 			}
 		});
@@ -326,12 +326,90 @@ namespace mul
 				{
 					const wchar_t* path = (const wchar_t*)payload->Data;
 					std::filesystem::path texturePath = std::filesystem::path(g_AssetPath) / path;
-					component.Texture = Texture2D::create(texturePath.string());
+					Ref<Texture2D> texture = Texture2D::create(texturePath.string());
+					if (texture->isLoaded())
+						component.Texture = texture;
+					else
+						MUL_WARN("Could not load texture {0}", texturePath.filename().string());
 				}
 				ImGui::EndDragDropTarget();
 			}
 
+			ImGui::PushItemWidth(100);
 			ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
+			ImGui::PopItemWidth();
 		});
+
+		drawComponent<CircleRendererComponent>("Circle Renderer", entity, [](auto& component)
+		{
+			ImGui::PushItemWidth(150);
+			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+			ImGui::DragFloat("Thickness", &component.Thickness, 0.025f, 0.0f, 1.0f);
+			ImGui::DragFloat("Fade", &component.Fade, 0.00025f, 0.0f, 1.0f);
+			ImGui::PopItemWidth();
+		});
+
+		drawComponent<Rigidbody2DComponent>("Rigidbody 2D", entity, [](auto& component)
+		{
+			const char* bodyTypeStrings[] = { "Static", "Dynamic", "Kinematic"};
+			const char* currentBodyTypeString = bodyTypeStrings[(int)component.Type];
+			ImGui::PushItemWidth(150);
+			if (ImGui::BeginCombo("Body Type", currentBodyTypeString))
+			{
+				for (int i = 0; i < 2; i++)
+				{
+					bool isSelected = currentBodyTypeString == bodyTypeStrings[i];
+					if (ImGui::Selectable(bodyTypeStrings[i], isSelected))
+					{
+						currentBodyTypeString = bodyTypeStrings[i];
+						component.Type = (Rigidbody2DComponent::BodyType)i;
+					}
+
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+
+				ImGui::EndCombo();
+			}
+			ImGui::PopItemWidth();
+
+			ImGui::Checkbox("Fixed Rotation", &component.FixedRotation);
+		});
+
+		drawComponent<BoxCollider2DComponent>("Box Collider 2D", entity, [](auto& component)
+		{
+			ImGui::PushItemWidth(150);
+			ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
+			ImGui::DragFloat2("Size", glm::value_ptr(component.Offset));
+			ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
+			ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
+			ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
+			ImGui::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.01f, 0.0f);
+			ImGui::PopItemWidth();
+		});
+
+		drawComponent<CircleCollider2DComponent>("Circle Collider 2D", entity, [](auto& component)
+		{
+			ImGui::PushItemWidth(150);
+			ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
+			ImGui::DragFloat("Radius", &component.Radius);
+			ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
+			ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
+			ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
+			ImGui::DragFloat("Restitution Threshold", &component.RestitutionThreshold, 0.01f, 0.0f);
+			ImGui::PopItemWidth();
+		});
+	}
+
+	template<typename T>
+	void SceneHierarchyPanel::displayAddComponentEntry(const std::string& entryName) {
+		if (!m_SelectionContext.hasComponent<T>())
+		{
+			if (ImGui::MenuItem(entryName.c_str()))
+			{
+				m_SelectionContext.addComponent<T>();
+				ImGui::CloseCurrentPopup();
+			}
+		}
 	}
 }

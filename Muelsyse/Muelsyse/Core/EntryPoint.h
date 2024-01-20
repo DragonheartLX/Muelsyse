@@ -30,4 +30,12 @@ extern mul::Application* mul::createApplication(ApplicationCommandLineArgs args)
 		return 0;
 	}
 
-#define FLOWING(X) mul::Application* mul::createApplication(mul::ApplicationCommandLineArgs args) { return new X(args); }
+#define FLOWING(X, PATH) mul::Application* mul::createApplication(mul::ApplicationCommandLineArgs args)\
+{\
+	mul::ApplicationSpecification spec;\
+	spec.Name = "Flowing";\
+	spec.WorkingDirectory = PATH;\
+	spec.CommandLineArgs = args;\
+\
+	return new X(spec);\
+}

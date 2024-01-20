@@ -26,10 +26,17 @@ namespace mul
 		}
 	};
 
+	struct ApplicationSpecification
+	{
+		std::string Name = "Flowing Application";
+		std::string WorkingDirectory;
+		ApplicationCommandLineArgs CommandLineArgs;
+	};
+
 	class MUL_API Application
 	{
 	public:
-		Application(const std::string& name = "Flowing Application", ApplicationCommandLineArgs args = ApplicationCommandLineArgs());
+		Application(const ApplicationSpecification& specification);
 		virtual ~Application();
 
 		void onEvent(Event& e);
@@ -45,14 +52,14 @@ namespace mul
 
 		static Application& get() { return *s_Instance; }
 
-		ApplicationCommandLineArgs getCommandLineArgs() const { return m_CommandLineArgs; }
+		const ApplicationSpecification& getSpecification() const { return m_Specification; }
 	private:
 		void m_Run();
 
 		bool m_OnWindowClose(WindowCloseEvent& e);
 		bool m_OnWindowResize(WindowResizeEvent& e);
 		
-		ApplicationCommandLineArgs m_CommandLineArgs;
+		ApplicationSpecification m_Specification;
 		ImGuiLayer* m_ImGuiLayer;
 		Scope<Window> m_Window;
 		bool m_Running = true;

@@ -36,15 +36,17 @@ namespace mul
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
+		float fontSize = 18.0f;
+
 		// CascadiaMono-Bold
-		io.Fonts->AddFontFromFileTTF("assets/fonts/CascadiaCodeMono/CascadiaMono-Bold.ttf", 20.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/CascadiaCodeMono/CascadiaMono-Regular.ttf", 20.0f);
+		io.Fonts->AddFontFromFileTTF("assets/fonts/CascadiaCodeMono/CascadiaMono-Bold.ttf", fontSize);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/CascadiaCodeMono/CascadiaMono-Regular.ttf", fontSize);
 
 		// OpenSans
 		// io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Bold.ttf", 22.0f);
 		// io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Regular.ttf", 22.0f);
 
-		// io.FontGlobalScale = 1.3f;
+		//io.FontGlobalScale = 0.8f;
 
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();

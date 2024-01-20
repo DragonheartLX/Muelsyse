@@ -13,4 +13,10 @@ namespace mul
 		static std::string openFile(const char* filterDes, const char* filter);
 		static std::string saveFile(const char* filterDes, const char* filter);
 	};
+
+	class Time
+	{
+	public:
+		static float getTime();
+	};
 }

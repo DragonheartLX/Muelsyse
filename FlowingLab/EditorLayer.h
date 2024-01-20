@@ -23,14 +23,30 @@ private:
 	bool onKeyPressed(KeyPressedEvent& e);
 	bool onMouseButtonPressed(MouseButtonPressedEvent& e);
 
+	void onOverlayRender();
+
 	void newScene();
 	void openScene();
 	void openScene(const std::filesystem::path& path);
+	void saveScene();
 	void saveSceneAs();
 
-	mul::OrthographicCameraController m_CameraController;
+	void serializeScene(Ref<Scene> scene, const std::filesystem::path& path);
+
+	void onScenePlay();
+	void onSceneSimulate();
+	void onSceneStop();
+
+	void onDuplicateEntity();
+
+
+	// UI Panels
+	void UI_Toolbar();
+
 	Ref<Framebuffer> m_Framebuffer;
 	Ref<Scene> m_ActiveScene;
+	Ref<Scene> m_EditorScene;
+	std::filesystem::path m_EditorScenePath;
 
 	Entity m_HoveredEntity;
 	
@@ -42,7 +58,18 @@ private:
 
 	int m_GizmoType = -1;
 
+	bool m_ShowPhysicsColliders = false;
+
+	enum class SceneState
+	{
+		Edit = 0, Play = 1, Simulate = 2
+	};
+	SceneState m_SceneState = SceneState::Edit;
+
 	// Panels
 	SceneHierarchyPanel m_SceneHierarchyPanel;
 	ContentBrowserPanel m_ContentBrowserPanel;
+
+	// Editor resources
+	Ref<Texture2D> m_IconPlay, m_IconSimulate, m_IconStop;
 };
