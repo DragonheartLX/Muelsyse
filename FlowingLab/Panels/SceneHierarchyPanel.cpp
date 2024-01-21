@@ -256,6 +256,7 @@ namespace mul
 			auto& camera = component.Camera;
 
 			ImGui::Checkbox("Primary", &component.Primary);
+			ImGui::Checkbox("FixedRotation", &component.FixedRotation);
 
 			const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
 			const char* currentProjectionTypeString = projectionTypeStrings[(int)camera.getProjectionType()];
@@ -342,8 +343,8 @@ namespace mul
 
 		drawComponent<CircleRendererComponent>("Circle Renderer", entity, [](auto& component)
 		{
-			ImGui::PushItemWidth(150);
 			ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+			ImGui::PushItemWidth(150);
 			ImGui::DragFloat("Thickness", &component.Thickness, 0.025f, 0.0f, 1.0f);
 			ImGui::DragFloat("Fade", &component.Fade, 0.00025f, 0.0f, 1.0f);
 			ImGui::PopItemWidth();
@@ -381,6 +382,9 @@ namespace mul
 			ImGui::PushItemWidth(150);
 			ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
 			ImGui::DragFloat2("Size", glm::value_ptr(component.Offset));
+			ImGui::PopItemWidth();
+
+			ImGui::PushItemWidth(100);
 			ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
 			ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
 			ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);
@@ -393,6 +397,9 @@ namespace mul
 			ImGui::PushItemWidth(150);
 			ImGui::DragFloat2("Offset", glm::value_ptr(component.Offset));
 			ImGui::DragFloat("Radius", &component.Radius);
+			ImGui::PopItemWidth();
+
+			ImGui::PushItemWidth(100);
 			ImGui::DragFloat("Density", &component.Density, 0.01f, 0.0f, 1.0f);
 			ImGui::DragFloat("Friction", &component.Friction, 0.01f, 0.0f, 1.0f);
 			ImGui::DragFloat("Restitution", &component.Restitution, 0.01f, 0.0f, 1.0f);

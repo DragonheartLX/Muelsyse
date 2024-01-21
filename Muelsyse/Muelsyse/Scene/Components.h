@@ -41,9 +41,9 @@ namespace mul
 		TransformComponent(const glm::vec3& translation)
 			: Translation(translation) {}
 
-		glm::mat4 getTransform() const
+		glm::mat4 getTransform(bool fixedRotation = false) const
 		{
-			glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
+			glm::mat4 rotation = fixedRotation ? glm::toMat4(glm::quat(glm::vec3(0.0f))) : glm::toMat4(glm::quat(Rotation));
 
 			return glm::translate(glm::mat4(1.0f), Translation)
 				* rotation
@@ -79,6 +79,7 @@ namespace mul
 		SceneCamera Camera;
 		bool Primary = true; // TODO: think about moving to Scene
 		bool FixedAspectRatio = false;
+		bool FixedRotation = false;
 
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;

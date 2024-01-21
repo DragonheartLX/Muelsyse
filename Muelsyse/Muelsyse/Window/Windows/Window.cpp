@@ -56,7 +56,7 @@ namespace mul
 		{
 			MUL_PROFILE_SCOPE("glfwCreateWindow");
 
-		#if defined(MUL_DEBUG)
+		#if defined(MUL_LOGGER)
 			if (Renderer::getAPI() == RendererAPI::API::OpenGL)
 				glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 		#endif

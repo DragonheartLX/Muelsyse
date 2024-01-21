@@ -14,4 +14,4 @@ private:
 
 };
 
-FLOWING(FlowingLab, "../../");
+FLOWING(FlowingLab, "../../../FlowingTest");

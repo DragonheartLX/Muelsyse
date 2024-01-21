@@ -220,6 +220,7 @@ void EditorLayer::onImGuiRender()
 	ImGui::Text("Quads: %d", stats.QuadCount);
 	ImGui::Text("Vertices: %d", stats.getTotalVertexCount());
 	ImGui::Text("Indices: %d", stats.getTotalIndexCount());
+	ImGui::Text("FPS: %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 	ImGui::End();
 
@@ -257,7 +258,7 @@ void EditorLayer::onImGuiRender()
 
 	// Gizmos
 	Entity selectedEntity = m_SceneHierarchyPanel.getSelectedEntity();
-	if (selectedEntity && m_GizmoType != -1)
+	if (selectedEntity && m_GizmoType != -1 && m_SceneState != SceneState::Play)
 	{
 		ImGuizmo::SetOrthographic(false);
 		ImGuizmo::SetDrawlist();
@@ -461,7 +462,7 @@ void EditorLayer::onOverlayRender()
 		if (!camera)
 			return;
 		
-		Renderer2D::beginScene(camera.getComponent<CameraComponent>().Camera, camera.getComponent<TransformComponent>().getTransform());
+		Renderer2D::beginScene(camera.getComponent<CameraComponent>().Camera, camera.getComponent<TransformComponent>().getTransform(camera.getComponent<CameraComponent>().FixedRotation));
 	}
 	else
 	{
@@ -507,7 +508,8 @@ void EditorLayer::onOverlayRender()
 	}
 
 	// Draw selected entity outline 
-	if (Entity selectedEntity = m_SceneHierarchyPanel.getSelectedEntity())
+	Entity selectedEntity = m_SceneHierarchyPanel.getSelectedEntity();
+	if (selectedEntity && m_SceneState != SceneState::Play)
 	{
 		const TransformComponent& transform = selectedEntity.getComponent<TransformComponent>();
 		Renderer2D::drawRect(transform.getTransform(), glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));

@@ -196,7 +196,7 @@ namespace mul
 				if (camera.Primary)
 				{
 					mainCamera = &camera.Camera;
-					cameraTransform = transform.getTransform();
+					cameraTransform = transform.getTransform(camera.FixedRotation);
 					break;
 				}
 			}

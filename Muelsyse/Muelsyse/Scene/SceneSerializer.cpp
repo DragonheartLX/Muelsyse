@@ -187,6 +187,7 @@ namespace mul
 
 			out << YAML::Key << "Primary" << YAML::Value << cameraComponent.Primary;
 			out << YAML::Key << "FixedAspectRatio" << YAML::Value << cameraComponent.FixedAspectRatio;
+			out << YAML::Key << "FixedRotation" << YAML::Value << cameraComponent.FixedRotation;
 
 			out << YAML::EndMap; // CameraComponent
 		}
@@ -356,6 +357,7 @@ namespace mul
 
 					cc.Primary = cameraComponent["Primary"].as<bool>();
 					cc.FixedAspectRatio = cameraComponent["FixedAspectRatio"].as<bool>();
+					cc.FixedRotation = cameraComponent["FixedRotation"].as<bool>();
 				}
 
 				auto spriteRendererComponent = entity["SpriteRendererComponent"];

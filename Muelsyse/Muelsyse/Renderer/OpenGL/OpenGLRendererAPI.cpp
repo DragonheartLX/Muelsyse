@@ -29,7 +29,7 @@ namespace mul
 	{
 		MUL_PROFILE_FUNCTION();
 
-	#ifdef MUL_DEBUG
+	#ifdef MUL_LOGGER
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(openGLMessageCallback, nullptr);

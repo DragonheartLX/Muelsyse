@@ -36,6 +36,8 @@ namespace mul
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
+		//io.IniFilename = "./cache/imgui.ini";
+		
 		float fontSize = 18.0f;
 
 		// CascadiaMono-Bold
