@@ -1,15 +1,13 @@
 #include "mulpch.h"
 #include "Panels/ContentBrowserPanel.h"
+#include "Muelsyse/Project/Project.h"
 
 #include <imgui.h>
 
 namespace mul 
 {
-	// Once we have projects, change this
-	extern const std::filesystem::path g_AssetPath = "assets";
-
 	ContentBrowserPanel::ContentBrowserPanel(): 
-        m_CurrentDirectory(g_AssetPath)
+        m_BaseDirectory(Project::getAssetDirectory()), m_CurrentDirectory(m_BaseDirectory)
 	{
 		m_DirectoryIcon = Texture2D::create("Resources/Icons/ContentBrowser/FolderOpenIcon.png");
 		m_FileIcon = Texture2D::create("Resources/Icons/ContentBrowser/FileIcon.png");
@@ -19,7 +17,7 @@ namespace mul
 	{
 		ImGui::Begin("Content Browser");
 
-		if (m_CurrentDirectory != std::filesystem::path(g_AssetPath))
+		if (m_CurrentDirectory != m_BaseDirectory)
 		{
 			if (ImGui::Button("<-"))
 			{
@@ -50,7 +48,7 @@ namespace mul
 
 			if (ImGui::BeginDragDropSource())
 			{
-				auto relativePath = std::filesystem::relative(path, g_AssetPath);
+				std::filesystem::path relativePath(path);
 				const wchar_t* itemPath = relativePath.c_str();
 				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
 				ImGui::EndDragDropSource();

@@ -35,7 +35,7 @@ namespace mul
 		void onUpdateEditor(Timestep ts, EditorCamera& camera);
 		void onViewportResize(uint32_t width, uint32_t height);
 
-		void duplicateEntity(Entity entity);
+		Entity duplicateEntity(Entity entity);
 
 		Entity getPrimaryCameraEntity();
 

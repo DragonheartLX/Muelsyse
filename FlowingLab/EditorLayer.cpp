@@ -10,11 +10,6 @@
 
 using namespace mul;
 
-namespace mul
-{
-	extern const std::filesystem::path g_AssetPath;
-}
-
 EditorLayer::EditorLayer(): 
 	Layer("EditorLayer")
 {
@@ -37,16 +32,24 @@ void EditorLayer::onAttach()
 
 	m_EditorScene = createRef<Scene>();
 	m_ActiveScene = m_EditorScene;
+	m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
 	auto commandLineArgs = Application::get().getSpecification().CommandLineArgs;
 	if (commandLineArgs.Count > 1)
 	{
-		auto sceneFilePath = commandLineArgs[1];
-		SceneSerializer serializer(m_ActiveScene);
-		serializer.deserialize(sceneFilePath);
+		auto projectFilePath = commandLineArgs[1];
+		openProject(projectFilePath);
 	}
+	else
+	{
+		// TODO: prompt the user to select a directory
+		// newProject();
 
-	m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+		// If no project is opened, close
+		// NOTE: this is while we don't have a new project path
+		if (!openProject())
+			Application::get().close();
+	}
 	// Renderer2D::setLineWidth(1.0f);
 }
 
@@ -179,21 +182,21 @@ void EditorLayer::onImGuiRender()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			// Disabling fullscreen would allow the window to be moved to the front of other windows,
-			// which we can't undo at the moment without finer window depth/z control.
-			// ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
+			if (ImGui::MenuItem("Open Project...", "Ctrl+O"))
+				openProject();
 
-			if (ImGui::MenuItem("New", "Ctrl+N"))
+			ImGui::Separator();
+
+			if (ImGui::MenuItem("New Scene", "Ctrl+N"))
 				newScene();
 
-			if (ImGui::MenuItem("Open...", "Ctrl+O"))
-				openScene();
-
-			if (ImGui::MenuItem("Save", "Ctrl+S"))
+			if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
 				saveScene();
 
-			if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+			if (ImGui::MenuItem("Save Scene As...", "Ctrl+Shift+S"))
 				saveSceneAs();
+
+			ImGui::Separator();
 
 			if (ImGui::MenuItem("Exit"))
 				Application::get().close();
@@ -205,7 +208,7 @@ void EditorLayer::onImGuiRender()
 	}
 
 	m_SceneHierarchyPanel.onImGuiRender();
-	m_ContentBrowserPanel.onImGuiRender();
+	m_ContentBrowserPanel->onImGuiRender();
 
 	ImGui::Begin("Stats");
 
@@ -251,7 +254,7 @@ void EditorLayer::onImGuiRender()
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 		{
 			const wchar_t* path = (const wchar_t*)payload->Data;
-			openScene(std::filesystem::path(g_AssetPath) / path);
+			openScene(path);
 		}
 		ImGui::EndDragDropTarget();
 	}
@@ -367,6 +370,7 @@ void EditorLayer::onEvent(Event &e)
 	EventDispatcher dispatcher(e);
 	dispatcher.dispatcher<KeyPressedEvent>(MUL_BIND_EVENT_FUNC(EditorLayer::onKeyPressed));
 	dispatcher.dispatcher<MouseButtonPressedEvent>(MUL_BIND_EVENT_FUNC(EditorLayer::onMouseButtonPressed));
+	dispatcher.dispatcher<WindowDropEvent>(MUL_BIND_EVENT_FUNC(EditorLayer::onWindowDrop));
 }
 
 bool EditorLayer::onKeyPressed(KeyPressedEvent& e)
@@ -389,7 +393,7 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& e)
 		case Key::O:
 		{
 			if (control)
-				openScene();
+				openProject();
 			break;
 		}
 		case Key::S:
@@ -439,6 +443,19 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& e)
 				m_GizmoType = ImGuizmo::OPERATION::SCALE;
 			break;
 		}
+		case Key::Delete:
+		{
+			if (Application::get().getImGuiLayer()->getActiveWidgetID() == 0)
+			{
+				Entity selectedEntity = m_SceneHierarchyPanel.getSelectedEntity();
+				if (selectedEntity)
+				{
+					m_SceneHierarchyPanel.setSelectedEntity({});
+					m_ActiveScene->destroyEntity(selectedEntity);
+				}
+			}
+			break;
+		}
 	}
 
 	return true;
@@ -452,6 +469,15 @@ bool EditorLayer::onMouseButtonPressed(MouseButtonPressedEvent& e)
 			m_SceneHierarchyPanel.setSelectedEntity(m_HoveredEntity);
 	}
 	return false;
+}
+
+bool EditorLayer::onWindowDrop(WindowDropEvent& e)
+{
+	// TODO: if a project is dropped in, probably open it
+
+	//AssetManager::importAsset();
+
+	return true;
 }
 
 void EditorLayer::onOverlayRender()
@@ -516,6 +542,36 @@ void EditorLayer::onOverlayRender()
 	}
 
 	Renderer2D::endScene();
+}
+
+void EditorLayer::newProject()
+{
+	Project::newProject();
+}
+
+void EditorLayer::openProject(const std::filesystem::path& path)
+{
+	if (Project::loadProject(path))
+	{
+		auto startScenePath = Project::getAssetFileSystemPath(Project::getActive()->getConfig().StartScene);
+		openScene(startScenePath);
+		m_ContentBrowserPanel = createScope<ContentBrowserPanel>();
+	}
+}
+
+bool EditorLayer::openProject()
+{
+	std::string filepath = FileDialogs::openFile("Muelsyse Project (*.mproj)", "*.mproj");
+	if (filepath.empty())
+		return false;
+
+	openProject(filepath);
+	return true;
+}
+
+void EditorLayer::saveProject()
+{
+	// Project::SaveActive();
 }
 
 void EditorLayer::newScene()
@@ -631,5 +687,8 @@ void EditorLayer::onDuplicateEntity()
 
 	Entity selectedEntity = m_SceneHierarchyPanel.getSelectedEntity();
 	if (selectedEntity)
-		m_EditorScene->duplicateEntity(selectedEntity);
+	{
+		Entity newEntity = m_EditorScene->duplicateEntity(selectedEntity);
+		m_SceneHierarchyPanel.setSelectedEntity(newEntity);
+	}
 }

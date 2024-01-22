@@ -43,7 +43,8 @@ namespace mul
 				COMDLG_FILTERSPEC fileType[] =
 				{
 					{ L"All files", L"*.*" },
-					{ L"Muelsyse Scene (*.flowing)", L"*.flowing" }
+					{ L"Muelsyse Scene (*.flowing)", L"*.flowing" },
+					{ L"Muelsyse Project (*.mproj)", L"*.mproj"}
 				};
 				hr = pFileOpen->SetFileTypes(ARRAYSIZE(fileType), fileType);
 
@@ -101,7 +102,8 @@ namespace mul
 				COMDLG_FILTERSPEC fileType[] =
 				{
 					{ L"All files", L"*.*" },
-					{ L"Muelsyse Scene (*.flowing)", L"*.flowing" }
+					{ L"Muelsyse Scene (*.flowing)", L"*.flowing" },
+					{ L"Muelsyse Project (*.mproj)", L"*.mproj"}
 				};
 				hr = pFileSave->SetFileTypes(ARRAYSIZE(fileType), fileType);
 

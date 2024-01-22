@@ -60,4 +60,21 @@ namespace mul
 		EVENT_CLASS_TYPE(AppRender)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
+
+	class MUL_API WindowDropEvent: public Event
+	{
+	public:
+		WindowDropEvent(const std::vector<std::filesystem::path>& paths): 
+			m_Paths(paths) {}
+
+		WindowDropEvent(std::vector<std::filesystem::path>&& paths): 
+			m_Paths(std::move(paths)) {}
+
+		const std::vector<std::filesystem::path>& getPaths() const { return m_Paths; }
+
+		EVENT_CLASS_TYPE(WindowDrop)
+		EVENT_CLASS_CATEGORY(EventCategoryApplication)
+	private:
+		std::vector<std::filesystem::path> m_Paths;
+	};
 }

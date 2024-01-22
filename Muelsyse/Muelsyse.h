@@ -21,6 +21,8 @@
 #include "Muelsyse/Scene/ScriptableEntity.h"
 #include "Muelsyse/Scene/Components.h"
 
+#include "Muelsyse/Project/Project.h"
+
 #include "Muelsyse/Renderer/Renderer.h"
 #include "Muelsyse/Renderer/Renderer2D.h"
 #include "Muelsyse/Renderer/RenderCommand.h"

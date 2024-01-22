@@ -4,6 +4,7 @@
 
 #include "glad/glad.h"
 #include "imgui.h"
+#include "imgui_internal.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_glfw.h"
 #include "ImGuizmo.h"
@@ -41,8 +42,8 @@ namespace mul
 		float fontSize = 18.0f;
 
 		// CascadiaMono-Bold
-		io.Fonts->AddFontFromFileTTF("assets/fonts/CascadiaCodeMono/CascadiaMono-Bold.ttf", fontSize);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/CascadiaCodeMono/CascadiaMono-Regular.ttf", fontSize);
+		io.Fonts->AddFontFromFileTTF("Resources/Fonts/CascadiaCodeMono/CascadiaMono-Bold.ttf", fontSize);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/CascadiaCodeMono/CascadiaMono-Regular.ttf", fontSize);
 
 		// OpenSans
 		// io.Fonts->AddFontFromFileTTF("assets/fonts/opensans/OpenSans-Bold.ttf", 22.0f);
@@ -165,5 +166,10 @@ namespace mul
 		colors[ImGuiCol_TitleBg] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 		colors[ImGuiCol_TitleBgActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 		colors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+	}
+
+	uint32_t ImGuiLayer::getActiveWidgetID() const
+	{
+		return GImGui->ActiveId;
 	}
 }

@@ -1,6 +1,7 @@
 #include "Muelsyse/Core/Application.h"
 #include "Muelsyse/Renderer/Renderer.h"
 #include "Muelsyse/Utils/Utils.h"
+#include "Muelsyse/Script/ScriptEngine.h"
 
 namespace mul
 {
@@ -22,6 +23,7 @@ namespace mul
 		m_Window->setEventCallback(MUL_BIND_EVENT_FUNC(Application::onEvent));
 
 		Renderer::init();
+		ScriptEngine::init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		pushOverlay(m_ImGuiLayer);
@@ -30,6 +32,7 @@ namespace mul
 	Application::~Application()
 	{
 		MUL_PROFILE_FUNCTION();
+		ScriptEngine::shutdown();
 		Renderer::shutdown();
 	}
 

@@ -1,0 +1,32 @@
+Scene: Untitled
+Entities:
+  - Entity: 4929393907028954568
+    TagComponent:
+      Tag: Texture
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [5, 5, 1]
+    SpriteRendererComponent:
+      Color: [1, 1, 1, 1]
+      TexturePath: Textures\water.png
+      TilingFactor: 1
+  - Entity: 11701067505148201243
+    TagComponent:
+      Tag: Camera
+    TransformComponent:
+      Translation: [0, -0.100000001, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 1
+        PerspectiveFOV: 0.785398185
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: true
+      FixedAspectRatio: false
+      FixedRotation: false

@@ -22,8 +22,14 @@ public:
 private:
 	bool onKeyPressed(KeyPressedEvent& e);
 	bool onMouseButtonPressed(MouseButtonPressedEvent& e);
+	bool onWindowDrop(WindowDropEvent& e);
 
 	void onOverlayRender();
+
+	void newProject();
+	bool openProject();
+	void openProject(const std::filesystem::path& path);
+	void saveProject();
 
 	void newScene();
 	void openScene();
@@ -53,7 +59,7 @@ private:
 	EditorCamera m_EditorCamera;
 
 	bool m_ViewportFocused = false, m_ViewportHovered = false;
-	glm::vec2 m_ViewportSize = {0.0f, 0.0f};
+	glm::vec2 m_ViewportSize = {1920.0f, 1080.0f};
 	glm::vec2 m_ViewportBounds[2];
 
 	int m_GizmoType = -1;
@@ -68,7 +74,7 @@ private:
 
 	// Panels
 	SceneHierarchyPanel m_SceneHierarchyPanel;
-	ContentBrowserPanel m_ContentBrowserPanel;
+	Scope<ContentBrowserPanel> m_ContentBrowserPanel;
 
 	// Editor resources
 	Ref<Texture2D> m_IconPlay, m_IconSimulate, m_IconStop;

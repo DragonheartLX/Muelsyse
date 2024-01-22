@@ -171,9 +171,9 @@ namespace mul
 		for (uint32_t i = 0; i < s_Data->MaxTextureSlots; i++)
 			samplers[i] = i;
 		
-		s_Data->QuadShader = Shader::create("assets/shaders/Renderer2D_Quad.glsl");
-		s_Data->CircleShader = Shader::create("assets/shaders/Renderer2D_Circle.glsl");
-		s_Data->LineShader = Shader::create("assets/shaders/Renderer2D_Line.glsl");
+		s_Data->QuadShader = Shader::create("Resources/Shaders/Renderer2D_Quad.glsl");
+		s_Data->CircleShader = Shader::create("Resources/Shaders/Renderer2D_Circle.glsl");
+		s_Data->LineShader = Shader::create("Resources/Shaders/Renderer2D_Line.glsl");
 
 		// Set first texture slot to 0
 		s_Data->TextureSlots[0] = s_Data->WhiteTexture;

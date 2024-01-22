@@ -26,5 +26,6 @@
 #include <array>
 
 #include "Muelsyse/Core/Core.h"
+#include "Muelsyse/Core/Buffer.h"
 #include "Muelsyse/Core/Logger.h"
 #include "Muelsyse/Debug/Instrumentor.h"

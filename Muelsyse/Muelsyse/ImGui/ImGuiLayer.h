@@ -23,6 +23,8 @@ namespace mul
 		void blockEvents(bool block) { m_BlockEvents = block; }
 
 		void setDarkThemeColors();
+
+		uint32_t getActiveWidgetID() const;
 	private:
 		bool m_BlockEvents = true;
 		float m_Time = 0.0f;

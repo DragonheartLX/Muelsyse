@@ -2,6 +2,7 @@
 #include "Muelsyse/Scene/SceneSerializer.h"
 #include "Muelsyse/Scene/Entity.h"
 #include "Muelsyse/Scene/Components.h"
+#include "Muelsyse/Project/Project.h"
 
 #include <fstream>
 #include <yaml-cpp/yaml.h>
@@ -365,6 +366,15 @@ namespace mul
 				{
 					auto& src = deserializedEntity.addComponent<SpriteRendererComponent>();
 					src.Color = spriteRendererComponent["Color"].as<glm::vec4>();
+					if (spriteRendererComponent["TexturePath"])
+					{
+						std::string texturePath = spriteRendererComponent["TexturePath"].as<std::string>();
+						auto path = Project::getAssetFileSystemPath(texturePath);
+						src.Texture = Texture2D::create(path.string());
+					}
+
+					if (spriteRendererComponent["TilingFactor"])
+						src.TilingFactor = spriteRendererComponent["TilingFactor"].as<float>();
 				}
 
 				auto circleRendererComponent = entity["CircleRendererComponent"];

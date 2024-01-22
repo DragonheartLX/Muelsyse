@@ -4,6 +4,7 @@
 #include "Muelsyse/Scene/Components.h"
 #include "Muelsyse/Scene/Entity.h"
 #include "Muelsyse/Scene/ScriptableEntity.h"
+#include "Muelsyse/Physics/Physics2D.h"
 
 #include <glm/glm.hpp>
 // Box2D
@@ -15,19 +16,6 @@
 
 namespace mul
 {
-	static b2BodyType Rigidbody2DTypeToBox2DBody(Rigidbody2DComponent::BodyType bodyType)
-	{
-		switch (bodyType)
-		{
-			case Rigidbody2DComponent::BodyType::Static:    return b2_staticBody;
-			case Rigidbody2DComponent::BodyType::Dynamic:   return b2_dynamicBody;
-			case Rigidbody2DComponent::BodyType::Kinematic: return b2_kinematicBody;
-		}
-
-		MUL_CORE_ASSERT(false, "Unknown body type");
-		return b2_staticBody;
-	}
-
 	Scene::Scene()
 	{
 
@@ -293,10 +281,13 @@ namespace mul
 		return {};
 	}
 
-	void Scene::duplicateEntity(Entity entity)
+	Entity Scene::duplicateEntity(Entity entity)
 	{
-		Entity newEntity = createEntity(entity.getName());
+		// Copy name because we're going to modify component data structure
+		std::string name = entity.getName();
+		Entity newEntity = createEntity(name);
 		copyComponentIfExists(AllComponents{}, newEntity, entity);
+		return newEntity;
 	}
 
 	void Scene::onPhysics2DStart()
@@ -311,7 +302,7 @@ namespace mul
 			auto& rb2d = entity.getComponent<Rigidbody2DComponent>();
 
 			b2BodyDef bodyDef;
-			bodyDef.type = Rigidbody2DTypeToBox2DBody(rb2d.Type);
+			bodyDef.type = Utils::Rigidbody2DTypeToBox2DBody(rb2d.Type);
 			bodyDef.position.Set(transform.Translation.x, transform.Translation.y);
 			bodyDef.angle = transform.Rotation.z;
 
