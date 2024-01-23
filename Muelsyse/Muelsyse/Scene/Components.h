@@ -85,6 +85,14 @@ namespace mul
 		CameraComponent(const CameraComponent&) = default;
 	};
 
+	struct ScriptComponent
+	{
+		std::string ClassName;
+
+		ScriptComponent() = default;
+		ScriptComponent(const ScriptComponent&) = default;
+	};
+
 	// Forward declaration
 	class ScriptableEntity;
 	
@@ -164,6 +172,7 @@ namespace mul
 			SpriteRendererComponent,
 			CircleRendererComponent,
 			CameraComponent, 
+			ScriptComponent,
 			NativeScriptComponent,
 			Rigidbody2DComponent,
 			BoxCollider2DComponent, 

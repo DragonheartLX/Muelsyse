@@ -10,3 +10,5 @@ build-*/
 
 # Flowing Cache
 FlowingTest/cache/
+FlowingTest/Project/Cache/
+FlowingTest/Resources/Scripts/

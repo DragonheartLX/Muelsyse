@@ -17,3 +17,4 @@
 | box2d                     | >= 2.4.1#3         |   (vcpkg version) |
 | shaderc                   | >= 2023.7          |   (vcpkg version) |
 | spirv-cross               | >= 1.3.268.0       |   (vcpkg version) |
+| mono                      |    6.12.0.205      |   git tag         |

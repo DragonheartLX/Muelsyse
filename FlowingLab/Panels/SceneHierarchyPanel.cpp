@@ -1,6 +1,7 @@
 #include "Panels/SceneHierarchyPanel.h"
 
 #include <Muelsyse/Scene/Components.h>
+#include <Muelsyse/Script/ScriptEngine.h>
 #include <Muelsyse/UI/UI.h>
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -211,7 +212,7 @@ namespace mul
 
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
-			strcpy_s(buffer, sizeof(buffer), tag.c_str());
+			strncpy_s(buffer, sizeof(buffer), tag.c_str(), sizeof(buffer));
 
 			ImGui::PushItemWidth(200);
 			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
@@ -230,6 +231,7 @@ namespace mul
 		if (ImGui::BeginPopup("AddComponent"))
 		{
 			displayAddComponentEntry<CameraComponent>("Camera");
+			displayAddComponentEntry<ScriptComponent>("Script");
 			displayAddComponentEntry<SpriteRendererComponent>("Sprite Renderer");
 			displayAddComponentEntry<CircleRendererComponent>("Circle Renderer");
 			displayAddComponentEntry<Rigidbody2DComponent>("Rigidbody 2D");
@@ -313,6 +315,85 @@ namespace mul
 
 				ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
 			}
+		});
+
+		drawComponent<ScriptComponent>("Script", entity, [entity, scene = m_Context](auto& component) mutable
+		{
+			bool scriptClassExists = ScriptEngine::entityClassExists(component.ClassName);
+
+			static char buffer[64];
+			strcpy_s(buffer, sizeof(buffer), component.ClassName.c_str());
+
+			if (!scriptClassExists)
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.2f, 0.3f, 1.0f));
+
+			if (ImGui::InputText("Class", buffer, sizeof(buffer)))
+				component.ClassName = buffer;
+
+			// Fields
+			bool sceneRunning = scene->isRunning();
+			if (sceneRunning)
+			{
+				Ref<ScriptInstance> scriptInstance = ScriptEngine::getEntityScriptInstance(entity.getUUID());
+				if (scriptInstance)
+				{
+					const auto& fields = scriptInstance->getScriptClass()->getFields();
+					for (const auto& [name, field] : fields)
+					{
+						if (field.Type == ScriptFieldType::Float)
+						{
+							float data = scriptInstance->getFieldValue<float>(name);
+							if (ImGui::DragFloat(name.c_str(), &data))
+							{
+								scriptInstance->setFieldValue(name, data);
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				if (scriptClassExists)
+				{
+					Ref<ScriptClass> entityClass = ScriptEngine::getEntityClass(component.ClassName);
+					const auto& fields = entityClass->getFields();
+
+					auto& entityFields = ScriptEngine::getScriptFieldMap(entity);
+					for (const auto& [name, field] : fields)
+					{
+						// Field has been set in editor
+						if (entityFields.find(name) != entityFields.end())
+						{
+							ScriptFieldInstance& scriptField = entityFields.at(name);
+
+							// Display control to set it maybe
+							if (field.Type == ScriptFieldType::Float)
+							{
+								float data = scriptField.getValue<float>();
+								if (ImGui::DragFloat(name.c_str(), &data))
+									scriptField.setValue(data);
+							}
+						}
+						else
+						{
+							// Display control to set it maybe
+							if (field.Type == ScriptFieldType::Float)
+							{
+								float data = 0.0f;
+								if (ImGui::DragFloat(name.c_str(), &data))
+								{
+									ScriptFieldInstance& fieldInstance = entityFields[name];
+									fieldInstance.Field = field;
+									fieldInstance.setValue(data);
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (!scriptClassExists)
+				ImGui::PopStyleColor();
 		});
 
 		drawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto& component)

@@ -5,6 +5,7 @@
 #include "Muelsyse/Scene/Entity.h"
 #include "Muelsyse/Scene/ScriptableEntity.h"
 #include "Muelsyse/Physics/Physics2D.h"
+#include "Muelsyse/Script/ScriptEngine.h"
 
 #include <glm/glm.hpp>
 // Box2D
@@ -103,22 +104,45 @@ namespace mul
 		entity.addComponent<TransformComponent>();
 		auto& tag = entity.addComponent<TagComponent>();
 		tag.Tag = name.empty() ? "Entity" : name;
+
+		m_EntityMap[uuid] = entity;
+		
 		return entity;
 	}
 
 	void Scene::destroyEntity(Entity entity)
 	{
 		m_Registry.destroy(entity);
+		m_EntityMap.erase(entity.getUUID());
 	}
 
 	void Scene::onRuntimeStart()
 	{
+		m_IsRunning = true;
+
 		onPhysics2DStart();
+
+		// Scripting
+		{
+			ScriptEngine::onRuntimeStart(this);
+			// Instantiate all script entities
+
+			auto view = m_Registry.view<ScriptComponent>();
+			for (auto e : view)
+			{
+				Entity entity = { e, this };
+				ScriptEngine::onCreateEntity(entity);
+			}
+		}
 	}
 
 	void Scene::onRuntimeStop()
 	{
+		m_IsRunning = false;
+		
 		onPhysics2DStop();
+
+		ScriptEngine::onRuntimeStop();
 	}
 
 	void Scene::onSimulationStart()
@@ -135,6 +159,14 @@ namespace mul
 	{
 		// Update scripts
 		{
+			// C# Entity OnUpdate
+			auto view = m_Registry.view<ScriptComponent>();
+			for (auto e : view)
+			{
+				Entity entity = { e, this };
+				ScriptEngine::onUpdateEntity(entity, ts);
+			}
+
 			m_Registry.view<NativeScriptComponent>().each([=, this](auto entity, auto& nsc)
 			{
 				// TODO: Move to Scene::OnScenePlay
@@ -164,6 +196,7 @@ namespace mul
 				auto& rb2d = entity.getComponent<Rigidbody2DComponent>();
 
 				b2Body* body = (b2Body*)rb2d.RuntimeBody;
+
 				const auto& position = body->GetPosition();
 				transform.Translation.x = position.x;
 				transform.Translation.y = position.y;
@@ -256,6 +289,9 @@ namespace mul
 
 	void Scene::onViewportResize(uint32_t width, uint32_t height)
 	{
+		if (m_ViewportWidth == width && m_ViewportHeight == height)
+			return;
+		
 		m_ViewportWidth = width;
 		m_ViewportHeight = height;
 
@@ -288,6 +324,27 @@ namespace mul
 		Entity newEntity = createEntity(name);
 		copyComponentIfExists(AllComponents{}, newEntity, entity);
 		return newEntity;
+	}
+
+	Entity Scene::findEntityByName(std::string_view name)
+	{
+		auto view = m_Registry.view<TagComponent>();
+		for (auto entity : view)
+		{
+			const TagComponent& tc = view.get<TagComponent>(entity);
+			if (tc.Tag == name)
+				return Entity{ entity, this };
+		}
+		return {};
+	}
+
+	Entity Scene::getEntityByUUID(UUID uuid)
+	{
+		// TODO(Yan): Maybe should be assert
+		if (m_EntityMap.find(uuid) != m_EntityMap.end())
+			return { m_EntityMap.at(uuid), this };
+
+		return {};
 	}
 
 	void Scene::onPhysics2DStart()
@@ -401,6 +458,11 @@ namespace mul
 	{
 		if (m_ViewportWidth > 0 && m_ViewportHeight > 0)
 			component.Camera.setViewportSize(m_ViewportWidth, m_ViewportHeight);
+	}
+
+	template<>
+	void MUL_API Scene::onComponentAdded<ScriptComponent>(Entity entity, ScriptComponent& component)
+	{
 	}
 
 	template<>

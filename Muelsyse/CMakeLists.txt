@@ -50,6 +50,9 @@ find_package(spirv_cross_core CONFIG REQUIRED)
 find_package(spirv_cross_glsl CONFIG REQUIRED)
     target_link_libraries(MuelsyseLib PRIVATE spirv-cross-glsl)
 
+# mono
+target_link_libraries(MuelsyseLib PRIVATE ${MONO_LIB_LIST})
+
 if(MUL_OPT_BUILD_SHARED)
     install(TARGETS MuelsyseLib DESTINATION bin)
 else()

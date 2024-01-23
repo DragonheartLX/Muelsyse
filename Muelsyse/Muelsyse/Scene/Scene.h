@@ -37,7 +37,12 @@ namespace mul
 
 		Entity duplicateEntity(Entity entity);
 
+		Entity findEntityByName(std::string_view name);
+		Entity getEntityByUUID(UUID uuid);
+
 		Entity getPrimaryCameraEntity();
+
+		bool isRunning() const { return m_IsRunning; }
 
 		template<typename... Components>
 		auto getAllEntitiesWith()
@@ -55,9 +60,12 @@ namespace mul
 
 		entt::registry m_Registry;
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
+		bool m_IsRunning = false;
 
 		b2World* m_PhysicsWorld = nullptr;
 
+		std::unordered_map<UUID, entt::entity> m_EntityMap;
+		
 		friend class Entity;
 		friend class SceneSerializer;
 		friend class SceneHierarchyPanel;

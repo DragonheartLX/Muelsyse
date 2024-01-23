@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <Muelsyse/Scene/SceneSerializer.h>
 #include <Muelsyse/Utils/Utils.h>
+#include <Muelsyse/Script/ScriptEngine.h>
 #include <ImGuizmo.h>
 #include <Muelsyse/Math/Math.h>
 
@@ -62,6 +63,8 @@ void EditorLayer::onUpdate(Timestep ts)
 {
 	MUL_PROFILE_FUNCTION();
 
+	m_ActiveScene->onViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+
 	// Resize
 	if (FramebufferSpecification spec = m_Framebuffer->getSpecification();
 		m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
@@ -69,7 +72,6 @@ void EditorLayer::onUpdate(Timestep ts)
 	{
 		m_Framebuffer->resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		m_EditorCamera.setViewportSize(m_ViewportSize.x, m_ViewportSize.y);
-		m_ActiveScene->onViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 	}
 
 	// Render
@@ -204,6 +206,14 @@ void EditorLayer::onImGuiRender()
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Script"))
+		{
+			if (ImGui::MenuItem("Reload assembly", "Ctrl+R"))
+				ScriptEngine::reloadAssembly();
+			
+			ImGui::EndMenu();
+		}
+		
 		ImGui::EndMenuBar();
 	}
 
@@ -241,7 +251,7 @@ void EditorLayer::onImGuiRender()
 
 	m_ViewportFocused = ImGui::IsWindowFocused();
 	m_ViewportHovered = ImGui::IsWindowHovered();
-	Application::get().getImGuiLayer()->blockEvents(!m_ViewportFocused && !m_ViewportHovered);
+	Application::get().getImGuiLayer()->blockEvents(!m_ViewportHovered);
 
 	ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 	m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
@@ -439,8 +449,15 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& e)
 		}
 		case Key::R:
 		{
-			if (!ImGuizmo::IsUsing())
-				m_GizmoType = ImGuizmo::OPERATION::SCALE;
+			if (control)
+				{
+					ScriptEngine::reloadAssembly();
+				}
+				else
+				{
+					if (!ImGuizmo::IsUsing())
+						m_GizmoType = ImGuizmo::OPERATION::SCALE;
+				}
 			break;
 		}
 		case Key::Delete:
@@ -577,7 +594,7 @@ void EditorLayer::saveProject()
 void EditorLayer::newScene()
 {
 	m_ActiveScene = createRef<Scene>();
-	m_ActiveScene->onViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+
 	m_SceneHierarchyPanel.setContext(m_ActiveScene);
 
 	m_EditorScenePath = std::filesystem::path();
@@ -606,7 +623,7 @@ void EditorLayer::openScene(const std::filesystem::path& path)
 	if (serializer.deserialize(path.string()))
 	{
 		m_EditorScene = newScene;
-		m_EditorScene->onViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		
 		m_SceneHierarchyPanel.setContext(m_EditorScene);
 
 		m_ActiveScene = m_EditorScene;

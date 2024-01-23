@@ -28,6 +28,7 @@ project(Muelsyse)
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
+set(MUL_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 
 message("-- [Muelsyse] EXECUTABLE_OUTPUT_PATH: ${EXECUTABLE_OUTPUT_PATH}")
 message("-- [Muelsyse] LIBRARY_OUTPUT_PATH: ${LIBRARY_OUTPUT_PATH}")
@@ -38,6 +39,7 @@ option(MUL_OPT_LOGGER "Enable Logger" ON)
 option(MUL_OPT_DEBUG_ASSERT "Enable Assert" ON)
 option(MUL_OPT_BUILD_SHARED "Build Dynamic Library" OFF)
 option(MUL_OPT_NO_CONSOLE "Build without console" OFF)
+option(MUL_OPT_MONO_DEBUG "Use mono Debug version" OFF)
 
 # MSVC Setting
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -94,6 +96,28 @@ if(MUL_OPT_NO_CONSOLE)
     add_compile_definitions(MUL_NO_CONSOLE)
 endif()
 
+if(MUL_OPT_MONO_DEBUG)
+    # Debug
+    set(MONO_LIB_LIST 
+        ${CMAKE_CURRENT_SOURCE_DIR}/mono/Debug/mono-2.0-sgen.lib
+        Ws2_32.lib
+        Winmm.lib
+        Version.lib
+        Bcrypt.lib
+    )
+else()
+    # Release
+    set(MONO_LIB_LIST 
+        ${CMAKE_CURRENT_SOURCE_DIR}/mono/Release/mono-2.0-sgen.lib
+        Ws2_32.lib
+        Winmm.lib
+        Version.lib
+        Bcrypt.lib
+    )
+endif()
+
 add_subdirectory(Muelsyse)
 add_subdirectory(FlowingLab)
 add_subdirectory(Flowing)
+add_subdirectory(Muelsyse-ScriptCore)
+add_subdirectory(FlowingTest/Project)
