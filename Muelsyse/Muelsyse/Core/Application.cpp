@@ -48,6 +48,8 @@ namespace mul
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
+			executeMainThreadQueue();
+
 			if(!m_Minimized)
 			{
 				{
@@ -106,6 +108,13 @@ namespace mul
 		m_Running = false;
 	}
 
+	void Application::submitToMainThread(const std::function<void()>& function)
+	{
+		std::scoped_lock<std::mutex> lock(m_MainThreadQueueMutex);
+
+		m_MainThreadQueue.emplace_back(function);
+	}
+
 	bool Application::m_OnWindowClose(WindowCloseEvent& e)
 	{
 		m_Running = false;
@@ -126,5 +135,15 @@ namespace mul
 		Renderer::onWindowResize(e.getWidth(), e.getHeight());
 
 		return false;
+	}
+
+	void Application::executeMainThreadQueue()
+	{
+		std::scoped_lock<std::mutex> lock(m_MainThreadQueueMutex);
+
+		for (auto& func : m_MainThreadQueue)
+			func();
+
+		m_MainThreadQueue.clear();
 	}
 }

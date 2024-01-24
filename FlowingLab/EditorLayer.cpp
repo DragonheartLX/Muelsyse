@@ -22,6 +22,8 @@ void EditorLayer::onAttach()
 	MUL_PROFILE_FUNCTION();
 
 	m_IconPlay = Texture2D::create("Resources/Icons/PlayButton.png");
+	m_IconPause = Texture2D::create("Resources/Icons/PauseButton.png");
+	m_IconStep = Texture2D::create("Resources/Icons/StepButton.png");
 	m_IconSimulate = Texture2D::create("Resources/Icons/SimulateButton.png");
 	m_IconStop = Texture2D::create("Resources/Icons/StopButton.png");
 
@@ -345,9 +347,14 @@ void EditorLayer::UI_Toolbar()
 		tintColor.w = 0.5f;
 
 	float size = ImGui::GetWindowHeight() - 4.0f;
+	ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+
+	bool hasPlayButton = m_SceneState == SceneState::Edit || m_SceneState == SceneState::Play;
+	bool hasSimulateButton = m_SceneState == SceneState::Edit || m_SceneState == SceneState::Simulate;
+	bool hasPauseButton = m_SceneState != SceneState::Edit;
+
 	{
 		Ref<Texture2D> icon = (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Simulate) ? m_IconPlay : m_IconStop;
-		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
 		if (ImGui::ImageButton(reinterpret_cast<ImTextureID>(icon->getRendererID()), ImVec2(size, size), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), tintColor) && toolbarEnabled)
 		{
 			if (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Simulate)
@@ -356,9 +363,13 @@ void EditorLayer::UI_Toolbar()
 				onSceneStop();
 		}
 	}
-	ImGui::SameLine();
+
+	if (hasSimulateButton)
 	{
-		Ref<Texture2D> icon = (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Play) ? m_IconSimulate : m_IconStop;		//ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+		if (hasPlayButton)
+			ImGui::SameLine();
+
+		Ref<Texture2D> icon = (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Play) ? m_IconSimulate : m_IconStop;
 		if (ImGui::ImageButton(reinterpret_cast<ImTextureID>(icon->getRendererID()), ImVec2(size, size), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), tintColor) && toolbarEnabled)
 		{
 			if (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Play)
@@ -367,6 +378,34 @@ void EditorLayer::UI_Toolbar()
 				onSceneStop();
 		}
 	}
+
+	if (hasPauseButton)
+	{
+		bool isPaused = m_ActiveScene->isPaused();
+		ImGui::SameLine();
+		{
+			Ref<Texture2D> icon = m_IconPause;
+			if (ImGui::ImageButton(reinterpret_cast<ImTextureID>(icon->getRendererID()), ImVec2(size, size), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), tintColor) && toolbarEnabled)
+			{
+				m_ActiveScene->setPaused(!isPaused);
+			}
+		}
+
+		// Step button
+		if (isPaused)
+		{
+			ImGui::SameLine();
+			{
+				Ref<Texture2D> icon = m_IconStep;
+				bool isPaused = m_ActiveScene->isPaused();
+				if (ImGui::ImageButton(reinterpret_cast<ImTextureID>(icon->getRendererID()), ImVec2(size, size), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), tintColor) && toolbarEnabled)
+				{
+					m_ActiveScene->step();
+				}
+			}
+		}
+	}
+
 	ImGui::PopStyleVar(2);
 	ImGui::PopStyleColor(3);
 	ImGui::End();
@@ -475,7 +514,7 @@ bool EditorLayer::onKeyPressed(KeyPressedEvent& e)
 		}
 	}
 
-	return true;
+	return false;
 }
 
 bool EditorLayer::onMouseButtonPressed(MouseButtonPressedEvent& e)
@@ -695,6 +734,14 @@ void EditorLayer::onSceneStop()
 	m_ActiveScene = m_EditorScene;
 
 	m_SceneHierarchyPanel.setContext(m_ActiveScene);
+}
+
+void EditorLayer::onScenePause()
+{
+	if (m_SceneState == SceneState::Edit)
+		return;
+
+	m_ActiveScene->setPaused(true);
 }
 
 void EditorLayer::onDuplicateEntity()

@@ -9,6 +9,7 @@ build-*/
 .vs/
 
 # Flowing Cache
+FlowingTest/MonoDebugger.log
 FlowingTest/cache/
 FlowingTest/Project/Cache/
 FlowingTest/Resources/Scripts/

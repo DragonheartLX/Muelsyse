@@ -53,12 +53,16 @@ namespace mul
 		static Application& get() { return *s_Instance; }
 
 		const ApplicationSpecification& getSpecification() const { return m_Specification; }
+
+		void submitToMainThread(const std::function<void()>& function);
 	private:
 		void m_Run();
 
 		bool m_OnWindowClose(WindowCloseEvent& e);
 		bool m_OnWindowResize(WindowResizeEvent& e);
 		
+		void executeMainThreadQueue();
+
 		ApplicationSpecification m_Specification;
 		ImGuiLayer* m_ImGuiLayer;
 		Scope<Window> m_Window;
@@ -67,6 +71,9 @@ namespace mul
 		
 		LayerStack m_LayerStack;
 		float m_LastFrameTime = 0.0f;
+
+		std::vector<std::function<void()>> m_MainThreadQueue;
+		std::mutex m_MainThreadQueueMutex;
 
 		static Application* s_Instance;
 

@@ -17,7 +17,7 @@ namespace mul
 {
 	static std::unordered_map<MonoType*, std::function<bool(Entity)>> s_EntityHasComponentFuncs;
 
-#define MUL_ADD_INTERNAL_CALL(Name) mono_add_internal_call("Muelsyse.InternalCalls::"#Name, Name)
+	#define MUL_ADD_INTERNAL_CALL(Name) mono_add_internal_call("Muelsyse.InternalCalls::"#Name, Name)
 
 	static void NativeLog(MonoString* string, int parameter)
 	{
