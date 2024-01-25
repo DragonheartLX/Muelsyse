@@ -324,11 +324,13 @@ namespace mul
 			static char buffer[64];
 			strcpy_s(buffer, sizeof(buffer), component.ClassName.c_str());
 
-			if (!scriptClassExists)
-				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.2f, 0.3f, 1.0f));
+			UI::ScopedStyleColor textColor(ImGuiCol_Text, ImVec4(0.9f, 0.2f, 0.3f, 1.0f), !scriptClassExists);
 
 			if (ImGui::InputText("Class", buffer, sizeof(buffer)))
+			{
 				component.ClassName = buffer;
+				return;
+			}
 
 			// Fields
 			bool sceneRunning = scene->isRunning();
@@ -391,9 +393,6 @@ namespace mul
 					}
 				}
 			}
-
-			if (!scriptClassExists)
-				ImGui::PopStyleColor();
 		});
 
 		drawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto& component)

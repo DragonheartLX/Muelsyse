@@ -8,30 +8,18 @@ set(VCPKG_TARGET_TRIPLET "x64-win-llvm-static")
 
 # Use Clang-CL (default)
 set(CMAKE_GENERATOR_TOOLSET "ClangCL")
-# -DCMAKE_C_COMPILER=clang-cl
-# -DCMAKE_CXX_COMPILER=clang-cl
-# set(CMAKE_C_COMPILER "clang-cl")
-# set(CMAKE_CXX_COMPILER "clang-cl")
-
-# Use clang++
-# -DCMAKE_C_COMPILER=clang
-# -DCMAKE_CXX_COMPILER=clang++
-
-# Default Build Type
-# Useless for MSVC
-# set(CMAKE_BUILD_TYPE "Debug")
-
-# set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
 project(Muelsyse)
 
-set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
-set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}/bin>)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}/lib>)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY $<1:${CMAKE_BINARY_DIR}/lib>)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
 set(MUL_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 
-message("-- [Muelsyse] EXECUTABLE_OUTPUT_PATH: ${EXECUTABLE_OUTPUT_PATH}")
-message("-- [Muelsyse] LIBRARY_OUTPUT_PATH: ${LIBRARY_OUTPUT_PATH}")
+message("-- [Muelsyse] EXECUTABLE_OUTPUT_PATH: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+message("-- [Muelsyse] LIBRARY_OUTPUT_PATH (Static): ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}")
+message("-- [Muelsyse] LIBRARY_OUTPUT_PATH (Shared): ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 message("-- [Muelsyse] CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
 option(MUL_OPT_PROFILE "Enable Profile Test" OFF)
@@ -39,7 +27,6 @@ option(MUL_OPT_LOGGER "Enable Logger" ON)
 option(MUL_OPT_DEBUG_ASSERT "Enable Assert" ON)
 option(MUL_OPT_BUILD_SHARED "Build Dynamic Library" OFF)
 option(MUL_OPT_NO_CONSOLE "Build without console" OFF)
-option(MUL_OPT_MONO_DEBUG "Use mono Debug version" OFF)
 
 # MSVC Setting
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -63,7 +50,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     endif()
 endif()
 
-# message("-- [Muelsyse] Build Type: ${CMAKE_BUILD_TYPE}")
 message("-- [Muelsyse] C Compiler: ${CMAKE_C_COMPILER_ID}")
 message("-- [Muelsyse] CXX Compiler: ${CMAKE_CXX_COMPILER_ID}")
 
@@ -96,25 +82,13 @@ if(MUL_OPT_NO_CONSOLE)
     add_compile_definitions(MUL_NO_CONSOLE)
 endif()
 
-if(MUL_OPT_MONO_DEBUG)
-    # Debug
-    set(MONO_LIB_LIST 
-        ${CMAKE_CURRENT_SOURCE_DIR}/mono/Debug/mono-2.0-sgen.lib
-        Ws2_32.lib
-        Winmm.lib
-        Version.lib
-        Bcrypt.lib
-    )
-else()
-    # Release
-    set(MONO_LIB_LIST 
-        ${CMAKE_CURRENT_SOURCE_DIR}/mono/Release/mono-2.0-sgen.lib
-        Ws2_32.lib
-        Winmm.lib
-        Version.lib
-        Bcrypt.lib
-    )
-endif()
+set(MONO_LIB_LIST 
+    ${CMAKE_CURRENT_SOURCE_DIR}/External/mono/Release/libmono-static-sgen.lib
+    Ws2_32.lib
+    Winmm.lib
+    Version.lib
+    Bcrypt.lib
+)
 
 add_subdirectory(Muelsyse)
 add_subdirectory(FlowingLab)

@@ -5,6 +5,7 @@
 #include "Muelsyse/Core/Timer.h"
 #include "Muelsyse/Core/Buffer.h"
 #include "Muelsyse/Core/FileSystem.h"
+#include "Muelsyse/Project/Project.h"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
@@ -130,7 +131,11 @@ namespace mul
 		Scope<filewatch::FileWatch<std::string>> AppAssemblyFileWatcher;
 		bool AssemblyReloadPending = false;
 
+#ifdef MUL_DEBUG_ASSERT
 		bool EnableDebugging = true;
+#else
+		bool EnableDebugging = false;
+#endif
 
 		// Runtime
 		Scene* SceneContext = nullptr;
@@ -160,55 +165,21 @@ namespace mul
 		ScriptGlue::registerFunctions();
 
 		// loadAssembly("Resources/Scripts/Muelsyse-ScriptCore.dll");
-		if(std::filesystem::exists("Resources/Scripts/Release/Muelsyse-ScriptCore.dll"))
+		bool status = loadAssembly("Resources/Scripts/Muelsyse-ScriptCore.dll");
+		if (!status)
 		{
-			bool status = loadAssembly("Resources/Scripts/Release/Muelsyse-ScriptCore.dll");
-
-			if (!status)
-			{
-				MUL_CORE_ERROR("[ScriptEngine] Could not load Muelsyse-ScriptCore assembly.");
-				return;
-			}
-		}
-		else if(std::filesystem::exists("Resources/Scripts/Debug/Muelsyse-ScriptCore.dll"))
-		{
-			bool status = loadAssembly("Resources/Scripts/Debug/Muelsyse-ScriptCore.dll");
-
-			if (!status)
-			{
-				MUL_CORE_ERROR("[ScriptEngine] Could not load Muelsyse-ScriptCore assembly.");
-				return;
-			}
-		}
-		else
-		{
-			MUL_CORE_ASSERT(false);
+			MUL_CORE_ERROR("[ScriptEngine] Could not load Muelsyse-ScriptCore assembly.");
+			return;
 		}
 
 		// loadAppAssembly("Project/Cache/Binaries/FlowingTest.dll");
-		if(std::filesystem::exists("Project/Cache/Binaries/Release/FlowingCSharp.dll"))
-		{
-			bool status = loadAppAssembly("Project/Cache/Binaries/Release/FlowingCSharp.dll");
+		auto scriptModulePath = Project::getProjectDirectory() / Project::getActive()->getConfig().ScriptModulePath;
+		status = loadAppAssembly(scriptModulePath);
 
-			if (!status)
-			{
-				MUL_CORE_ERROR("[ScriptEngine] Could not load app assembly.");
-				return;
-			}
-		}
-		else if(std::filesystem::exists("Project/Cache/Binaries/Debug/FlowingCSharp.dll"))
+		if (!status)
 		{
-			bool status = loadAppAssembly("Project/Cache/Binaries/Debug/FlowingCSharp.dll");
-
-			if (!status)
-			{
-				MUL_CORE_ERROR("[ScriptEngine] Could not load app assembly.");
-				return;
-			}
-		}
-		else
-		{
-			MUL_CORE_ASSERT(false);
+			MUL_CORE_ERROR("[ScriptEngine] Could not load app assembly.");
+			return;
 		}
 
 		loadAssemblyClasses();

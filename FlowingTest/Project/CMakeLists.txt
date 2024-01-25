@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-set(LIBRARY_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Cache/Binaries")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY $<1:${CMAKE_CURRENT_SOURCE_DIR}/Cache/Binaries>)
 message("-- [FlowingCSharp] Output Path: ${LIBRARY_OUTPUT_PATH}")
 
 file(GLOB_RECURSE FLOWING_SRC LIST_DIRECTORIES false 

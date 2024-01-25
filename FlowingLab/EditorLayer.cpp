@@ -353,6 +353,7 @@ void EditorLayer::UI_Toolbar()
 	bool hasSimulateButton = m_SceneState == SceneState::Edit || m_SceneState == SceneState::Simulate;
 	bool hasPauseButton = m_SceneState != SceneState::Edit;
 
+	if (hasPlayButton)
 	{
 		Ref<Texture2D> icon = (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Simulate) ? m_IconPlay : m_IconStop;
 		if (ImGui::ImageButton(reinterpret_cast<ImTextureID>(icon->getRendererID()), ImVec2(size, size), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), tintColor) && toolbarEnabled)
@@ -609,6 +610,7 @@ void EditorLayer::openProject(const std::filesystem::path& path)
 {
 	if (Project::loadProject(path))
 	{
+		ScriptEngine::init();
 		auto startScenePath = Project::getAssetFileSystemPath(Project::getActive()->getConfig().StartScene);
 		openScene(startScenePath);
 		m_ContentBrowserPanel = createScope<ContentBrowserPanel>();

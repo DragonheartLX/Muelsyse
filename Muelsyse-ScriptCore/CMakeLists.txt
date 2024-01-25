@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-set(LIBRARY_OUTPUT_PATH "${MUL_ROOT_PATH}/FlowingTest/Resources/Scripts")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY $<1:${MUL_ROOT_PATH}/FlowingTest/Resources/Scripts>)
 message("-- [ScriptCore] Output Path: ${LIBRARY_OUTPUT_PATH}")
 
 file(GLOB_RECURSE MUL_CORE_SRC LIST_DIRECTORIES false 

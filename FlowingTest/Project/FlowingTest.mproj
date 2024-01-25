@@ -2,4 +2,4 @@ Project:
   Name: FlowingTest
   StartScene: "Scenes/Physics2D.flowing"
   AssetDirectory: "Assets"
-  ScriptModulePath: "Scripts"
+  ScriptModulePath: "Cache/Binaries/FlowingCSharp.dll"

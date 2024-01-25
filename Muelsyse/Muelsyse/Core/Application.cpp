@@ -23,7 +23,6 @@ namespace mul
 		m_Window->setEventCallback(MUL_BIND_EVENT_FUNC(Application::onEvent));
 
 		Renderer::init();
-		ScriptEngine::init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		pushOverlay(m_ImGuiLayer);
