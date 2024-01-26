@@ -398,7 +398,7 @@ void EditorLayer::UI_Toolbar()
 			ImGui::SameLine();
 			{
 				Ref<Texture2D> icon = m_IconStep;
-				bool isPaused = m_ActiveScene->isPaused();
+				// bool isPaused = m_ActiveScene->isPaused();
 				if (ImGui::ImageButton(reinterpret_cast<ImTextureID>(icon->getRendererID()), ImVec2(size, size), ImVec2(0, 1), ImVec2(1, 0), 0, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), tintColor) && toolbarEnabled)
 				{
 					m_ActiveScene->step();

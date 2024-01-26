@@ -271,6 +271,7 @@ namespace mul
 						WRITE_SCRIPT_FIELD(Vector3, glm::vec3 );
 						WRITE_SCRIPT_FIELD(Vector4, glm::vec4 );
 						WRITE_SCRIPT_FIELD(Entity,  UUID      );
+						default:	break;
 					}
 					out << YAML::EndMap; // ScriptFields
 				}
@@ -497,6 +498,7 @@ namespace mul
 									READ_SCRIPT_FIELD(Vector3, glm::vec3);
 									READ_SCRIPT_FIELD(Vector4, glm::vec4);
 									READ_SCRIPT_FIELD(Entity, UUID);
+									default:	break;
 								}
 							}
 						}
