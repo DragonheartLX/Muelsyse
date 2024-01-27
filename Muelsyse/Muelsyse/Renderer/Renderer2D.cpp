@@ -5,6 +5,7 @@
 #include "Muelsyse/Renderer/RenderCommand.h"
 #include "Muelsyse/Renderer/OpenGL/OpenGLShader.h"
 #include "Muelsyse/Renderer/UniformBuffer.h"
+#include "Muelsyse/Asset/Assetmanager.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -163,9 +164,9 @@ namespace mul
 		s_Data->LineVertexArray->addVertexBuffer(s_Data->LineVertexBuffer);
 		s_Data->LineVertexBufferBase = new LineVertex[s_Data->MaxVertices];
 
-		s_Data->WhiteTexture = Texture2D::create(1, 1);
+		s_Data->WhiteTexture = Texture2D::create(TextureSpecification());
 		uint32_t whiteTextureData = 0xffffffff;
-		s_Data->WhiteTexture->setData(&whiteTextureData, sizeof(uint32_t));
+		s_Data->WhiteTexture->setData(Buffer(&whiteTextureData, sizeof(uint32_t)));
 
 		int32_t samplers[s_Data->MaxTextureSlots];
 		for (uint32_t i = 0; i < s_Data->MaxTextureSlots; i++)
@@ -350,6 +351,7 @@ namespace mul
 	void Renderer2D::drawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor, int entityID)
 	{
 		MUL_PROFILE_FUNCTION();
+		MUL_CORE_VERIFY(texture);
 
 		constexpr size_t quadVertexCount = 4;
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
@@ -492,9 +494,14 @@ namespace mul
 	void Renderer2D::drawSprite(const glm::mat4& transform, SpriteRendererComponent& src, int entityID)
 	{
 		if (src.Texture)
-			drawQuad(transform, src.Texture, src.TilingFactor, src.Color, entityID);
+		{
+			Ref<Texture2D> texture = AssetManager::getAsset<Texture2D>(src.Texture);
+			drawQuad(transform, texture, src.TilingFactor, src.Color, entityID);
+		}
 		else
+		{
 			drawQuad(transform, src.Color, entityID);
+		}
 	}
 
 	float Renderer2D::getLineWidth()

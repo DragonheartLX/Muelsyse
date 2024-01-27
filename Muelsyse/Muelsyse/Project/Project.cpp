@@ -20,6 +20,9 @@ namespace mul
 		{
 			project->m_ProjectDirectory = path.parent_path();
 			s_ActiveProject = project;
+			std::shared_ptr<EditorAssetManager> editorAssetManager = std::make_shared<EditorAssetManager>();
+			s_ActiveProject->m_AssetManager = editorAssetManager;
+			editorAssetManager->deserializeAssetRegistry();
 			return s_ActiveProject;
 		}
 

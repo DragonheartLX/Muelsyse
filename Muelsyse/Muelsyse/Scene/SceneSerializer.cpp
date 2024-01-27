@@ -288,8 +288,7 @@ namespace mul
 
 			auto& spriteRendererComponent = entity.getComponent<SpriteRendererComponent>();
 			out << YAML::Key << "Color" << YAML::Value << spriteRendererComponent.Color;
-			if (spriteRendererComponent.Texture)
-				out << YAML::Key << "TexturePath" << YAML::Value << spriteRendererComponent.Texture->getPath();
+			out << YAML::Key << "TextureHandle" << YAML::Value << spriteRendererComponent.Texture;
 
 			out << YAML::Key << "TilingFactor" << YAML::Value << spriteRendererComponent.TilingFactor;
 			out << YAML::EndMap; // SpriteRendererComponent
@@ -512,11 +511,14 @@ namespace mul
 					src.Color = spriteRendererComponent["Color"].as<glm::vec4>();
 					if (spriteRendererComponent["TexturePath"])
 					{
-						std::string texturePath = spriteRendererComponent["TexturePath"].as<std::string>();
-						auto path = Project::getAssetFileSystemPath(texturePath);
-						src.Texture = Texture2D::create(path.string());
+						// std::string texturePath = spriteRendererComponent["TexturePath"].as<std::string>();
+						// auto path = Project::getAssetFileSystemPath(texturePath);
+						// src.Texture = Texture2D::create(path.string());
 					}
 
+					if (spriteRendererComponent["TextureHandle"])
+						src.Texture = spriteRendererComponent["TextureHandle"].as<AssetHandle>();
+					
 					if (spriteRendererComponent["TilingFactor"])
 						src.TilingFactor = spriteRendererComponent["TilingFactor"].as<float>();
 				}

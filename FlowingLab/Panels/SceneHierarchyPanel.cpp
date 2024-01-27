@@ -404,13 +404,15 @@ namespace mul
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 				{
+#if 0
 					const wchar_t* path = (const wchar_t*)payload->Data;
 					std::filesystem::path texturePath(path);
 					Ref<Texture2D> texture = Texture2D::create(texturePath.string());
 					if (texture->isLoaded())
-						component.Texture = texture;
+						component.Texture = texture->Handle;
 					else
 						MUL_WARN("Could not load texture {0}", texturePath.filename().string());
+#endif
 				}
 				ImGui::EndDragDropTarget();
 			}

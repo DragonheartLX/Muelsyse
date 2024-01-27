@@ -8,6 +8,7 @@
 #include <Muelsyse/Script/ScriptEngine.h>
 #include <ImGuizmo.h>
 #include <Muelsyse/Math/Math.h>
+#include <Muelsyse/Asset/TextureImporter.h>
 
 using namespace mul;
 
@@ -21,11 +22,11 @@ void EditorLayer::onAttach()
 {
 	MUL_PROFILE_FUNCTION();
 
-	m_IconPlay = Texture2D::create("Resources/Icons/PlayButton.png");
-	m_IconPause = Texture2D::create("Resources/Icons/PauseButton.png");
-	m_IconStep = Texture2D::create("Resources/Icons/StepButton.png");
-	m_IconSimulate = Texture2D::create("Resources/Icons/SimulateButton.png");
-	m_IconStop = Texture2D::create("Resources/Icons/StopButton.png");
+	m_IconPlay = TextureImporter::loadTexture2D("Resources/Icons/PlayButton.png");
+	m_IconPause = TextureImporter::loadTexture2D("Resources/Icons/PauseButton.png");
+	m_IconStep = TextureImporter::loadTexture2D("Resources/Icons/StepButton.png");
+	m_IconSimulate = TextureImporter::loadTexture2D("Resources/Icons/SimulateButton.png");
+	m_IconStop = TextureImporter::loadTexture2D("Resources/Icons/StopButton.png");
 
 	FramebufferSpecification fbSpec;
 	fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
